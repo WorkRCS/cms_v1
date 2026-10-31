@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use App\Services\ProductImageService;
+use App\Services\YouTubeVideoService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -15,8 +16,10 @@ use Illuminate\Validation\ValidationException;
 
 class ProductController extends Controller
 {
-    public function __construct(private readonly ProductImageService $images)
-    {
+    public function __construct(
+        private readonly ProductImageService $images,
+        private readonly YouTubeVideoService $youtubeVideos,
+    ) {
     }
 
     public function dashboard(Request $request): JsonResponse
@@ -73,11 +76,26 @@ class ProductController extends Controller
             'images' => ['required', 'array', 'min:1', 'max:8'],
             'images.*' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:8192'],
             'video' => ['nullable', 'file', 'mimes:mp4,webm', 'max:51200'],
+            'video_youtube_url' => ['nullable', 'string', 'max:500', 'url'],
+            'video_title' => ['nullable', 'string', 'max:180'],
+            'video_layout' => ['nullable', 'in:auto,shorts,standard'],
         ]);
 
         $category = $this->validatedCategory($data['category_id'], $data['product_type']);
         $images = $this->images->store($data['images'], $data['name']);
-        $video = $request->hasFile('video') ? $this->storeVideo($request) : null;
+        if (filled($data['video_youtube_url'] ?? null) && $request->hasFile('video')) {
+            throw ValidationException::withMessages([
+                'video_youtube_url' => ['Choose either a YouTube link or an uploaded video, not both.'],
+            ]);
+        }
+
+        $video = filled($data['video_youtube_url'] ?? null)
+            ? $this->youtubeVideos->fromUrl(
+                $data['video_youtube_url'],
+                $data['video_layout'] ?? 'auto',
+                $data['video_title'] ?? null,
+            )
+            : ($request->hasFile('video') ? $this->storeVideo($request) : null);
 
         $baseSlug = Str::slug($data['name']) ?: 'product';
         $slug = Product::where('slug', $baseSlug)->exists()
@@ -137,6 +155,10 @@ class ProductController extends Controller
             'images' => ['sometimes', 'array', 'min:1', 'max:8'],
             'images.*' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:8192'],
             'video' => ['sometimes', 'nullable', 'file', 'mimes:mp4,webm', 'max:51200'],
+            'video_youtube_url' => ['sometimes', 'nullable', 'string', 'max:500', 'url'],
+            'video_title' => ['sometimes', 'nullable', 'string', 'max:180'],
+            'video_layout' => ['sometimes', 'in:auto,shorts,standard'],
+            'remove_video' => ['sometimes', 'boolean'],
         ]);
 
         $productType = $data['product_type'] ?? $product->product_type;
@@ -165,9 +187,25 @@ class ProductController extends Controller
             $data['images'] = $this->images->store($data['images'], $data['name'] ?? $product->name);
         }
 
-        if ($request->hasFile('video')) {
+        if (filled($data['video_youtube_url'] ?? null) && $request->hasFile('video')) {
+            throw ValidationException::withMessages([
+                'video_youtube_url' => ['Choose either a YouTube link or an uploaded video, not both.'],
+            ]);
+        }
+
+        if (filled($data['video_youtube_url'] ?? null)) {
+            $data['video'] = $this->youtubeVideos->fromUrl(
+                $data['video_youtube_url'],
+                $data['video_layout'] ?? 'auto',
+                $data['video_title'] ?? null,
+            );
+        } elseif ($request->boolean('remove_video')) {
+            $data['video'] = null;
+        } elseif ($request->hasFile('video')) {
             $data['video'] = $this->storeVideo($request);
         }
+
+        unset($data['video_youtube_url'], $data['video_title'], $data['video_layout'], $data['remove_video']);
 
         $product->fill($data);
         $product->save();
@@ -215,6 +253,8 @@ class ProductController extends Controller
         $path = $file->store('products/videos', 'public');
 
         return [
+            'type' => 'upload',
+            'layout' => 'standard',
             'url' => Storage::disk('public')->url($path),
             'path' => $path,
             'mime_type' => $file->getMimeType(),
