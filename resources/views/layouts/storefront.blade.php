@@ -4,12 +4,57 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#fffefa">
+    @php
+        $storeName = config('store.name', 'Field & Found');
+        $seoTitle = trim($__env->yieldContent('seo_title', trim($__env->yieldContent('title', $storeName)).' — '.$storeName));
+        $seoDescription = trim($__env->yieldContent('meta_description', 'Shop quality farm produce and everyday essentials from one trusted independent seller.'));
+        $canonicalUrl = trim($__env->yieldContent('canonical_url', url()->current()));
+        $ogImage = trim($__env->yieldContent('og_image', asset('favicon.svg')));
+        $ogType = trim($__env->yieldContent('og_type', 'website'));
+        $robotsDirective = trim($__env->yieldContent('robots', 'index,follow,max-image-preview:large'));
+        $siteGraph = [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'Organization',
+                    '@id' => route('home').'#organization',
+                    'name' => $storeName,
+                    'url' => route('home'),
+                ],
+                [
+                    '@type' => 'WebSite',
+                    '@id' => route('home').'#website',
+                    'name' => $storeName,
+                    'url' => route('home'),
+                    'publisher' => ['@id' => route('home').'#organization'],
+                    'inLanguage' => 'en',
+                ],
+            ],
+        ];
+    @endphp
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="@yield('meta_description', 'Shop quality farm produce and everyday essentials from one trusted independent seller.')">
-    <title>@yield('title', 'Field & Found') — Field & Found</title>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <meta name="description" content="{{ $seoDescription }}">
+    <meta name="robots" content="{{ $robotsDirective }}">
+    <link rel="canonical" href="{{ $canonicalUrl }}">
+    <meta property="og:site_name" content="{{ $storeName }}">
+    <meta property="og:type" content="{{ $ogType }}">
+    <meta property="og:title" content="{{ $seoTitle }}">
+    <meta property="og:description" content="{{ $seoDescription }}">
+    <meta property="og:url" content="{{ $canonicalUrl }}">
+    <meta property="og:image" content="{{ $ogImage }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $seoTitle }}">
+    <meta name="twitter:description" content="{{ $seoDescription }}">
+    <meta name="twitter:image" content="{{ $ogImage }}">
+    <title>{{ $seoTitle }}</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+    <link rel="dns-prefetch" href="//images.unsplash.com">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{ asset('assets/css/storefront.css') }}?v=responsive-20261031" rel="stylesheet">
+    <link href="{{ asset('assets/css/storefront.css') }}?v=seo-performance-20261031" rel="stylesheet">
+    <script type="application/ld+json">{!! json_encode($siteGraph, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}</script>
+    @stack('structured_data')
     @stack('head')
 </head>
 <body>
@@ -100,7 +145,7 @@
                 <h6>Explore</h6><a href="{{ route('shop') }}">Shop all</a><a href="{{ route('shop', ['product_type'=>'agriculture']) }}">Farm & garden</a><a href="{{ route('shop', ['product_type'=>'general']) }}">Everyday goods</a>
             </div>
             <div class="col-6 col-lg-2">
-                <h6>Help</h6><a href="{{ route('home') }}#faq">FAQs</a><a href="mailto:hello@example.test">Contact us</a><a href="{{ route('login') }}">My account</a>
+                <h6>Help & policies</h6><a href="{{ route('home') }}#faq">FAQs</a><a href="mailto:{{ config('store.contact_email') }}">Contact us</a><a href="{{ route('login') }}">My account</a><a href="{{ route('terms') }}">Terms & conditions</a><a href="{{ route('privacy-policy') }}">Privacy policy</a><a href="{{ route('data-privacy') }}">Data privacy & rights</a>
             </div>
             <div class="col-lg-3">
                 <h6>Good things, occasionally.</h6><p class="footer-copy">Join our list for product news and seasonal updates.</p>
@@ -117,8 +162,8 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset('assets/js/storefront.js') }}" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
+<script src="{{ asset('assets/js/storefront.js') }}?v=seo-performance-20261031" defer></script>
 @stack('scripts')
 </body>
 </html>
