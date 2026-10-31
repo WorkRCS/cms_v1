@@ -83,7 +83,7 @@
     <link rel="preload" as="image" href="{{ $mainImageUrl }}" fetchpriority="high">
 @endpush
 @push('structured_data')
-    <script type="application/ld+json">{!! json_encode($productSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}</script>
+    <script type="application/ld+json" nonce="{{ request()->attributes->get('csp_nonce') }}">{!! json_encode($productSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}</script>
     <script type="application/ld+json">{!! json_encode($breadcrumbSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}</script>
 @endpush
 @section('content')
@@ -171,6 +171,7 @@
                 <div class="d-grid gap-2 mt-4">
                     <button class="btn btn-dark btn-lg rounded-pill" type="button" data-add-to-cart>Add to cart</button>
                     <a href="{{ route('cart') }}" class="btn btn-outline-dark btn-lg rounded-pill">View cart</a>
+                    <button class="btn btn-outline-secondary btn-lg rounded-pill" type="button" data-product-share><svg class="icon me-2"><use href="#i-share"/></svg>Share product</button>
                 </div>
                 <div class="product-benefits">
                     <div><svg class="icon"><use href="#i-truck"/></svg><span>Delivery details at checkout</span></div>
@@ -195,5 +196,5 @@
         </div>
     </div>
 </div>
-<script type="application/json" id="initialProductData">@json($product->toArray())</script>
+<script type="application/json" id="initialProductData" nonce="{{ request()->attributes->get('csp_nonce') }}">@json($product->toArray())</script>
 @endsection
