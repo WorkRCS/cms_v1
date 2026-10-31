@@ -1,5 +1,6 @@
 @extends('layouts.storefront')
 @section('title', 'Your cart')
+@section('robots', 'noindex,nofollow')
 @section('content')
 <section class="page-hero compact-hero"><div class="container"><span class="eyebrow">YOUR PICKS</span><h1>Your <em>cart.</em></h1><p>A little collection of good things.</p></div></section>
 <section class="section-space pt-4"><div class="container"><div class="row g-5">
