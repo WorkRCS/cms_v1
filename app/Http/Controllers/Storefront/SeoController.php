@@ -1,11 +1,11 @@
 <?php
 
-namespace App\\Http\\Controllers\\Storefront;
+namespace App\Http\Controllers\Storefront;
 
-use App\\Http\\Controllers\\Controller;
-use App\\Models\\Product;
-use Illuminate\\Http\\Response;
-use Illuminate\\Support\\Facades\\Cache;
+use App\Http\Controllers\Controller;
+use App\Models\Product;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 
 class SeoController extends Controller
 {
@@ -32,7 +32,7 @@ class SeoController extends Controller
     {
         $sitemapUrl = route('sitemap');
 
-        $rules = implode("\\n", [
+        $rules = implode("\n", [
             'User-agent: *',
             'Allow: /',
             'Disallow: /account',
@@ -55,6 +55,13 @@ class SeoController extends Controller
             '',
             'User-agent: ChatGPT-User',
             'Allow: /',
+            'Disallow: /account',
+            'Disallow: /seller',
+            'Disallow: /login',
+            'Disallow: /register',
+            'Disallow: /cart',
+            'Disallow: /checkout',
+            'Disallow: /api/',
             '',
             'User-agent: GPTBot',
             'Disallow: /',
