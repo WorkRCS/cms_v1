@@ -172,6 +172,20 @@
     </div>
 </footer>
 
+<div class="modal fade" id="confirmActionModal" tabindex="-1" aria-labelledby="confirmActionTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content feedback-modal-content">
+            <div class="modal-body p-4">
+                <h2 class="h5" id="confirmActionTitle">Confirm action</h2>
+                <p id="confirmActionMessage" class="text-secondary"></p>
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill" data-confirm-cancel data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-dark rounded-pill" id="confirmActionApprove">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content feedback-modal-content">
@@ -187,7 +201,7 @@
 
 <script src="{{ asset('assets/js/vendor/purify.min.js') }}" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
-<script src="{{ asset('assets/js/storefront.js') }}?v=storefront-admin-video-v1-20261031" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
+<script src="{{ asset('assets/js/storefront.js') }}?v=storefront-admin-video-v2-20261031" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
 <script src="{{ asset('assets/js/storefront-i18n.js') }}?v=storefront-language-v12-20261031" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
 @stack('scripts')
 </body>
