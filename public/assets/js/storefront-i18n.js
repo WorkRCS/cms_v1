@@ -521,8 +521,15 @@
     video: ['ভিডিও', 'वीडियो'],
     video_youtube_url: ['YouTube ভিডিও লিংক', 'YouTube वीडियो लिंक'],
     address: ['ঠিকানা', 'पता'],
-    postal_code: ['পিন কোড', 'पिन कोड']
+    postal_code: ['পিন কোড', 'पिन कोड'],
+    address_postal_code: ['পিন কোড', 'पिन कोड']
   };
+
+  function localizedFieldLabel(rawField, language) {
+    const normalized = String(rawField || '').replace(/ field$/i, '').replace(/[. ]/g, '_');
+    const labels = fieldLabels[normalized];
+    return labels ? labels[language === 'bn' ? 0 : 1] : String(rawField || '');
+  }
 
   function translateValue(source, language) {
     const lang = safeLanguage(language);
@@ -587,13 +594,12 @@
       if (!translated) {
         match = trimmed.match(/^The (.+) field is required\.$/i);
         if (match) {
-          const rawField = match[1].replace(/\./g, '_');
-          const field = fieldLabels[rawField] ? fieldLabels[rawField][lang === 'bn' ? 0 : 1] : rawField;
+          const field = localizedFieldLabel(match[1], lang);
           translated = lang === 'bn' ? field + ' ঘরটি পূরণ করা বাধ্যতামূলক।' : field + ' फ़ील्ड भरना आवश्यक है।';
         }
       }
       if (!translated) {
-        match = trimmed.match(/^The (.+) must be a valid email address\.$/i);
+        match = trimmed.match(/^The (.+?)(?: field)? must be a valid email address\.$/i);
         if (match) translated = lang === 'bn' ? 'সঠিক ইমেল ঠিকানা দিতে হবে।' : 'एक मान्य ईमेल पता दर्ज करना होगा।';
       }
       if (!translated) {
@@ -601,10 +607,39 @@
         if (match) translated = lang === 'bn' ? 'পাসওয়ার্ড নিশ্চিতকরণ মিলছে না।' : 'पासवर्ड की पुष्टि मेल नहीं खाती।';
       }
       if (!translated) {
-        match = trimmed.match(/^The (.+) must be at least (\d+) characters?\.$/i);
-        if (match) translated = lang === 'bn'
-          ? match[1] + ' কমপক্ষে ' + match[2] + ' অক্ষরের হতে হবে।'
-          : match[1] + ' कम से कम ' + match[2] + ' वर्णों का होना चाहिए।';
+        match = trimmed.match(/^The (.+?)(?: field)? must be at least (\d+) characters?\.$/i);
+        if (match) {
+          const field = localizedFieldLabel(match[1], lang);
+          translated = lang === 'bn'
+            ? field + ' কমপক্ষে ' + match[2] + ' অক্ষরের হতে হবে।'
+            : field + ' कम से कम ' + match[2] + ' वर्णों का होना चाहिए।';
+        }
+      }
+      if (!translated) {
+        match = trimmed.match(/^The (.+) field must not be greater than (\d+) characters?\.$/i);
+        if (match) {
+          const field = localizedFieldLabel(match[1], lang);
+          translated = lang === 'bn'
+            ? field + ' সর্বোচ্চ ' + match[2] + ' অক্ষরের হতে পারে।'
+            : field + ' अधिकतम ' + match[2] + ' वर्णों का हो सकता है।';
+        }
+      }
+      if (!translated) {
+        match = trimmed.match(/^The (.+) field must have at least (\d+) items?\.$/i);
+        if (match) {
+          const field = localizedFieldLabel(match[1], lang);
+          translated = lang === 'bn'
+            ? field + ' অন্তত ' + match[2] + 'টি দিতে হবে।'
+            : field + ' कम से कम ' + match[2] + ' देने होंगे।';
+        }
+      }
+      if (!translated) {
+        match = trimmed.match(/^The (.+) field must be a valid URL\.$/i);
+        if (match) translated = lang === 'bn' ? 'সঠিক URL দিতে হবে।' : 'एक मान्य URL दर्ज करना होगा।';
+      }
+      if (!translated) {
+        match = trimmed.match(/^The (.+) must be greater than or equal to the (.+)\.$/i);
+        if (match) translated = lang === 'bn' ? 'তুলনামূলক দাম বিক্রয়মূল্যের সমান বা বেশি হতে হবে।' : 'तुलना मूल्य बिक्री मूल्य के बराबर या उससे अधिक होना चाहिए।';
       }
     }
 
