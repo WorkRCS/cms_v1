@@ -1629,3 +1629,62 @@ html[data-language-pending="true"] body {
         will-change: auto;
     }
 }
+
+
+.home-video-intro {
+    max-width: 700px;
+    margin: -14px 0 24px;
+    color: #4f5a4d;
+    font-size: 13px;
+    line-height: 1.65;
+}
+.home-video-rail-track {
+    animation-play-state: paused !important;
+}
+.home-video-rail-track.is-ready.is-moving-left,
+.home-video-rail-track.is-ready.is-moving-right {
+    animation-play-state: running !important;
+}
+.home-video-card {
+    width: clamp(340px, 54vw, 720px);
+    flex-basis: clamp(340px, 54vw, 720px);
+}
+.home-video-card-media--standard {
+    width: 100%;
+    min-height: 200px;
+}
+.home-video-card-media--shorts {
+    min-height: 400px;
+}
+.home-video-card-copy .eyebrow {
+    color: #52664c;
+}
+.home-video-footnote {
+    margin: 8px 0 0;
+    color: #4f5a4d;
+    font-size: 11px;
+    text-align: right;
+}
+.home-video-card-actions button.text-link {
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+}
+.home-video-card-actions button:focus-visible,
+.home-video-play:focus-visible,
+.home-video-card-copy a:focus-visible {
+    outline: 3px solid #9a6b29;
+    outline-offset: 3px;
+}
+@media (max-width: 767.98px) {
+    .home-video-card {
+        width: 84vw;
+        flex-basis: 84vw;
+    }
+    .home-video-card-media--shorts {
+        min-height: 340px;
+    }
+    .home-video-footnote {
+        text-align: left;
+    }
+}
