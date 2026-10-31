@@ -18,5 +18,6 @@ return [
         ],
     ],
     'limiter' => env('CACHE_LIMITER', 'file'),
+    'serializable_classes' => false,
     'prefix' => env('CACHE_PREFIX', Str::slug((string) env('APP_NAME', 'storefront')).'-cache-'),
 ];
