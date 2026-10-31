@@ -579,7 +579,7 @@
     });
     root.addEventListener('click', async (event) => {
       const button = event.target.closest('[data-archive-product]');
-      if (!button || !window.confirm('Archive this product? It will no longer appear in the public shop.')) return;
+      if (!button || !window.confirm(window.storefrontTranslate ? window.storefrontTranslate('Archive this product? It will no longer appear in the public shop.') : 'Archive this product? It will no longer appear in the public shop.')) return;
       try {
         await apiRequest('/seller/products/' + encodeURIComponent(button.dataset.archiveProduct), {method:'DELETE', body:'{}'});
         notify('Product archived.'); await loadSellerData();
