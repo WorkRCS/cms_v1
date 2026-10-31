@@ -27,8 +27,8 @@ class AdminController extends Controller
         if (filled($filters['q'] ?? null)) {
             $term = trim($filters['q']);
             $query->where(function ($builder) use ($term): void {
-                $builder->where('name', 'like', '%'.$term.'%')
-                    ->orWhere('email', 'like', '%'.$term.'%');
+                $builder->where('name', 'like', $term.'%')
+                    ->orWhere('email', 'like', $term.'%');
             });
         }
 
