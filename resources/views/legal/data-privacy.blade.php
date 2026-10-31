@@ -14,7 +14,7 @@
     <article class="container legal-content">
         <p class="legal-updated">Last updated: 31 October 2026</p>
         <h2>What the store currently uses</h2>
-        <p>The current website uses account details (name, email and optional phone number), encrypted session storage, security tokens and browser local storage for the shopping cart. Passwords are stored as hashes. The current checkout is a preview and does not submit orders or payment details.</p>
+        <p>The current website uses account details (name, email and optional phone number), any optional delivery-address fields you choose to save (such as house/flat, street, locality, city, district, state and PIN code), encrypted session storage, security tokens and browser local storage for the shopping cart. Passwords are stored as hashes. The current checkout is a preview and does not submit orders or payment details.</p>
 
         <h2>Your privacy requests</h2>
         <p>You may contact the store to request information about personal data associated with your account, ask for inaccurate details to be corrected, request deletion where legally available, or raise a concern about how information is handled. The store may ask you to verify your identity before acting on a request.</p>
