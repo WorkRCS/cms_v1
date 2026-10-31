@@ -664,7 +664,7 @@
       option.setAttribute('value', record.source.trim());
     }
 
-    const categoryNode = node.parentElement.closest('[data-category-slug], [data-category]');
+    const categoryNode = node.parentElement.closest('[data-category-name]');
     const categorySlug = categoryNode
       ? (categoryNode.getAttribute('data-category-slug') || categoryNode.getAttribute('data-category') || '')
       : '';
