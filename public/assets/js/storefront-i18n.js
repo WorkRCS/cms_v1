@@ -4,6 +4,7 @@
   const STORAGE_KEY = 'field-found-language';
   const languageCodes = { en: 'en-IN', bn: 'bn-IN', hi: 'hi-IN' };
   const select = document.getElementById('siteLanguageSelect');
+  const originalDocumentTitle = document.title;
 
   // Only storefront interface copy is translated. Seller-entered product data is
   // deliberately excluded from the translation pass.
@@ -54,7 +55,7 @@
     "One independent seller": ["একজন স্বতন্ত্র বিক্রেতা", "एक स्वतंत्र विक्रेता"],
     "FIND YOUR SOMETHING": ["আপনার পছন্দের জিনিস খুঁজুন", "अपनी पसंद की चीज़ खोजें"],
     "Shop by": ["বিভাগ অনুযায়ী", "श्रेणी के अनुसार"],
-    "category": ["কেনাকাটা", "खरीदारी"],
+    "category": ["বিভাগ", "श्रेणी"],
     "View everything": ["সবকিছু দেখুন", "सब कुछ देखें"],
     "Categories will appear here soon.": ["শিগগিরই এখানে বিভাগগুলো দেখা যাবে।", "श्रेणियाँ जल्द ही यहाँ दिखाई देंगी।"],
     "A FEW GOOD PICKS": ["বেছে নেওয়া কিছু ভালো পণ্য", "कुछ चुनिंदा अच्छे सामान"],
@@ -68,8 +69,8 @@
     "We believe shopping should feel simple, honest and a little more personal. This independent store brings together carefully chosen farm products and everyday goods in one easy place.": ["আমরা বিশ্বাস করি কেনাকাটা হওয়া উচিত সহজ, স্বচ্ছ ও কিছুটা ব্যক্তিগত। এই স্বতন্ত্র স্টোরে যত্ন করে বাছাই করা কৃষিপণ্য ও দৈনন্দিন প্রয়োজনীয় জিনিস এক জায়গায় পাওয়া যায়।", "हमारा मानना है कि खरीदारी आसान, पारदर्शी और थोड़ी व्यक्तिगत होनी चाहिए। यह स्वतंत्र दुकान सोच-समझकर चुने गए कृषि उत्पादों और रोज़मर्रा के सामान को एक ही जगह लाती है।"],
     "Get to know the collection": ["আমাদের পণ্যের সংগ্রহ দেখুন", "हमारे उत्पादों का संग्रह देखें"],
     "JUST ARRIVED": ["একদম নতুন", "अभी-अभी आए"],
-    "Fresh to the": ["স্টোরে", "दुकान में"],
-    "store": ["নতুন", "नए"],
+    "Fresh to the": ["স্টোরে নতুন", "दुकान में नए"],
+    "store": ["পণ্য", "उत्पाद"],
     "Shop all products": ["সব পণ্য কিনুন", "सभी उत्पाद देखें"],
     "Products will appear here soon.": ["শিগগিরই এখানে পণ্য দেখা যাবে।", "उत्पाद जल्द ही यहाँ दिखाई देंगे।"],
     "BEHIND THE GOODS": ["পণ্যের পেছনের গল্প", "उत्पादों के पीछे की कहानी"],
@@ -557,9 +558,9 @@
 
   function translateDocumentTitle() {
     const suffix = ' — Field & Found';
-    const base = document.title.endsWith(suffix) ? document.title.slice(0, -suffix.length) : document.title;
+    const base = originalDocumentTitle.endsWith(suffix) ? originalDocumentTitle.slice(0, -suffix.length) : originalDocumentTitle;
     const translated = translateValue(base, currentLanguage);
-    document.title = translated + (document.title.endsWith(suffix) ? suffix : '');
+    document.title = translated + (originalDocumentTitle.endsWith(suffix) ? suffix : '');
   }
 
   function applyLanguage(language) {
