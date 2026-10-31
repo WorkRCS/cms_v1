@@ -19,7 +19,7 @@ A single-seller B2C ecommerce starter for agriculture products and general merch
 - Shop catalogue with search, product-type and category filters, sorting and pagination
 - Product details with multi-image gallery, image thumbnails, attributes and product video
 - Browser-persisted cart (localStorage)
-- Customer registration, login, logout and account page
+- Customer registration, login, logout and editable profile with optional Indian delivery address
 - Checkout preview (order placement is not yet connected)
 
 ### Seller area
@@ -136,7 +136,8 @@ All JSON APIs use /api/v1.
 | GET | /api/v1/products/{slug} | Public | Product details and gallery |
 | POST | /api/v1/auth/register | Guest | Create customer |
 | POST | /api/v1/auth/login | Guest | Sign in |
-| GET | /api/v1/auth/me | Authenticated | Current user |
+| GET | /api/v1/auth/me | Authenticated | Current user and saved profile/address |
+| PATCH | /api/v1/auth/profile | Authenticated | Update optional profile and delivery-address fields |
 | POST | /api/v1/auth/logout | Authenticated | Sign out |
 | GET | /api/v1/seller/dashboard | Seller | Product summary |
 | GET | /api/v1/seller/products | Seller | List seller's products |
