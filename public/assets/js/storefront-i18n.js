@@ -9,6 +9,9 @@
   // Only storefront interface copy is translated. Seller-entered product data is
   // deliberately excluded from the translation pass.
   const entries = {
+    "Good things, from good places": ["ভালো জায়গা থেকে ভালো পণ্য", "अच्छी जगहों से अच्छी चीज़ें"],
+    "Shop farm produce & everyday essentials": ["কৃষিপণ্য ও দৈনন্দিন প্রয়োজনীয় জিনিস কিনুন", "कृषि उत्पाद और रोज़मर्रा की ज़रूरी चीज़ें खरीदें"],
+    "Your cart": ["আপনার কার্ট", "आपका कार्ट"],
     "Skip to main content": ["মূল বিষয়বস্তুতে যান", "मुख्य सामग्री पर जाएँ"],
     "Thoughtfully selected goods, delivered to your door": ["যত্ন করে বাছাই করা পণ্য, পৌঁছে যাবে আপনার দরজায়", "सोच-समझकर चुने गए सामान, आपके दरवाज़े तक"],
     "A little closer to the source. Discover thoughtful farm goods and everyday essentials, all from one independent store.": ["উৎসের আরও একটু কাছে। একটি স্বতন্ত্র স্টোরে যত্ন করে বাছাই করা কৃষিপণ্য ও দৈনন্দিন প্রয়োজনীয় জিনিস আবিষ্কার করুন।", "स्रोत के थोड़ा और करीब। एक स्वतंत्र दुकान में सोच-समझकर चुने गए कृषि उत्पाद और रोज़मर्रा की ज़रूरी चीज़ें खोजें।"],
