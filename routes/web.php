@@ -7,9 +7,15 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\Seller\ProductController as SellerProductController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
+
 Route::view('/', 'storefront.home')->name('home');
 Route::view('/shop', 'storefront.shop')->name('shop');
-Route::view('/product/{slug}', 'storefront.product')->name('product.show');
+Route::get('/product/{slug}', [ProductPageController::class, 'show'])->name('product.show');
+Route::view('/terms', 'legal.terms')->name('terms');
+Route::view('/privacy-policy', 'legal.privacy')->name('privacy-policy');
+Route::view('/data-privacy', 'legal.data-privacy')->name('data-privacy');
 Route::view('/login', 'auth.login')->name('login');
 Route::view('/register', 'auth.register')->name('register');
 Route::view('/cart', 'storefront.cart')->name('cart');
