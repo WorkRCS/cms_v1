@@ -87,20 +87,26 @@ class ProductController extends Controller
         ]);
 
         $category = $this->validatedCategory($data['category_id'], $data['product_type']);
-        $images = $this->images->store($data['images'], $data['name']);
+
         if (filled($data['video_youtube_url'] ?? null) && $request->hasFile('video')) {
             throw ValidationException::withMessages([
                 'video_youtube_url' => ['Choose either a YouTube link or an uploaded video, not both.'],
             ]);
         }
 
+        // Validate supported YouTube hosts before writing any image files.
         $video = filled($data['video_youtube_url'] ?? null)
             ? $this->youtubeVideos->fromUrl(
                 $data['video_youtube_url'],
                 $data['video_layout'] ?? 'auto',
                 $data['video_title'] ?? null,
             )
-            : ($request->hasFile('video') ? $this->storeVideo($request) : null);
+            : null;
+
+        $images = $this->images->store($data['images'], $data['name']);
+        if ($request->hasFile('video')) {
+            $video = $this->storeVideo($request);
+        }
 
         $baseSlug = Str::slug($data['name']) ?: 'product';
         $slug = Product::where('slug', $baseSlug)->exists()
