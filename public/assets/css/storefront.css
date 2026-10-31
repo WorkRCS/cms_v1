@@ -1844,3 +1844,25 @@ html[data-language-pending="true"] body {
     outline-offset: 4px;
     border-radius: 6px;
 }
+
+#productEditor .modal-content {
+    border: 0;
+    border-radius: 12px;
+}
+#productEditor .modal-header {
+    border-bottom-color: var(--line);
+}
+#productEditor .modal-body {
+    padding: 22px;
+}
+#productEditor .editor-card {
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+}
+.admin-product-modal .modal-header {
+    border-bottom-color: var(--line);
+}
+.admin-product-modal .modal-title {
+    color: var(--forest-deep);
+}
