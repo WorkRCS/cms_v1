@@ -260,9 +260,15 @@ class ProductController extends Controller
         $file = $request->file('video');
         $path = $file->store('products/videos', 'public');
 
+        $layout = in_array($request->input('video_layout'), ['shorts', 'standard'], true)
+            ? $request->input('video_layout')
+            : 'standard';
+        $title = trim((string) $request->input('video_title', ''));
+
         return [
             'type' => 'upload',
-            'layout' => 'standard',
+            'layout' => $layout,
+            'title' => $title !== '' ? mb_substr($title, 0, 180) : null,
             'url' => Storage::disk('public')->url($path),
             'path' => $path,
             'mime_type' => $file->getMimeType(),
