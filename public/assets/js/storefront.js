@@ -898,7 +898,7 @@
       if (videoFile) payload.append('video', videoFile);
       if (youtubeUrl) payload.append('video_youtube_url', youtubeUrl);
       payload.append('video_layout', editForm.elements.video_layout.value || 'auto');
-      if (editForm.elements.video_title.value.trim()) payload.append('video_title', editForm.elements.video_title.value.trim());
+      payload.append('video_title', editForm.elements.video_title.value.trim());
       payload.append('remove_video', editForm.elements.remove_video.checked ? '1' : '0');
 
       button.disabled = true;
