@@ -200,3 +200,13 @@ These are starter policy notices. Before public launch, set real seller, support
 The login session lifetime is fixed at seven days (10,080 minutes); closing the browser does not intentionally end it. Logout invalidates the session immediately. Production must use HTTPS and SESSION_SECURE_COOKIE=true.
 
 Read the full deployment, SEO/Search Console, Lighthouse and legal launch checklist in [docs/SEO-PERFORMANCE-LEGAL-SESSIONS.md](docs/SEO-PERFORMANCE-LEGAL-SESSIONS.md). Lighthouse scores and search rankings are not guaranteed and must be tested on the deployed public domain.
+
+## Product YouTube videos
+
+Seller Studio lets the seller add an optional YouTube URL, title and video layout when creating a product. Shorts links are auto-detected and displayed vertically (9:16); standard videos use landscape (16:9). The original MP4/WebM upload option is still available. Product-page videos are selectable gallery thumbnails; the homepage renders lazy-loaded product video stories, and product cards mark video-enabled products.
+
+For the two existing local demo products, run:
+
+    php artisan db:seed --class=DemoProductVideoSeeder
+
+See [docs/PRODUCT-VIDEOS-LIGHTHOUSE.md](docs/PRODUCT-VIDEOS-LIGHTHOUSE.md) for supported link formats, demo video references, security/accessibility details and the Lighthouse retest checklist. The Lighthouse summary score alone is not enough to identify any remaining failed audit; check the individual failed audits for each route.
