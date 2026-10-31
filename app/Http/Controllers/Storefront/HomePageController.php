@@ -6,43 +6,58 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class HomePageController extends Controller
 {
     public function __invoke(): View
     {
-        $categories = Cache::remember('storefront.home.categories.v1', now()->addMinutes(5), fn () =>
+        // Cache only plain arrays. Laravel 13 intentionally blocks arbitrary
+        // PHP object unserialization unless each class is explicitly allow-listed.
+        $categoryRows = Cache::remember('storefront.home.categories.v2', now()->addMinutes(5), fn () =>
             Category::query()
                 ->where('is_active', true)
                 ->orderBy('sort_order')
                 ->get()
+                ->map(fn (Category $category): array => $category->toArray())
+                ->all()
         );
+        $categories = collect($categoryRows)->map(fn (array $row) => (object) $row);
 
-        $featuredProducts = Cache::remember('storefront.home.featured.v1', now()->addMinutes(2), fn () =>
+        $featuredRows = Cache::remember('storefront.home.featured.v2', now()->addMinutes(2), fn () =>
             Product::query()
                 ->where('status', 'published')
                 ->where('is_featured', true)
                 ->orderBy('created_at', 'desc')
                 ->limit(4)
                 ->get()
+                ->map(fn (Product $product): array => $product->toArray())
+                ->all()
         );
+        $featuredProducts = collect($featuredRows)->map(fn (array $row) => (object) $row);
 
-        $latestProducts = Cache::remember('storefront.home.latest.v1', now()->addMinutes(2), fn () =>
+        $latestRows = Cache::remember('storefront.home.latest.v2', now()->addMinutes(2), fn () =>
             Product::query()
                 ->where('status', 'published')
                 ->orderBy('created_at', 'desc')
                 ->limit(8)
                 ->get()
+                ->map(fn (Product $product): array => $product->toArray())
+                ->all()
         );
+        $latestProducts = collect($latestRows)->map(fn (array $row) => (object) $row);
 
-        $videoProducts = Cache::remember('storefront.home.videos.v2', now()->addMinutes(5), fn () =>
+        $videoRows = Cache::remember('storefront.home.videos.v3', now()->addMinutes(5), fn () =>
             Product::query()
                 ->where('status', 'published')
                 ->whereNotNull('video.url')
                 ->orderBy('updated_at', 'desc')
                 ->get(['name', 'slug', 'video', 'short_description', 'images', 'updated_at'])
+                ->map(fn (Product $product): array => $product->toArray())
+                ->all()
         );
+        $videoProducts = collect($videoRows)->map(fn (array $row) => (object) $row);
 
         // Split the full video catalogue between two opposite-direction rails.
         // Every product appears once instead of duplicating all cards in the DOM.
