@@ -50,7 +50,6 @@ class AuthController extends Controller
         $data = $request->validate([
             'email' => ['required', 'email:rfc', 'max:190'],
             'password' => ['required', 'string'],
-            'remember' => ['sometimes', 'boolean'],
         ]);
 
         $credentials = [
@@ -59,7 +58,7 @@ class AuthController extends Controller
             'is_active' => true,
         ];
 
-        if (! Auth::attempt($credentials, (bool) ($data['remember'] ?? false))) {
+        if (! Auth::attempt($credentials)) {
             throw ValidationException::withMessages([
                 'email' => ['The supplied credentials are not valid.'],
             ]);
