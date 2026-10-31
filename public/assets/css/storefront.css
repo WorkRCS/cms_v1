@@ -1401,3 +1401,24 @@ textarea {
 #main-content:focus {
   outline: none;
 }
+
+
+/* Additional contrast refinements for compact labels and metadata. */
+.hero-index {
+  color: rgba(255,255,255,.76);
+}
+.attribute-chip small,
+.demo-credentials small,
+.seller-table thead th,
+.seller-product-cell small {
+  color: #65705f;
+}
+.search-box svg {
+  color: #667366;
+}
+.product-rating span {
+  color: #8b5c1a;
+}
+.discount-pill {
+  color: #87452d;
+}
