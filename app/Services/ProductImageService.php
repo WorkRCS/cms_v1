@@ -29,7 +29,29 @@ class ProductImageService
 
     private function storeOne(UploadedFile $file, string $productName, int $index): array
     {
-        $binary = file_get_contents($file->getRealPath());
+        $realPath = $file->getRealPath();
+        $dimensions = $realPath !== false ? @getimagesize($realPath) : false;
+
+        if (! is_array($dimensions) || ! isset($dimensions[0], $dimensions[1])) {
+            throw new RuntimeException('One of the uploaded files is not a readable raster image.');
+        }
+
+        $sourceWidth = (int) $dimensions[0];
+        $sourceHeight = (int) $dimensions[1];
+        $maxDimension = 8000;
+        $maxPixels = 16_000_000;
+
+        if (
+            $sourceWidth < 1 ||
+            $sourceHeight < 1 ||
+            $sourceWidth > $maxDimension ||
+            $sourceHeight > $maxDimension ||
+            ($sourceWidth * $sourceHeight) > $maxPixels
+        ) {
+            throw new RuntimeException('Each product image must be no larger than 8,000 pixels per side and 16 megapixels.');
+        }
+
+        $binary = file_get_contents($realPath);
         $source = $binary === false ? false : @imagecreatefromstring($binary);
 
         if ($source === false) {
@@ -64,7 +86,10 @@ class ProductImageService
             }
 
             $path = $folder.'/'.$variant.'.webp';
-            Storage::disk('public')->put($path, $webp);
+            if (! Storage::disk('public')->put($path, $webp)) {
+                imagedestroy($source);
+                throw new RuntimeException('The server could not save an optimized product image.');
+            }
             $variants[$variant] = Storage::disk('public')->url($path);
         }
 
