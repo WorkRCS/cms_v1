@@ -14,7 +14,7 @@ Only trusted YouTube hostnames are accepted. The application extracts and valida
 
 On a product page, the video is a selectable gallery thumbnail next to the product images. Selecting an image returns to the image viewer; selecting the video opens the iframe in the same gallery area. The iframe is created on click, not at initial page render. Local MP4/WebM videos use the same gallery control.
 
-The homepage includes a Watch it from the source section for up to three published products with a video. YouTube videos use lazy-loaded iframes; uploaded MP4/WebM videos use the native browser video player. Product cards also show a Watch video marker. Videos are included as VideoObject information in the product structured data when the record contains YouTube metadata.
+The homepage displays every published product with a video in two finite horizontal rails that move in opposite directions once and then stop. Shorts use a vertical 9:16 card and standard videos use a landscape 16:9 card. Each card names its product and links to the product detail page. Only thumbnails load initially; selecting Watch video creates the YouTube iframe or local MP4/WebM player. The rail pauses on hover/focus and respects reduced-motion settings. Videos are included as VideoObject information in the product structured data when the record contains YouTube metadata.
 
 ## Local demo videos
 
@@ -31,7 +31,7 @@ These are third-party demo embeds, not seller-produced content or customer testi
 
 ## YouTube embed behaviour
 
-The site uses https://www.youtube-nocookie.com/embed/VIDEO_ID for the privacy-enhanced embed host. Gallery playback is user-triggered. Homepage video frames use loading=lazy. Iframes have descriptive titles, fullscreen support and strict-origin referrer policy.
+The site uses https://www.youtube-nocookie.com/embed/VIDEO_ID for the privacy-enhanced embed host. Gallery playback is user-triggered. Homepage video players are click-to-play; only thumbnail images are loaded initially. Iframes have descriptive titles, fullscreen support and strict-origin referrer policy.
 
 YouTube's official embed documentation specifies a 200px by 200px minimum player viewport. A landscape 16:9 video and a vertical 9:16 Shorts layout are styled separately. Browser support, video availability, region restrictions and the uploader's embed permissions remain controlled by YouTube.
 
@@ -62,7 +62,7 @@ A code change cannot guarantee 100 for every deployment. The final score depends
     php artisan serve
 
 Then check:
-- / — homepage YouTube embeds and uploaded product videos.
+- / — the complete product video catalogue, two opposing one-pass rails and click-to-play YouTube/uploaded videos.
 - /product/farm-fresh-vegetable-box — vertical Shorts thumbnail in the image gallery.
 - /product/garden-hand-trowel — standard landscape video thumbnail in the image gallery.
 - /seller — add a product with a YouTube URL or uploaded MP4/WebM.
