@@ -1866,3 +1866,8 @@ html[data-language-pending="true"] body {
 .admin-product-modal .modal-title {
     color: var(--forest-deep);
 }
+
+.home-video-rail:hover .home-video-rail-track.is-ready,
+.home-video-rail:focus-within .home-video-rail-track.is-ready {
+    animation-play-state: paused !important;
+}
