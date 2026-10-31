@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Storefront;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
@@ -17,8 +18,13 @@ class SeoController extends Controller
                 ->orderBy('slug')
                 ->get(['slug', 'updated_at']);
 
+            $categories = Category::query()
+                ->where('is_active', true)
+                ->orderBy('slug')
+                ->get(['slug', 'updated_at']);
+
             return response()
-                ->view('seo.sitemap', compact('products'))
+                ->view('seo.sitemap', compact('products', 'categories'))
                 ->getContent();
         });
 
