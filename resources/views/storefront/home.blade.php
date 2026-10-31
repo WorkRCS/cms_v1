@@ -108,7 +108,7 @@
             <div class="home-video-rails" data-home-video-rails>
                 @foreach (['left' => $videoProductsLeft, 'right' => $videoProductsRight] as $railDirection => $railProducts)
                     @if ($railProducts->isNotEmpty())
-                    <div class="home-video-rail" data-home-video-rail="{{ $railDirection }}" aria-label="{{ $railDirection === 'left' ? 'Product videos moving left' : 'Product videos moving right' }}">
+                    <div class="home-video-rail" data-home-video-rail="{{ $railDirection }}" role="region" tabindex="0" aria-label="{{ $railDirection === 'left' ? 'Product videos moving left' : 'Product videos moving right' }}">
                         <div class="home-video-rail-track{{ $railDirection === 'left' ? ' is-moving-left' : ' is-moving-right' }}" data-home-video-track data-direction="{{ $railDirection }}">
                             @foreach ($railProducts as $videoProduct)
                                 @php
