@@ -47,13 +47,38 @@ class HomePageController extends Controller
         );
         $latestProducts = collect($latestRows)->map(fn (array $row) => (object) $row);
 
-        $videoRows = Cache::remember('storefront.home.videos.v3', now()->addMinutes(5), fn () =>
+        $videoRows = Cache::remember('storefront.home.videos.v4', now()->addMinutes(5), fn () =>
             Product::query()
                 ->where('status', 'published')
                 ->whereNotNull('video.url')
                 ->orderBy('updated_at', 'desc')
                 ->get(['name', 'slug', 'video', 'short_description', 'images', 'updated_at'])
-                ->map(fn (Product $product): array => $product->toArray())
+                ->map(function (Product $product): array {
+                    $video = is_array($product->video) ? $product->video : [];
+                    $firstImage = is_array($product->images) ? ($product->images[0] ?? []) : [];
+
+                    return [
+                        'name' => (string) $product->name,
+                        'slug' => (string) $product->slug,
+                        'short_description' => (string) ($product->short_description ?? ''),
+                        'video' => [
+                            'type' => $video['type'] ?? 'upload',
+                            'url' => $video['url'] ?? '',
+                            'embed_url' => $video['embed_url'] ?? '',
+                            'thumbnail_url' => $video['thumbnail_url'] ?? null,
+                            'layout' => $video['layout'] ?? 'standard',
+                            'title' => $video['title'] ?? null,
+                        ],
+                        // Only keep the one small fallback image used by this rail.
+                        // Gallery variants and private upload metadata stay out of the cache.
+                        'images' => [[
+                            'url' => data_get($firstImage, 'url'),
+                            'variants' => [
+                                'medium' => data_get($firstImage, 'variants.medium'),
+                            ],
+                        ]],
+                    ];
+                })
                 ->all()
         );
         $videoProducts = collect($videoRows)->map(fn (array $row) => (object) $row);
