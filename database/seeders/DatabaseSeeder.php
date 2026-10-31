@@ -51,6 +51,14 @@ class DatabaseSeeder extends Seeder
             ['role' => 1, 'created_at' => -1],
             ['name' => 'users_customers_created'],
         );
+        $database->selectCollection('users')->createIndex(
+            ['role' => 1, 'name' => 1],
+            ['name' => 'users_customers_name'],
+        );
+        $database->selectCollection('users')->createIndex(
+            ['role' => 1, 'email' => 1],
+            ['name' => 'users_customers_email'],
+        );
 
         $email = mb_strtolower((string) env('DEMO_SELLER_EMAIL', 'owner@example.test'));
         $password = (string) env('DEMO_SELLER_PASSWORD', '');
