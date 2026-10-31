@@ -290,7 +290,8 @@
 
         if (isYoutubeVideo) {
           const frame = document.createElement('iframe');
-          frame.src = 'https://www.youtube-nocookie.com/embed/' + video.video_id + '?playsinline=1&rel=0';
+          const playerLanguage = window.storefrontLanguage ? window.storefrontLanguage() : 'en';
+          frame.src = 'https://www.youtube-nocookie.com/embed/' + video.video_id + '?playsinline=1&rel=0&hl=' + encodeURIComponent(playerLanguage);
           frame.title = video.title || ((product.name || 'Product') + ' video');
           frame.loading = 'lazy';
           frame.referrerPolicy = 'strict-origin-when-cross-origin';
