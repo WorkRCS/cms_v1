@@ -210,14 +210,21 @@
     const root = document.getElementById('productDetail');
     if (!root) return;
     try {
-      const result = await apiRequest('/products/' + encodeURIComponent(root.dataset.productSlug));
-      const product = result.data;
+      const initialProductData = document.getElementById('initialProductData');
+      let product = null;
+      if (initialProductData) {
+        product = JSON.parse(initialProductData.textContent || 'null');
+      } else {
+        const result = await apiRequest('/products/' + encodeURIComponent(root.dataset.productSlug));
+        product = result.data;
+      }
       if (!product) throw new Error('This product could not be found.');
       const images = Array.isArray(product.images) ? product.images : [];
       const main = document.querySelector('[data-product-main]');
       const thumbnails = document.querySelector('[data-product-thumbnails]');
-      main.src = imageFor(product);
-      main.alt = product.name || 'Product image';
+      const primaryImage = images.find((image) => image && image.is_primary) || images[0];
+      main.src = (primaryImage && primaryImage.variants && primaryImage.variants.large) || (primaryImage && primaryImage.url) || imageFor(product);
+      main.alt = (primaryImage && primaryImage.alt) || product.name || 'Product image';
       document.querySelector('[data-product-name]').textContent = product.name || 'Product';
       document.querySelector('[data-product-type]').textContent = product.product_type === 'agriculture' ? 'FARM & GARDEN' : 'EVERYDAY GOODS';
       document.querySelector('[data-product-price]').textContent = money(product.price_minor);
@@ -326,8 +333,7 @@
           method:'POST',
           body:JSON.stringify({
             email:login.elements.email.value.trim(),
-            password:login.elements.password.value,
-            remember:login.elements.remember ? login.elements.remember.checked : false
+            password:login.elements.password.value
           })
         });
         window.location.href = result.user && result.user.role === 'seller' ? '/seller' : '/account';
