@@ -1377,3 +1377,27 @@ textarea {
 .body-copy {
   color: #626b60;
 }
+
+
+/* Keyboard-only navigation */
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 2000;
+  padding: 11px 16px;
+  transform: translateY(-160%);
+  border-radius: 5px;
+  background: var(--forest-deep);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 5px 20px rgba(0,0,0,.18);
+}
+.skip-link:focus {
+  transform: translateY(0);
+  color: #fff;
+}
+#main-content:focus {
+  outline: none;
+}
