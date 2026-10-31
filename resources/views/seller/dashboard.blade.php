@@ -1,5 +1,6 @@
 @extends('layouts.storefront')
 @section('title', 'Seller dashboard')
+@section('robots', 'noindex,nofollow')
 @section('content')
 <section class="page-hero compact-hero"><div class="container d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3"><div><span class="eyebrow">STORE MANAGEMENT</span><h1>Seller <em>studio.</em></h1><p>Manage your product catalogue from one place.</p></div><span class="seller-live"><span></span> Seller access active</span></div></section>
 <section class="section-space pt-4"><div class="container">
