@@ -29,7 +29,7 @@
         <aside class="col-lg-3"><div class="filter-panel"><h5>Categories</h5><div class="category-filters" data-shop-categories data-server-rendered="true">
             <button class="category-filter-btn{{ empty($filters['category']) ? ' active' : '' }}" data-category="">All categories</button>
             @foreach ($categories as $category)
-                <button class="category-filter-btn{{ ($filters['category'] ?? '') === $category->slug ? ' active' : '' }}" data-category="{{ $category->slug }}">{{ $category->name }}</button>
+                <button class="category-filter-btn{{ ($filters['category'] ?? '') === $category->slug ? ' active' : '' }}" data-category="{{ $category->slug }}" data-category-name>{{ $category->name }}</button>
             @endforeach
         </div><hr><h5>Quick links</h5><a href="{{ route('shop', ['product_type'=>'agriculture']) }}">Farm & garden</a><a href="{{ route('shop', ['product_type'=>'general']) }}">Everyday goods</a><a href="{{ route('shop') }}">All products</a></div></aside>
         <div class="col-lg-9"><div class="row g-4" data-shop-grid data-server-rendered="true" data-current-page="{{ $products->currentPage() }}">
