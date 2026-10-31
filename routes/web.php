@@ -6,14 +6,16 @@ use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\Seller\ProductController as SellerProductController;
 use App\Http\Controllers\Storefront\ProductPageController;
+use App\Http\Controllers\Storefront\HomePageController;
+use App\Http\Controllers\Storefront\ShopPageController;
 use App\Http\Controllers\Storefront\SeoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
 
-Route::view('/', 'storefront.home')->name('home');
-Route::view('/shop', 'storefront.shop')->name('shop');
+Route::get('/', HomePageController::class)->name('home');
+Route::get('/shop', ShopPageController::class)->name('shop');
 Route::get('/product/{slug}', [ProductPageController::class, 'show'])->name('product.show');
 Route::view('/terms', 'legal.terms')->name('terms');
 Route::view('/privacy-policy', 'legal.privacy')->name('privacy-policy');
