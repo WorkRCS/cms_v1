@@ -975,7 +975,7 @@
     const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
     let resizeFrame = null;
 
-    const finishTrack = (track) => {
+    const finishTrack = (track, alignToEnd) => {
       const rail = track.closest('[data-home-video-rail]');
       track.classList.remove('is-ready');
       track.classList.add('is-finished');
@@ -986,7 +986,7 @@
       rail.classList.add('is-finished');
       // Leave the last items in view on the left-moving rail, and the first
       // items in view on the right-moving rail. Visitors can then swipe-scroll.
-      rail.scrollLeft = track.dataset.direction === 'left' ? rail.scrollWidth : 0;
+      rail.scrollLeft = alignToEnd && track.dataset.direction === 'left' ? rail.scrollWidth : 0;
     };
 
     const measureTracks = () => {
@@ -996,7 +996,7 @@
         const rail = track.closest('[data-home-video-rail]');
         if (!rail) return;
 
-        const travel = Math.max(rail.clientWidth, track.scrollWidth - rail.clientWidth);
+        const travel = Math.max(0, track.scrollWidth - rail.clientWidth);
         track.style.setProperty('--rail-travel', travel + 'px');
 
         const duration = Math.min(180, Math.max(18, travel / 42));
@@ -1004,7 +1004,7 @@
 
         track.classList.remove('is-ready');
         if (motionPreference.matches || travel < 24) {
-          finishTrack(track);
+          finishTrack(track, false);
           return;
         }
 
@@ -1019,7 +1019,7 @@
     tracks.forEach((track) => {
       track.addEventListener('animationend', (event) => {
         if (event.target !== track || event.animationName === '') return;
-        finishTrack(track);
+        finishTrack(track, true);
       });
     });
 
