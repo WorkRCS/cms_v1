@@ -7,14 +7,16 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\Seller\ProductController as SellerProductController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return response()->json([
-        'name' => config('app.name'),
-        'status' => 'backend_ready',
-        'api' => '/api/v1',
-        'documentation' => 'See README.md for setup and API routes.',
-    ]);
-});
+Route::view('/', 'storefront.home')->name('home');
+Route::view('/shop', 'storefront.shop')->name('shop');
+Route::view('/product/{slug}', 'storefront.product')->name('product.show');
+Route::view('/login', 'auth.login')->name('login');
+Route::view('/register', 'auth.register')->name('register');
+Route::view('/cart', 'storefront.cart')->name('cart');
+Route::view('/checkout', 'storefront.checkout')->name('checkout');
+
+Route::view('/account', 'customer.account')->middleware('auth')->name('account');
+Route::view('/seller', 'seller.dashboard')->middleware(['auth', 'seller'])->name('seller.dashboard');
 
 Route::prefix('api/v1')->group(function (): void {
     Route::get('/health', [HealthController::class, 'show']);

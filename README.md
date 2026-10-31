@@ -1,152 +1,185 @@
-# Storefront — Laravel + MongoDB Backend
+# Field & Found — Single-seller Storefront
 
-A single-seller B2C storefront backend. It supports both agriculture products and general merchandise in one catalogue.
+A single-seller B2C ecommerce starter for agriculture products and general merchandise, built with Laravel, MongoDB, Bootstrap and vanilla JavaScript.
 
-## Technology
+## Stack
 
 - PHP 8.3+
 - Laravel 13
-- MongoDB with the official mongodb/laravel-mongodb integration
-- Session-based authentication for the same-origin HTML/JavaScript storefront
-- JSON APIs designed for the planned Bootstrap frontend
-- GD with WebP support for product image processing
+- MongoDB with mongodb/laravel-mongodb
+- Blade views + HTML5 + Bootstrap 5.3 + custom CSS
+- Vanilla JavaScript (same-origin JSON API calls)
+- Session authentication, CSRF protection and seller-role middleware
+- PHP GD WebP image processing
 
-## Backend milestone included
+## Current implementation
 
+### Storefront
+- Responsive homepage with dynamic categories and featured/latest products
+- Shop catalogue with search, product-type and category filters, sorting and pagination
+- Product details with multi-image gallery, image thumbnails, attributes and product video
+- Browser-persisted cart (localStorage)
+- Customer registration, login, logout and account page
+- Checkout preview (order placement is not yet connected)
+
+### Seller area
+- Authenticated seller dashboard and product counts
+- Product list and archive action
+- Add product form with agriculture/general product type
+- Multiple product image upload (1–8 files) and optional MP4/WebM video
+- Server-side conversion to WebP thumbnail, medium and large variants
+
+### Backend
 - MongoDB connection and health endpoint
-- Customer registration, login, logout and current-user endpoint
-- Seller-only protected dashboard and product management
-- Public product and category catalogue APIs
-- Product type filter: agriculture or general
-- Multiple product images with thumbnail, medium and large WebP variants
-- Product video upload (MP4/WebM)
-- Local-only demo seller, 8 categories and 8 products (4 agriculture + 4 general)
-- MongoDB indexes for account email, category slug, product slug and seller/catalogue lookups
+- Customer registration/login/logout and current-user endpoint
+- Seller-only dashboard and product management APIs
+- Public product and category APIs
+- Local-only demo seeder: 8 categories and 8 published products (4 agriculture + 4 general)
+- MongoDB indexes for email, category slug, product slug and catalogue lookups
 
-The frontend and checkout/order workflow will be added in a later milestone.
+Orders, payment gateway, customer order history, coupon and video CMS are future milestones. The checkout page intentionally explains this rather than pretending to submit a real order.
 
 ## Requirements
 
 - PHP 8.3 or later
 - Composer 2
 - MongoDB Server or MongoDB Atlas
-- PHP extensions: mongodb, gd (GD must include WebP support), fileinfo, mbstring, openssl
-- A writable storage/ directory
+- PHP extensions: mongodb, gd with WebP support, fileinfo, mbstring, openssl, curl, dom, xml
+- Writable storage/ directory
 
-## VS Code / local setup
+## Windows + VS Code setup
 
-1. Clone this repository and open it in VS Code.
-2. Install PHP dependencies with: composer install
-3. Create your local environment file with: cp .env.example .env
-   On Windows PowerShell use: Copy-Item .env.example .env
-4. Generate the Laravel application key with: php artisan key:generate
-5. Start MongoDB locally on port 27017, or set DB_URI and DB_DATABASE in .env to your MongoDB Atlas connection and database name.
-6. Seed the local database with: php artisan db:seed
-7. Create the public storage symlink with: php artisan storage:link
-8. Start the backend with: php artisan serve
+### 1. Install PHP
 
-Open http://127.0.0.1:8000/. The root endpoint returns a small JSON status document. API health is available at http://127.0.0.1:8000/api/v1/health.
+Install PHP 8.3+ for Windows from the official downloads page: https://www.php.net/downloads.php?os=windows
 
-### Local demo seller
+Use the x64 build. Add the folder containing php.exe to the Windows PATH. Open a new PowerShell and verify:
 
-The example .env values seed this local-only seller:
+    php -v
 
-- Email: owner@example.test
-- Password: LocalDemoOnly!Change123
+Enable the required extensions in php.ini, including extension=gd and extension=mongodb (the MongoDB extension must be installed for the PHP version you use). Check active extensions with:
 
-Change the demo password in .env before using the application on any shared network. The seeder refuses to create demo records unless APP_ENV=local. Do not use the example credentials in production.
+    php -m
 
-The seeder creates eight categories and eight published demo products, with four products of each type. Each product includes three image entries so the future product details page can exercise a gallery. Demo image URLs are remote Unsplash URLs; newly uploaded seller images are processed and stored locally as WebP.
+GD must list WebP support. If mongodb is missing, install the matching Windows DLL from the official PECL MongoDB extension releases and enable it in the same php.ini used by the CLI.
 
-## MongoDB notes
+### 2. Install Composer
 
-Set the following in .env for local MongoDB:
+Download and run the official Windows Installer: https://getcomposer.org/Composer-Setup.exe
+
+When prompted, select the correct php.exe. The installer adds Composer and PHP to PATH. Close PowerShell completely, open a new PowerShell and verify:
+
+    composer -V
+    php -v
+
+If PowerShell says "composer is not recognized", Composer is not installed or its PATH entry has not been loaded. Reopen the terminal after installation. The official Composer Windows installer guide is at https://getcomposer.org/doc/00-intro.md#installation-windows.
+
+### 3. Install project dependencies
+
+From the project directory:
+
+    composer install
+
+Create your local environment file:
+
+    Copy-Item .env.example .env
+
+Generate an application key:
+
+    php artisan key:generate
+
+### 4. Configure MongoDB
+
+Run MongoDB locally on 127.0.0.1:27017, or use a MongoDB Atlas URI. The local .env should contain:
 
     DB_CONNECTION=mongodb
     DB_URI=mongodb://127.0.0.1:27017
     DB_DATABASE=storefront
 
-For Atlas, use the connection URI supplied by Atlas. Do not commit real database credentials or the .env file.
+Never commit .env or real database credentials.
 
-The first local seed creates these indexes:
+### 5. Seed demo products and run the site
 
-- users.email (unique)
-- categories.slug (unique)
-- products.slug (unique)
-- Product catalogue and seller lookup compound indexes
+The sample .env.example includes local-only demo seller values:
+
+- Email: owner@example.test
+- Password: LocalDemoOnly!Change123
+
+Set APP_ENV=local and make sure DEMO_SELLER_PASSWORD is present in your private .env. Change the sample password before sharing the app.
+
+Run:
+
+    php artisan db:seed
+    php artisan storage:link
+    php artisan serve
+
+Open:
+
+- Storefront: http://127.0.0.1:8000/
+- Shop: http://127.0.0.1:8000/shop
+- Seller login: http://127.0.0.1:8000/login
+- Seller dashboard: http://127.0.0.1:8000/seller
+- MongoDB health: http://127.0.0.1:8000/api/v1/health
+
+No Node.js or npm build is required for this first frontend milestone. Bootstrap CSS/JS are loaded from jsDelivr, while the store-specific CSS and JavaScript are local files under public/assets/.
 
 ## API routes
 
-All endpoints use the /api/v1 prefix and return JSON.
+All JSON APIs use /api/v1.
 
 | Method | Endpoint | Access | Purpose |
 |---|---|---|---|
 | GET | /api/v1/health | Public | Application and MongoDB health |
-| GET | /api/v1/csrf-token | Public | Obtain the current CSRF token |
-| GET | /api/v1/categories | Public | List active categories |
-| GET | /api/v1/products | Public | List published products |
-| GET | /api/v1/products/{slug} | Public | Product details and image gallery |
-| POST | /api/v1/auth/register | Guest | Create a customer account |
+| GET | /api/v1/csrf-token | Public | Obtain CSRF token for browser requests |
+| GET | /api/v1/categories | Public | Active categories |
+| GET | /api/v1/products | Public | Published product catalogue |
+| GET | /api/v1/products/{slug} | Public | Product details and gallery |
+| POST | /api/v1/auth/register | Guest | Create customer |
 | POST | /api/v1/auth/login | Guest | Sign in |
-| GET | /api/v1/auth/me | Customer/Seller | Current authenticated user |
-| POST | /api/v1/auth/logout | Customer/Seller | Sign out |
+| GET | /api/v1/auth/me | Authenticated | Current user |
+| POST | /api/v1/auth/logout | Authenticated | Sign out |
 | GET | /api/v1/seller/dashboard | Seller | Product summary |
-| GET | /api/v1/seller/products | Seller | List seller-owned products |
-| POST | /api/v1/seller/products | Seller | Create a product |
-| PUT | /api/v1/seller/products/{id} | Seller | Update a seller-owned product |
-| DELETE | /api/v1/seller/products/{id} | Seller | Archive a seller-owned product |
+| GET | /api/v1/seller/products | Seller | List seller's products |
+| POST | /api/v1/seller/products | Seller | Create product |
+| PUT | /api/v1/seller/products/{id} | Seller | Update seller-owned product |
+| DELETE | /api/v1/seller/products/{id} | Seller | Archive seller-owned product |
 
-### Catalogue filters
+Catalogue query examples:
 
-Examples:
+    /api/v1/products?product_type=agriculture
+    /api/v1/products?product_type=general
+    /api/v1/products?category=fresh-produce
+    /api/v1/products?q=seed&sort=price_low
+    /api/v1/products?featured=1&per_page=8
 
-- /api/v1/products?product_type=agriculture
-- /api/v1/products?product_type=general
-- /api/v1/products?category=fresh-produce
-- /api/v1/products?q=seed&sort=price_low
-- /api/v1/products?featured=1&per_page=8
+Allowed sort values: latest, price_low, price_high, name. Prices use integer minor units; for INR, 34900 means ₹349.00.
 
-Allowed sort values: latest, price_low, price_high, name.
+## Image uploads
 
-Prices are stored as integer minor units to avoid floating-point money calculations. For INR, 34900 represents ₹349.00.
+The seller product form accepts 1–8 JPG/JPEG/PNG/WebP files up to 8 MB each. The backend validates the images and writes WebP versions at up to 320px, 640px and 1200px. Optional product videos accept MP4/WebM up to 50 MB.
 
-## Browser authentication and CSRF
+Uploads are stored on Laravel's public disk. Run php artisan storage:link to expose the storage path locally. Demo product images are remote Unsplash examples; replace them with real product images before public launch.
 
-The API is intentionally served through Laravel's web middleware so the future same-origin HTML/Bootstrap/JavaScript storefront can use secure, HTTP-only session cookies. Keep credentials and cookies on the same origin.
+## Browser security
 
-For state-changing browser requests:
+The JSON endpoints are in Laravel's web middleware stack to use same-origin session cookies. Browser POST/PUT/DELETE requests acquire a CSRF token from /api/v1/csrf-token and send it in X-CSRF-TOKEN. The JavaScript uses credentials: same-origin.
 
-1. Call GET /api/v1/csrf-token first.
-2. Send the returned token in the X-CSRF-TOKEN request header.
-3. Keep browser credentials enabled with credentials: same-origin.
+Registration always creates a customer role; there is no public seller registration. Seller pages and APIs require an active, authenticated seller. Login and registration are rate-limited. Use HTTPS and SESSION_SECURE_COOKIE=true outside local development.
 
-The login and registration endpoints are rate limited. Registration always assigns the customer role; public visitors cannot self-register as a seller. Seller routes require an authenticated account whose role is seller and whose account is active.
+## Verification commands
 
-## Product image uploads
-
-Seller product creation accepts images[] (1–8 files; JPG/JPEG/PNG/WebP; max 8 MB each). The backend validates uploaded images, converts them to WebP and writes three sizes:
-
-- thumbnail: up to 320 px
-- medium: up to 640 px
-- large: up to 1200 px
-
-The response and MongoDB document include the URL, alt text, display order and variant URLs. Video uploads accept MP4/WebM up to 50 MB. Uploaded files are stored on Laravel's public disk; run php artisan storage:link to publish the storage path.
-
-## Quick verification
-
-    php artisan storefront:ping-mongodb
     php artisan route:list
-    curl http://127.0.0.1:8000/api/v1/products?product_type=agriculture
-    curl http://127.0.0.1:8000/api/v1/products?product_type=general
+    php artisan storefront:ping-mongodb
+    php artisan db:seed
+    php artisan serve
 
-For browser testing, seed first and sign in using the local demo seller credentials above. Product create/update requests should use multipart form data when attaching images or video.
+Then browse the homepage, filter agriculture/general products, open a product and test its image gallery, add items to the cart, sign in with the local demo seller and publish a test product.
 
-## Security and production checklist
+## Production checklist
 
-- Set APP_ENV=production, APP_DEBUG=false, a unique APP_KEY and SESSION_SECURE_COOKIE=true behind HTTPS.
-- Replace demo credentials and never run the local demo seeder in production.
-- Use a least-privilege MongoDB database user and restrict network access to the database.
-- Keep .env, backups and logs outside the public web root.
-- Serve public/ as the web server document root.
-- Configure HTTPS, rate limits, backups, monitoring and a production object-storage disk before launch.
-- Review real product descriptions, pricing, shipping, tax and return-policy rules before accepting orders.
+- Set APP_ENV=production, APP_DEBUG=false, a unique APP_KEY, and secure cookies behind HTTPS.
+- Replace local demo credentials and never seed demo records in production.
+- Use a least-privilege MongoDB database user and restrict database network access.
+- Keep .env, backups, logs and original/private uploads outside the public web root.
+- Serve the Laravel public/ directory as the web root.
+- Configure backups, monitoring, production object storage, payment and order workflows before accepting real customer orders.

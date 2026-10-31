@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="@yield('meta_description', 'Shop quality farm produce and everyday essentials from one trusted independent seller.')">
+    <title>@yield('title', 'Field & Found') — Field & Found</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset('assets/css/storefront.css') }}" rel="stylesheet">
+    @stack('head')
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" class="svg-defs" aria-hidden="true">
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l1 12H4L5 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M20 4c-8 0-14 3-14 10a6 6 0 0 0 6 6c7 0 10-6 8-16Z"/><path d="M4 21c3-6 7-9 13-12"/></symbol>
+    <symbol id="i-truck" viewBox="0 0 24 24"><path d="M3 6h11v11H3zM14 10h4l3 3v4h-7z"/><circle cx="7.5" cy="18" r="2"/><circle cx="17.5" cy="18" r="2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m9 6 10 6-10 6z"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+</svg>
+
+<div class="announcement-bar">
+    <div class="container d-flex justify-content-center align-items-center gap-2 text-center">
+        <span class="announcement-dot"></span>
+        Thoughtfully selected goods, delivered to your door
+    </div>
+</div>
+
+<nav class="navbar navbar-expand-lg site-nav sticky-top">
+    <div class="container">
+        <a class="navbar-brand brand-mark" href="{{ route('home') }}"><span class="brand-icon"><svg><use href="#i-leaf"/></svg></span>field<span>&</span>found</a>
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation"><svg class="icon"><use href="#i-menu"/></svg></button>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav mx-auto gap-lg-3">
+                <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('shop') }}">Shop all</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('shop', ['product_type' => 'agriculture']) }}">Farm & garden</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('shop', ['product_type' => 'general']) }}">Everyday goods</a></li>
+            </ul>
+            <div class="nav-actions d-flex align-items-center gap-3">
+                <a class="icon-link" href="{{ route('login') }}" aria-label="Account"><svg class="icon"><use href="#i-user"/></svg><span class="d-lg-none">Account</span></a>
+                <a class="icon-link cart-link" href="{{ route('cart') }}" aria-label="Shopping cart"><svg class="icon"><use href="#i-bag"/></svg><span class="cart-count" data-cart-count>0</span><span class="d-lg-none">Cart</span></a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main>
+    @yield('content')
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        <div class="row gy-4 pb-5">
+            <div class="col-lg-4">
+                <a class="navbar-brand brand-mark footer-brand" href="{{ route('home') }}"><span class="brand-icon"><svg><use href="#i-leaf"/></svg></span>field<span>&</span>found</a>
+                <p class="footer-copy mt-3">A little closer to the source. Discover thoughtful farm goods and everyday essentials, all from one independent store.</p>
+            </div>
+            <div class="col-6 col-lg-2 offset-lg-1">
+                <h6>Explore</h6><a href="{{ route('shop') }}">Shop all</a><a href="{{ route('shop', ['product_type'=>'agriculture']) }}">Farm & garden</a><a href="{{ route('shop', ['product_type'=>'general']) }}">Everyday goods</a>
+            </div>
+            <div class="col-6 col-lg-2">
+                <h6>Help</h6><a href="{{ route('home') }}#faq">FAQs</a><a href="mailto:hello@example.test">Contact us</a><a href="{{ route('login') }}">My account</a>
+            </div>
+            <div class="col-lg-3">
+                <h6>Good things, occasionally.</h6><p class="footer-copy">Join our list for product news and seasonal updates.</p>
+                <form class="newsletter-form d-flex" onsubmit="event.preventDefault(); alert('Thanks for your interest! Newsletter signup will be connected soon.');"><input type="email" class="form-control" placeholder="Your email address" aria-label="Your email address" required><button class="btn btn-light" type="submit" aria-label="Subscribe"><svg class="icon"><use href="#i-arrow"/></svg></button></form>
+            </div>
+        </div>
+        <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between gap-2"><span>© {{ date('Y') }} Field & Found. Demo storefront.</span><span>Made for better everyday shopping.</span></div>
+    </div>
+</footer>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="appToast" class="toast align-items-center text-bg-dark border-0" role="status" aria-live="polite" aria-atomic="true">
+        <div class="d-flex"><div class="toast-body" id="appToastMessage">Done</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('assets/js/storefront.js') }}" defer></script>
+@stack('scripts')
+</body>
+</html>
