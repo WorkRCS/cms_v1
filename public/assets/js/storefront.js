@@ -591,101 +591,306 @@
   function initSeller() {
     const root = document.querySelector('[data-seller-products]');
     if (!root) return;
+
     const summary = document.querySelector('[data-seller-summary]');
     const typeSelect = document.getElementById('productTypeInput');
     const categorySelect = document.getElementById('productCategoryInput');
     const form = document.getElementById('sellerProductForm');
     const imagesInput = document.getElementById('productImagesInput');
     const preview = document.querySelector('[data-upload-preview]');
+    const productPagination = document.querySelector('[data-seller-product-pagination]');
+    const customersRoot = document.querySelector('[data-admin-customers]');
+    const customerPagination = document.querySelector('[data-admin-customer-pagination]');
+    const customerSearch = document.getElementById('adminCustomerSearch');
+    const editForm = document.getElementById('editProductForm');
+    const editModalNode = document.getElementById('editProductModal');
+    const editTypeSelect = document.getElementById('editProductType');
+    const editCategorySelect = document.getElementById('editProductCategory');
+    const editVideoFile = document.getElementById('editProductVideoFile');
+    const editVideoUrl = document.getElementById('editProductVideoUrl');
+    const productRecords = new Map();
+    let currentProductPage = 1;
+    let currentCustomerPage = 1;
+    let customerQuery = '';
+    let searchTimer = null;
+    let editProductId = null;
 
-    async function loadCategories() {
-      const result = await apiRequest('/categories?product_type=' + encodeURIComponent(typeSelect.value));
-      categorySelect.innerHTML = '<option value="">Choose a category</option>' + (result.data || []).map((category) =>
+    const byId = (id) => document.getElementById(id);
+    const textValue = (value) => value == null ? '' : String(value);
+    const translate = (value) => window.storefrontTranslate ? window.storefrontTranslate(value) : value;
+
+    async function loadCategories(targetSelect, productType, selectedId) {
+      const result = await apiRequest('/categories?product_type=' + encodeURIComponent(productType));
+      targetSelect.innerHTML = '<option value="">Choose a category</option>' + (result.data || []).map((category) =>
         '<option value="' + escapeHtml(category.id || category._id) + '" data-category-slug="' + escapeHtml(category.slug) + '" data-category-name>' + escapeHtml(category.name) + '</option>'
       ).join('');
+      if (selectedId) targetSelect.value = String(selectedId);
     }
-    async function loadSellerData() {
-      const results = await Promise.all([apiRequest('/seller/dashboard'), apiRequest('/seller/products')]);
-      const s = results[0].summary || {};
+
+    async function loadDashboard() {
+      const result = await apiRequest('/seller/dashboard');
+      const s = result.summary || {};
       const metrics = [
-        ['Total products',s.total_products], ['Published',s.published_products],
-        ['Farm & garden',s.agriculture_products], ['Everyday goods',s.general_products]
+        ['Total products', s.total_products],
+        ['Published products', s.published_products],
+        ['Draft products', s.draft_products],
+        ['Total customers', s.total_customers],
+        ['Active customer accounts', s.active_customer_accounts],
+        ['Farm & garden', s.agriculture_products],
+        ['Everyday goods', s.general_products]
       ];
       summary.innerHTML = metrics.map((metric) =>
         '<div class="col-6 col-lg-3"><div class="metric-card"><span>' + metric[0] +
         '</span><strong>' + (Number(metric[1]) || 0) + '</strong></div></div>').join('');
-      root.innerHTML = (results[1].data || []).map((product) => {
-        const type = product.product_type === 'agriculture' ? 'Farm & garden' : 'Everyday';
-        const state = product.status === 'published' ? 'Published' : product.status;
-        const id = product.id || product._id;
+    }
+
+    function renderPagination(container, current, last, attribute) {
+      if (!container) return;
+      const pages = Math.max(1, Number(last) || 1);
+      const active = Math.min(pages, Math.max(1, Number(current) || 1));
+      container.innerHTML = Array.from({ length: pages }, (_, index) => {
+        const page = index + 1;
+        return '<li class="page-item ' + (page === active ? 'active' : '') + '">' +
+          '<button class="page-link" type="button" data-admin-page="' + attribute + '" data-page="' + page + '"' +
+          (page === active ? ' aria-current="page"' : '') + '>' + page + '</button></li>';
+      }).join('');
+      container.hidden = pages <= 1;
+    }
+
+    async function loadProducts(page) {
+      currentProductPage = Math.max(1, Number(page) || 1);
+      root.innerHTML = '<tr><td colspan="6" class="text-center py-5 text-secondary">Loading products…</td></tr>';
+      const result = await apiRequest('/seller/products?page=' + currentProductPage);
+      const rows = result.data || [];
+      productRecords.clear();
+
+      root.innerHTML = rows.map((product) => {
+        const id = String(product.id || product._id || '');
+        productRecords.set(id, product);
+        const type = product.product_type === 'agriculture' ? 'Farm & garden' : 'Everyday goods';
+        const state = product.status === 'published' ? 'Published' : (product.status || 'draft');
         return '<tr><td><div class="seller-product-cell"><img src="' + escapeHtml(imageFor(product)) +
           '" alt=""><div><strong>' + escapeHtml(product.name) + '</strong><small>' + escapeHtml(product.slug) +
           '</small></div></div></td><td>' + type + '</td><td>' + money(product.price_minor) +
           '</td><td>' + (Number(product.stock) || 0) + '</td><td><span class="badge text-bg-light">' +
-          escapeHtml(state) + '</span></td><td><button type="button" class="btn btn-link text-decoration-none p-0" data-archive-product="' +
-          escapeHtml(id) + '">Archive</button></td></tr>';
+          escapeHtml(state) + '</span></td><td><div class="admin-row-actions">' +
+          '<button type="button" class="btn btn-sm btn-outline-dark rounded-pill" data-edit-product="' + escapeHtml(id) + '">Edit</button>' +
+          (product.status === 'archived' ? '' : '<button type="button" class="btn btn-sm btn-link text-danger text-decoration-none" data-archive-product="' + escapeHtml(id) + '">Archive</button>') +
+          '</div></td></tr>';
       }).join('') || '<tr><td colspan="6" class="text-center py-5 text-secondary">No products yet. Add your first product above.</td></tr>';
+
+      renderPagination(productPagination, result.meta && result.meta.current_page, result.meta && result.meta.last_page, 'products');
     }
 
-    typeSelect.addEventListener('change', () => loadCategories().catch((error) => notify(error.message)));
+    async function loadCustomers(page) {
+      currentCustomerPage = Math.max(1, Number(page) || 1);
+      if (!customersRoot) return;
+      customersRoot.innerHTML = '<tr><td colspan="5" class="text-center py-5 text-secondary">Loading customers…</td></tr>';
+      const params = new URLSearchParams({ page: String(currentCustomerPage), per_page: '25' });
+      if (customerQuery) params.set('q', customerQuery);
+      const result = await apiRequest('/seller/customers?' + params.toString());
+      customersRoot.innerHTML = (result.data || []).map((customer) => {
+        const joined = customer.created_at ? new Date(customer.created_at).toLocaleDateString('en-IN') : '—';
+        const status = customer.is_active ? 'Active' : 'Disabled';
+        return '<tr><td><strong>' + escapeHtml(customer.name || '—') + '</strong></td>' +
+          '<td>' + escapeHtml(customer.email || '—') + '</td>' +
+          '<td>' + escapeHtml(customer.phone || '—') + '</td>' +
+          '<td><span class="badge ' + (customer.is_active ? 'text-bg-success' : 'text-bg-secondary') + '">' + status + '</span></td>' +
+          '<td>' + escapeHtml(joined) + '</td></tr>';
+      }).join('') || '<tr><td colspan="5" class="text-center py-5 text-secondary">No customer accounts found.</td></tr>';
+      renderPagination(customerPagination, result.meta && result.meta.current_page, result.meta && result.meta.last_page, 'customers');
+    }
+
+    function openEditProduct(product) {
+      if (!editForm || !editModalNode) return;
+      editProductId = String(product.id || product._id || '');
+      const set = (name, value) => {
+        const field = editForm.elements[name];
+        if (field) field.value = textValue(value);
+      };
+
+      set('id', editProductId);
+      set('name', product.name);
+      set('product_type', product.product_type || 'agriculture');
+      set('price', (Number(product.price_minor) / 100).toFixed(2));
+      set('compare_at_price', product.compare_at_price_minor ? (Number(product.compare_at_price_minor) / 100).toFixed(2) : '');
+      set('stock', Number(product.stock) || 0);
+      set('brand', product.brand);
+      set('short_description', product.short_description);
+      set('description', product.description);
+      set('status', product.status || 'draft');
+      set('video_title', product.video && product.video.title);
+      set('video_layout', product.video && product.video.layout || 'auto');
+      set('video_youtube_url', product.video && product.video.type === 'youtube' ? product.video.url : '');
+
+      editForm.elements.is_featured.checked = Boolean(product.is_featured);
+      editForm.elements.remove_video.checked = false;
+      editForm.elements.video.value = '';
+      editForm.elements['images[]'].value = '';
+      if (editVideoUrl) editVideoUrl.value = product.video && product.video.type === 'youtube' ? product.video.url : '';
+
+      loadCategories(editCategorySelect, product.product_type || 'agriculture', product.category_id)
+        .then(() => bootstrap.Modal.getOrCreateInstance(editModalNode).show())
+        .catch((error) => notify(error.message, false));
+    }
+
+    typeSelect.addEventListener('change', () => {
+      loadCategories(categorySelect, typeSelect.value).catch((error) => notify(error.message, false));
+    });
+
     imagesInput.addEventListener('change', () => {
-      preview.innerHTML = '';
+      preview.replaceChildren();
       Array.from(imagesInput.files || []).slice(0, 8).forEach((file) => {
         const img = document.createElement('img');
-        img.alt = 'Selected product preview'; img.src = URL.createObjectURL(file); preview.appendChild(img);
+        img.alt = translate('Selected product preview');
+        img.src = URL.createObjectURL(file);
+        img.addEventListener('load', () => URL.revokeObjectURL(img.src), { once: true });
+        preview.appendChild(img);
       });
     });
+
     root.addEventListener('click', async (event) => {
-      const button = event.target.closest('[data-archive-product]');
-      if (!button || !await askConfirm(window.storefrontTranslate ? window.storefrontTranslate('Archive this product? It will no longer appear in the public shop.') : 'Archive this product? It will no longer appear in the public shop.')) return;
+      const editButton = event.target.closest('[data-edit-product]');
+      if (editButton) {
+        const product = productRecords.get(editButton.dataset.editProduct);
+        if (product) openEditProduct(product);
+        return;
+      }
+
+      const archiveButton = event.target.closest('[data-archive-product]');
+      if (!archiveButton || !await askConfirm(translate('Archive this product? It will no longer appear in the public shop.'))) return;
       try {
-        await apiRequest('/seller/products/' + encodeURIComponent(button.dataset.archiveProduct), {method:'DELETE', body:'{}'});
-        notify('Product archived.', true); await loadSellerData();
-      } catch (error) { notify(error.message); }
+        await apiRequest('/seller/products/' + encodeURIComponent(archiveButton.dataset.archiveProduct), { method: 'DELETE', body: '{}' });
+        notify('Product archived.', true);
+        await Promise.all([loadDashboard(), loadProducts(currentProductPage)]);
+      } catch (error) {
+        notify(error.message, false);
+      }
     });
+
+    if (productPagination) {
+      productPagination.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-admin-page="products"]');
+        if (button) loadProducts(button.dataset.page).catch((error) => notify(error.message, false));
+      });
+    }
+    if (customerPagination) {
+      customerPagination.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-admin-page="customers"]');
+        if (button) loadCustomers(button.dataset.page).catch((error) => notify(error.message, false));
+      });
+    }
+    if (customerSearch) {
+      customerSearch.addEventListener('input', () => {
+        window.clearTimeout(searchTimer);
+        searchTimer = window.setTimeout(() => {
+          customerQuery = customerSearch.value.trim();
+          loadCustomers(1).catch((error) => notify(error.message, false));
+        }, 300);
+      });
+    }
+
+    editTypeSelect?.addEventListener('change', () => {
+      loadCategories(editCategorySelect, editTypeSelect.value).catch((error) => notify(error.message, false));
+    });
+
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       const button = form.querySelector('button[type="submit"]');
-      const price = Math.round(Number(form.elements.price.value) * 100);
-      const oldPrice = form.elements.compare_at_price.value ? Math.round(Number(form.elements.compare_at_price.value) * 100) : '';
       const files = Array.from(imagesInput.files || []);
-      if (files.length < 1 || files.length > 8) { setFormMessage(form, 'Choose between 1 and 8 images.'); return; }
+      const videoFile = form.elements.video.files && form.elements.video.files[0];
+      const youtubeUrl = form.elements.video_youtube_url.value.trim();
+      if (files.length < 1 || files.length > 8) {
+        setFormMessage(form, 'Choose between 1 and 8 images.');
+        return;
+      }
+      if (videoFile && youtubeUrl) {
+        setFormMessage(form, 'Choose either a YouTube URL or an uploaded video, not both.');
+        return;
+      }
+
       const payload = new FormData();
-      ['name','category_id','product_type','brand','short_description','description'].forEach((key) => payload.append(key, form.elements[key].value));
-      payload.append('price_minor', String(price));
-      if (oldPrice !== '') payload.append('compare_at_price_minor', String(oldPrice));
+      ['name', 'category_id', 'product_type', 'brand', 'short_description', 'description'].forEach((key) => payload.append(key, form.elements[key].value));
+      payload.append('price_minor', String(Math.round(Number(form.elements.price.value) * 100)));
+      if (form.elements.compare_at_price.value) payload.append('compare_at_price_minor', String(Math.round(Number(form.elements.compare_at_price.value) * 100)));
       payload.append('stock', String(Math.max(0, Number(form.elements.stock.value) || 0)));
       payload.append('track_inventory', '1');
       payload.append('is_featured', form.elements.is_featured.checked ? '1' : '0');
       payload.append('status', 'published');
       files.forEach((file, index) => payload.append('images[' + index + ']', file));
-      const video = form.elements.video.files && form.elements.video.files[0];
-      const youtubeUrl = form.elements.video_youtube_url.value.trim();
-      if (video && youtubeUrl) {
-        setFormMessage(form, 'Choose either a YouTube URL or an uploaded video, not both.');
-        return;
-      }
-      if (video) payload.append('video', video);
+      if (videoFile) payload.append('video', videoFile);
       if (youtubeUrl) payload.append('video_youtube_url', youtubeUrl);
       payload.append('video_layout', form.elements.video_layout.value || 'auto');
-      if (form.elements.video_title.value.trim()) {
-        payload.append('video_title', form.elements.video_title.value.trim());
-      }
-      button.disabled = true; setFormMessage(form, '');
+      if (form.elements.video_title.value.trim()) payload.append('video_title', form.elements.video_title.value.trim());
+
+      button.disabled = true;
       try {
-        await apiRequest('/seller/products', {method:'POST', body:payload});
-        form.reset(); preview.innerHTML = '';
-        await loadCategories(); await loadSellerData();
+        await apiRequest('/seller/products', { method: 'POST', body: payload });
+        form.reset();
+        preview.replaceChildren();
+        await Promise.all([loadCategories(categorySelect, typeSelect.value), loadDashboard(), loadProducts(1)]);
         bootstrap.Collapse.getOrCreateInstance(document.getElementById('productEditor')).hide();
         notify('Product published successfully.', true);
-      } catch (error) { setFormMessage(form, error.message); }
-      finally { button.disabled = false; }
+      } catch (error) {
+        setFormMessage(form, error.message);
+      } finally {
+        button.disabled = false;
+      }
     });
-    Promise.all([loadCategories(), loadSellerData()]).catch((error) => {
-      root.innerHTML = '<tr><td colspan="6" class="text-center text-danger py-5">' +
-        escapeHtml(error.message) + '</td></tr>';
-      notify('Could not load seller data. Please sign in again.');
+
+    editForm?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const button = editForm.querySelector('button[type="submit"]');
+      const imageFiles = Array.from(editForm.elements['images[]'].files || []);
+      const videoFile = editForm.elements.video.files && editForm.elements.video.files[0];
+      const youtubeUrl = editForm.elements.video_youtube_url.value.trim();
+
+      if (imageFiles.length > 8) {
+        notify('Choose between 1 and 8 images.', false);
+        return;
+      }
+      if (videoFile && youtubeUrl) {
+        notify('Choose either a YouTube URL or an uploaded video, not both.', false);
+        return;
+      }
+
+      const payload = new FormData();
+      payload.append('_method', 'PUT');
+      ['name', 'category_id', 'product_type', 'brand', 'short_description', 'description', 'status'].forEach((key) => payload.append(key, editForm.elements[key].value));
+      payload.append('price_minor', String(Math.round(Number(editForm.elements.price.value) * 100)));
+      payload.append('compare_at_price_minor', editForm.elements.compare_at_price.value
+        ? String(Math.round(Number(editForm.elements.compare_at_price.value) * 100)) : '');
+      payload.append('stock', String(Math.max(0, Number(editForm.elements.stock.value) || 0)));
+      payload.append('track_inventory', '1');
+      payload.append('is_featured', editForm.elements.is_featured.checked ? '1' : '0');
+      imageFiles.forEach((file, index) => payload.append('images[' + index + ']', file));
+      if (videoFile) payload.append('video', videoFile);
+      if (youtubeUrl) payload.append('video_youtube_url', youtubeUrl);
+      payload.append('video_layout', editForm.elements.video_layout.value || 'auto');
+      if (editForm.elements.video_title.value.trim()) payload.append('video_title', editForm.elements.video_title.value.trim());
+      payload.append('remove_video', editForm.elements.remove_video.checked ? '1' : '0');
+
+      button.disabled = true;
+      try {
+        await apiRequest('/seller/products/' + encodeURIComponent(editProductId), { method: 'POST', body: payload });
+        bootstrap.Modal.getOrCreateInstance(editModalNode).hide();
+        notify('Product updated successfully.', true);
+        await Promise.all([loadDashboard(), loadProducts(currentProductPage)]);
+      } catch (error) {
+        const node = editForm.querySelector('[data-edit-form-message]');
+        if (node) node.textContent = error.message;
+        notify(error.message, false);
+      } finally {
+        button.disabled = false;
+      }
     });
+
+    Promise.all([
+      loadCategories(categorySelect, typeSelect.value),
+      loadDashboard(),
+      loadProducts(1),
+      loadCustomers(1)
+    ]).catch((error) => notify(error.message, false));
   }
 
   function initProductShare() {
