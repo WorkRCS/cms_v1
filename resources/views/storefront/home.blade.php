@@ -98,7 +98,7 @@
     <div class="container">
         <div class="section-heading">
             <div><span class="eyebrow">BEHIND THE GOODS</span><h2>Watch it from the <em>source.</em></h2></div>
-            <span class="text-link">Product videos & stories</span>
+            <a class="text-link" href="{{ route('shop') }}">Explore products <svg class="icon"><use href="#i-arrow"/></svg></a>
         </div>
         @if ($videoProducts->isNotEmpty())
             <div class="row g-4 align-items-start">
