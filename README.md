@@ -191,7 +191,7 @@ The admin dashboard currently covers product management and customer account inf
 For multiple production application instances, use a managed Redis service for shared cache, sessions and rate-limit state. The repository includes optional Redis configuration; local defaults remain file cache/session and synchronous jobs. Production environment settings (after installing/enabling the PHP Redis extension and provisioning Redis) can include:
 
     CACHE_STORE=redis
-    CACHE_LIMITER=default
+    CACHE_LIMITER=redis
     SESSION_DRIVER=redis
     SESSION_CONNECTION=default
     QUEUE_CONNECTION=redis
