@@ -69,6 +69,10 @@ class EnsureStoreIndexes extends Command
                 ['name' => 'products_status_created'],
             );
             $products->createIndex(
+                ['status' => 1, 'is_featured' => 1, 'created_at' => -1],
+                ['name' => 'products_featured_latest'],
+            );
+            $products->createIndex(
                 ['status' => 1, 'video.url' => 1, 'updated_at' => -1],
                 ['name' => 'products_published_videos'],
             );
