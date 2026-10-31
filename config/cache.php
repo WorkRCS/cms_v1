@@ -17,6 +17,6 @@ return [
             'lock_connection' => env('REDIS_CACHE_LOCK_CONNECTION', 'default'),
         ],
     ],
-    'limiter' => env('CACHE_LIMITER', 'default'),
+    'limiter' => env('CACHE_LIMITER', 'file'),
     'prefix' => env('CACHE_PREFIX', Str::slug((string) env('APP_NAME', 'storefront')).'-cache-'),
 ];
