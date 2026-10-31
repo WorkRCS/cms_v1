@@ -32,7 +32,7 @@ Route::view('/admin', 'seller.dashboard')->middleware(['auth', 'seller'])->name(
 
 Route::prefix('api/v1')->group(function (): void {
     Route::get('/health', [HealthController::class, 'show']);
-    Route::get('/csrf-token', fn () => response()->json(['token' => csrf_token()]));
+    Route::get('/csrf-token', fn () => response()->json(['token' => csrf_token()]))->middleware('throttle:120,1');
 
     Route::get('/categories', [CategoryController::class, 'index'])->middleware('throttle:120,1');
     Route::get('/products', [ProductController::class, 'index'])->middleware('throttle:120,1');
@@ -41,7 +41,7 @@ Route::prefix('api/v1')->group(function (): void {
     Route::post('/auth/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
     Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 
-    Route::middleware('auth')->group(function (): void {
+    Route::middleware(['auth', 'throttle:120,1'])->group(function (): void {
         Route::get('/auth/me', [AuthController::class, 'me']);
         Route::patch('/auth/profile', [AuthController::class, 'updateProfile']);
         Route::post('/auth/logout', [AuthController::class, 'logout']);
