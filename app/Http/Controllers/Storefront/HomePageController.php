@@ -47,7 +47,7 @@ class HomePageController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->limit(8)
                 ->get()
-                ->map(fn (Product $product): array => $product->toArray())
+                ->map(fn (Product $product): array => $this->cacheableProduct($product))
                 ->all()
         );
         $latestProducts = collect($latestRows)->map(fn (array $row) => (object) $row);
