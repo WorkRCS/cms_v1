@@ -33,6 +33,10 @@ class DemoProductVideoSeeder extends Seeder
             ['role' => 1, 'is_active' => 1, 'created_at' => -1],
             ['name' => 'users_by_role_status_created'],
         );
+        $database->selectCollection('users')->createIndex(
+            ['role' => 1, 'created_at' => -1],
+            ['name' => 'users_customers_created'],
+        );
 
         $videos = [
             'farm-fresh-vegetable-box' => [
