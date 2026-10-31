@@ -47,6 +47,53 @@ class ProductImageService
         return $results;
     }
 
+    /**
+     * Delete only files whose URLs belong to the configured public disk.
+     * External/demo image URLs are deliberately ignored.
+     *
+     * @param array<int, array<string, mixed>> $images
+     */
+    public function delete(array $images): void
+    {
+        $disk = Storage::disk('public');
+        $basePath = parse_url($disk->url(''), PHP_URL_PATH);
+
+        if (! is_string($basePath)) {
+            return;
+        }
+
+        $prefix = rtrim($basePath, '/').'/';
+        $paths = [];
+
+        foreach ($images as $image) {
+            $urls = array_values((array) data_get($image, 'variants', []));
+            if (filled(data_get($image, 'url'))) {
+                $urls[] = data_get($image, 'url');
+            }
+
+            foreach ($urls as $url) {
+                if (! is_string($url) || $url === '') {
+                    continue;
+                }
+
+                $urlPath = parse_url($url, PHP_URL_PATH);
+                if (! is_string($urlPath) || ! str_starts_with($urlPath, $prefix)) {
+                    continue;
+                }
+
+                $relativePath = ltrim(substr($urlPath, strlen($prefix)), '/');
+                if ($relativePath !== '' && ! str_contains($relativePath, '..')) {
+                    $paths[] = $relativePath;
+                }
+            }
+        }
+
+        $paths = array_values(array_unique($paths));
+        if ($paths !== []) {
+            $disk->delete($paths);
+        }
+    }
+
     private function storeOne(UploadedFile $file, string $productName, int $index): array
     {
         $realPath = $file->getRealPath();
