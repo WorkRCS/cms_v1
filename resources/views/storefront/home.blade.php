@@ -1,6 +1,7 @@
 @extends('layouts.storefront')
 @section('title', 'Good things, from good places')
 @section('meta_description', 'Discover fresh farm produce, garden essentials and thoughtful everyday goods at Field & Found.')
+@section('og_image', 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200&q=85')
 @section('content')
 <section class="hero-section">
     <div class="container">
