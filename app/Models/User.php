@@ -14,12 +14,13 @@ class User extends Authenticatable
     protected $connection = 'mongodb';
     protected $table = 'users';
 
-    protected $fillable = ['name', 'email', 'password', 'phone', 'role', 'is_active'];
+    protected $fillable = ['name', 'email', 'password', 'phone', 'address', 'role', 'is_active'];
 
     protected $hidden = ['password', 'remember_token'];
 
     protected $casts = [
         'email_verified_at' => 'datetime',
         'is_active' => 'boolean',
+        'address' => 'array',
     ];
 }
