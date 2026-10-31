@@ -686,19 +686,21 @@
     async function loadCustomers(page) {
       currentCustomerPage = Math.max(1, Number(page) || 1);
       if (!customersRoot) return;
-      customersRoot.innerHTML = '<tr><td colspan="5" class="text-center py-5 text-secondary">Loading customers…</td></tr>';
+      customersRoot.innerHTML = '<tr><td colspan="6" class="text-center py-5 text-secondary">Loading customers…</td></tr>';
       const params = new URLSearchParams({ page: String(currentCustomerPage), per_page: '25' });
       if (customerQuery) params.set('q', customerQuery);
       const result = await apiRequest('/seller/customers?' + params.toString());
       customersRoot.innerHTML = (result.data || []).map((customer) => {
         const joined = customer.created_at ? new Date(customer.created_at).toLocaleDateString('en-IN') : '—';
         const status = customer.is_active ? 'Active' : 'Disabled';
+        const address = Object.values(customer.address || {}).filter((part) => typeof part === 'string' && part.trim()).join(', ');
         return '<tr><td><strong>' + escapeHtml(customer.name || '—') + '</strong></td>' +
           '<td>' + escapeHtml(customer.email || '—') + '</td>' +
           '<td>' + escapeHtml(customer.phone || '—') + '</td>' +
+          '<td class="admin-customer-address">' + escapeHtml(address || '—') + '</td>' +
           '<td><span class="badge ' + (customer.is_active ? 'text-bg-success' : 'text-bg-secondary') + '">' + status + '</span></td>' +
           '<td>' + escapeHtml(joined) + '</td></tr>';
-      }).join('') || '<tr><td colspan="5" class="text-center py-5 text-secondary">No customer accounts found.</td></tr>';
+      }).join('') || '<tr><td colspan="6" class="text-center py-5 text-secondary">No customer accounts found.</td></tr>';
       renderPagination(customerPagination, result.meta && result.meta.current_page, result.meta && result.meta.last_page, 'customers');
     }
 
