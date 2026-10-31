@@ -255,7 +255,7 @@
 
       const imageButtons = images.map((image, index) =>
         '<button class="product-thumb ' + (index === 0 ? 'active' : '') + '" type="button" data-image-index="' + index +
-        '" aria-label="View product image ' + (index + 1) + '"><img src="' +
+        '" aria-label="View product image ' + (index + 1) + '" aria-pressed="' + (index === 0 ? 'true' : 'false') + '"><img src="' +
         escapeHtml((image.variants && image.variants.thumbnail) || (image.variants && image.variants.medium) || image.url || imageFor(product)) +
         '" alt="' + escapeHtml(image.alt || ((product.name || 'Product') + ' image ' + (index + 1))) +
         '" loading="lazy" decoding="async" width="82" height="82"></button>'
@@ -308,7 +308,11 @@
           player.setAttribute('aria-label', video.title || ((product.name || 'Product') + ' video'));
           videoStage.appendChild(player);
         }
-        thumbnails.querySelectorAll('.product-thumb').forEach((node) => node.classList.toggle('active', node.hasAttribute('data-video-select')));
+        thumbnails.querySelectorAll('.product-thumb').forEach((node) => {
+          const selected = node.hasAttribute('data-video-select');
+          node.classList.toggle('active', selected);
+          node.setAttribute('aria-pressed', selected ? 'true' : 'false');
+        });
       };
 
       thumbnails.addEventListener('click', (event) => {
@@ -324,7 +328,11 @@
         stopAndHideVideo();
         main.src = (selected.variants && selected.variants.large) || (selected.variants && selected.variants.medium) || selected.url || imageFor(product);
         main.alt = selected.alt || product.name || 'Product image';
-        thumbnails.querySelectorAll('.product-thumb').forEach((node) => node.classList.toggle('active', node === button));
+        thumbnails.querySelectorAll('.product-thumb').forEach((node) => {
+          const selected = node === button;
+          node.classList.toggle('active', selected);
+          node.setAttribute('aria-pressed', selected ? 'true' : 'false');
+        });
       });
       document.querySelector('[data-product-attributes]').innerHTML = Object.entries(product.attributes || {}).map(([key, value]) =>
         '<div class="attribute-chip"><small>' + escapeHtml(key.replace(/[_-]/g, ' ')) +
