@@ -1610,6 +1610,20 @@ html[data-language-pending="true"] body {
 .home-video-rail-track.is-finished {
     will-change: auto;
 }
+.home-video-rail.is-finished {
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+}
+.home-video-rail.is-finished .home-video-card {
+    scroll-snap-align: start;
+}
+.home-video-rail-track.is-finished {
+    animation: none !important;
+    transform: none !important;
+}
 @keyframes homeVideoSlideLeft {
     from { transform: translate3d(0, 0, 0); }
     to { transform: translate3d(calc(-1 * var(--rail-travel, 0px)), 0, 0); }
