@@ -1,5 +1,6 @@
 @extends('layouts.storefront')
-@section('title', 'Shop all products')
+@section('title', 'Shop farm produce & everyday essentials')
+@section('meta_description', 'Explore farm produce, seeds, garden supplies and useful everyday goods from Field & Found.')
 @section('content')
 <section class="page-hero"><div class="container"><span class="eyebrow">THE COLLECTION</span><h1>Find your <em>something.</em></h1><p>Good things for the garden, the home and everything in between.</p></div></section>
 <section class="section-space pt-4"><div class="container">
