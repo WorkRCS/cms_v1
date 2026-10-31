@@ -41,7 +41,7 @@ class HomePageController extends Controller
         );
         $featuredProducts = collect($featuredRows)->map(fn (array $row) => (object) $row);
 
-        $latestRows = Cache::remember('storefront.home.latest.v2', now()->addMinutes(2), fn () =>
+        $latestRows = Cache::remember('storefront.home.latest.v3', now()->addMinutes(2), fn () =>
             Product::query()
                 ->where('status', 'published')
                 ->orderBy('created_at', 'desc')
