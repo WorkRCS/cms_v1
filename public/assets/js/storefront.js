@@ -4,6 +4,18 @@
   const CART_KEY = 'field-found-cart';
   let csrfToken = null;
 
+  // A default Trusted Types policy sanitizes every dynamic HTML sink used by
+  // the storefront templates before the browser parses it.
+  if (window.trustedTypes && window.DOMPurify) {
+    try {
+      window.trustedTypes.createPolicy('default', {
+        createHTML: (input) => window.DOMPurify.sanitize(input, { RETURN_TRUSTED_TYPE: false })
+      });
+    } catch (_) {
+      // The policy can already exist when another page module initialized it.
+    }
+  }
+
   const escapeHtml = (value) => String(value == null ? '' : value).replace(/[&<>"']/g, (char) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   })[char]);
@@ -16,12 +28,26 @@
     return (image && image.variants && image.variants.medium) || (image && image.url) ||
       'https://placehold.co/640x720/f0f0e9/6c7868?text=Product';
   };
-  const notify = (message) => {
-    const node = document.getElementById('appToast');
-    const text = document.getElementById('appToastMessage');
-    if (node && text && window.bootstrap) {
-      text.textContent = message;
-      bootstrap.Toast.getOrCreateInstance(node, { delay: 2600 }).show();
+  const notify = (message, success) => {
+    const modalNode = document.getElementById('feedbackModal');
+    const messageNode = document.getElementById('feedbackModalMessage');
+    const titleNode = document.getElementById('feedbackModalTitle');
+    const iconNode = document.getElementById('feedbackModalIcon');
+    if (modalNode && messageNode && titleNode && window.bootstrap) {
+      messageNode.textContent = String(message || '');
+      titleNode.textContent = success ? 'Done' : 'Please note';
+      if (iconNode) {
+        iconNode.classList.toggle('is-success', Boolean(success));
+        iconNode.classList.toggle('is-error', !success);
+      }
+      bootstrap.Modal.getOrCreateInstance(modalNode, { backdrop: true, keyboard: true }).show();
+      return;
+    }
+    const fallback = document.getElementById('appToastMessage');
+    const toast = document.getElementById('appToast');
+    if (toast && fallback && window.bootstrap) {
+      fallback.textContent = String(message || '');
+      bootstrap.Toast.getOrCreateInstance(toast, { delay: 3000 }).show();
     }
   };
   async function getCsrfToken() {
@@ -397,9 +423,11 @@
   }
   function setFormMessage(form, message, success) {
     const node = form.querySelector('[data-form-message]');
-    if (!node) return;
-    node.textContent = message;
-    node.classList.toggle('success', Boolean(success));
+    if (node) {
+      node.textContent = '';
+      node.classList.remove('success');
+    }
+    if (message) notify(message, success);
   }
   function initAuthForms() {
     const login = document.getElementById('loginForm');
@@ -516,7 +544,6 @@
           const updatedUser = result.user || {};
           name.textContent = updatedUser.name || 'Customer';
           setFormMessage(profileForm, result.message || 'Profile and address saved successfully.', true);
-          notify('Profile details saved.');
         } catch (error) {
           setFormMessage(profileForm, error.message);
         } finally {
@@ -580,7 +607,7 @@
     });
     root.addEventListener('click', async (event) => {
       const button = event.target.closest('[data-archive-product]');
-      if (!button || !window.confirm(window.storefrontTranslate ? window.storefrontTranslate('Archive this product? It will no longer appear in the public shop.') : 'Archive this product? It will no longer appear in the public shop.')) return;
+      if (!button || !await askConfirm('Archive this product? It will no longer appear in the public shop.')) return;
       try {
         await apiRequest('/seller/products/' + encodeURIComponent(button.dataset.archiveProduct), {method:'DELETE', body:'{}'});
         notify('Product archived.'); await loadSellerData();
@@ -628,6 +655,51 @@
       root.innerHTML = '<tr><td colspan="6" class="text-center text-danger py-5">' +
         escapeHtml(error.message) + '</td></tr>';
       notify('Could not load seller data. Please sign in again.');
+    });
+  }
+
+  function initProductShare() {
+    const button = document.querySelector('[data-product-share]');
+    if (!button) return;
+
+    button.addEventListener('click', async () => {
+      const titleNode = document.querySelector('[data-product-name]');
+      const title = titleNode ? titleNode.textContent.trim() : document.title;
+      const shareData = { title, text: title, url: window.location.href };
+
+      try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+          return;
+        }
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(window.location.href);
+        } else {
+          const field = document.createElement('textarea');
+          field.value = window.location.href;
+          field.setAttribute('readonly', '');
+          field.style.position = 'fixed';
+          field.style.opacity = '0';
+          document.body.appendChild(field);
+          field.select();
+          const copied = document.execCommand('copy');
+          field.remove();
+          if (!copied) throw new Error('Copy failed');
+        }
+        notify('Product link copied.');
+      } catch (error) {
+        if (error && error.name !== 'AbortError') notify('The product link could not be shared. Copy the page address instead.');
+      }
+    });
+  }
+
+  function initNewsletter() {
+    document.querySelectorAll('[data-newsletter-form]').forEach((form) => {
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        notify('Thanks for your interest! Newsletter signup will be connected soon.', true);
+        form.reset();
+      });
     });
   }
 
@@ -770,5 +842,7 @@
     initSeller();
     initHomeVideoRails();
     initHomeVideoPlayers();
+    initProductShare();
+    initNewsletter();
   });
 })();
