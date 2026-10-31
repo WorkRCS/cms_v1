@@ -859,7 +859,7 @@
         form.reset();
         preview.replaceChildren();
         await Promise.all([loadCategories(categorySelect, typeSelect.value), loadDashboard(), loadProducts(1)]);
-        bootstrap.Collapse.getOrCreateInstance(document.getElementById('productEditor')).hide();
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('productEditor')).hide();
         notify('Product published successfully.', true);
       } catch (error) {
         setFormMessage(form, error.message);
