@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <script>
+    <script nonce="{{ request()->attributes->get('csp_nonce') }}">
         try {
             const savedStorefrontLanguage = localStorage.getItem('field-found-language');
             if (['en', 'bn', 'hi'].includes(savedStorefrontLanguage)) {
@@ -62,7 +62,7 @@
     <link rel="dns-prefetch" href="//images.unsplash.com">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link href="{{ asset('assets/css/storefront.css') }}?v=storefront-language-v2-20261031" rel="stylesheet">
-    <script type="application/ld+json">{!! json_encode($siteGraph, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}</script>
+    <script type="application/ld+json" nonce="{{ request()->attributes->get('csp_nonce') }}">{!! json_encode($siteGraph, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}</script>
     @stack('structured_data')
     @stack('head')
 </head>
@@ -77,6 +77,7 @@
     <symbol id="i-truck" viewBox="0 0 24 24"><path d="M3 6h11v11H3zM14 10h4l3 3v4h-7z"/><circle cx="7.5" cy="18" r="2"/><circle cx="17.5" cy="18" r="2"/></symbol>
     <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></symbol>
     <symbol id="i-play" viewBox="0 0 24 24"><path d="m9 6 10 6-10 6z"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.7 6.6-4.4M8.7 13.3l6.6 4.4"/></symbol>
     <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
     <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
@@ -164,22 +165,30 @@
             </div>
             <div class="col-lg-3">
                 <h6>Good things, occasionally.</h6><p class="footer-copy">Join our list for product news and seasonal updates.</p>
-                <form class="newsletter-form d-flex" onsubmit="event.preventDefault(); alert(window.storefrontTranslate ? window.storefrontTranslate('Thanks for your interest! Newsletter signup will be connected soon.') : 'Thanks for your interest! Newsletter signup will be connected soon.');"><input type="email" class="form-control" placeholder="Your email address" aria-label="Your email address" required><button class="btn btn-light" type="submit" aria-label="Subscribe"><svg class="icon"><use href="#i-arrow"/></svg></button></form>
+                <form class="newsletter-form d-flex" data-newsletter-form><input type="email" class="form-control" placeholder="Your email address" aria-label="Your email address" required><button class="btn btn-light" type="submit" aria-label="Subscribe"><svg class="icon"><use href="#i-arrow"/></svg></button></form>
             </div>
         </div>
         <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between gap-2"><span>© {{ date('Y') }} Field & Found. Demo storefront.</span><span>Made for better everyday shopping.</span></div>
     </div>
 </footer>
 
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div id="appToast" class="toast align-items-center text-bg-dark border-0" role="status" aria-live="polite" aria-atomic="true">
-        <div class="d-flex"><div class="toast-body" id="appToastMessage">Done</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>
+<div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content feedback-modal-content">
+            <div class="modal-body text-center p-4">
+                <div class="feedback-modal-icon" id="feedbackModalIcon" aria-hidden="true"><svg class="icon"><use href="#i-check"/></svg></div>
+                <h2 class="h5 mt-3" id="feedbackModalTitle">Done</h2>
+                <p class="feedback-modal-message mb-4" id="feedbackModalMessage" role="status" aria-live="polite"></p>
+                <button type="button" class="btn btn-dark rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous" defer></script>
-<script src="{{ asset('assets/js/storefront.js') }}?v=storefront-language-v6-20261031" defer></script>
-<script src="{{ asset('assets/js/storefront-i18n.js') }}?v=storefront-language-v11-20261031" defer></script>
+<script src="{{ asset('assets/js/vendor/purify.min.js') }}" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
+<script src="{{ asset('assets/js/storefront.js') }}?v=storefront-admin-video-v1-20261031" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
+<script src="{{ asset('assets/js/storefront-i18n.js') }}?v=storefront-language-v12-20261031" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
 @stack('scripts')
 </body>
 </html>
