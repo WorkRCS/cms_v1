@@ -200,7 +200,7 @@
 
 <script src="{{ asset('assets/js/vendor/purify.min.js') }}" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
 <script src="{{ asset('assets/vendor/bootstrap/bootstrap.bundle.min.js') }}?v=5.3.8" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
-<script src="{{ asset('assets/js/storefront.js') }}?v=storefront-admin-video-v11-20261031" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
+<script src="{{ asset('assets/js/storefront.js') }}?v=storefront-admin-video-v12-20261031" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
 <script src="{{ asset('assets/js/storefront-i18n.js') }}?v=storefront-language-v18-20261031" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
 @stack('scripts')
 </body>
