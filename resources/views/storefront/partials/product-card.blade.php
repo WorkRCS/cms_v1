@@ -28,7 +28,7 @@
                 decoding="async"
             >
             <span class="product-tag">{{ $cardType }}</span>
-            @if (($product->video['type'] ?? null) === 'youtube')
+            @if (! empty(data_get($product->video, 'url')))
                 <span class="product-video-badge"><svg class="icon"><use href="#i-play"/></svg> Watch video</span>
             @endif
         </a>
