@@ -92,7 +92,7 @@
         <ol class="breadcrumb small">
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
             <li class="breadcrumb-item"><a href="{{ route('shop') }}">Shop</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ $product->name }}</li>
+            <li class="breadcrumb-item active" aria-current="page"><span data-i18n-ignore>{{ $product->name }}</span></li>
         </ol>
     </nav>
     <div class="row g-5">
@@ -141,7 +141,7 @@
                 <span class="eyebrow" data-product-type>{{ $product->product_type === 'agriculture' ? 'FARM & GARDEN' : 'EVERYDAY GOODS' }}</span>
                 <h1 data-product-name>{{ $product->name }}</h1>
                 @if ($product->brand)
-                    <p class="small text-secondary mb-2">{{ $product->brand }}</p>
+                    <p class="small text-secondary mb-2" data-i18n-ignore>{{ $product->brand }}</p>
                 @endif
                 <div class="product-price-line">
                     <strong data-product-price>₹{{ number_format(((int) $product->price_minor) / 100, 2) }}</strong>
