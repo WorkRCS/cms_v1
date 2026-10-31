@@ -183,3 +183,19 @@ Then browse the homepage, filter agriculture/general products, open a product an
 - Keep .env, backups, logs and original/private uploads outside the public web root.
 - Serve the Laravel public/ directory as the web root.
 - Configure backups, monitoring, production object storage, payment and order workflows before accepting real customer orders.
+
+## SEO, performance, legal pages and sessions
+
+The storefront now includes server-rendered product details and catalogue cards, generated product metadata and Product/Offer + BreadcrumbList JSON-LD, canonical URLs, crawler directives, a dynamic product/category image sitemap and cache invalidation when products change. The homepage and shop render their initial catalogue content in HTML instead of waiting for client-side API calls.
+
+Public policy routes:
+
+- /terms
+- /privacy-policy
+- /data-privacy
+
+These are starter policy notices. Before public launch, set real seller, support, address and grievance details using the STORE_* settings described in docs/SEO-PERFORMANCE-LEGAL-SESSIONS.md, then obtain a review against the laws that apply to the business. The current checkout is still a preview, not a working order/payment flow.
+
+The login session lifetime is fixed at seven days (10,080 minutes); closing the browser does not intentionally end it. Logout invalidates the session immediately. Production must use HTTPS and SESSION_SECURE_COOKIE=true.
+
+Read the full deployment, SEO/Search Console, Lighthouse and legal launch checklist in [docs/SEO-PERFORMANCE-LEGAL-SESSIONS.md](docs/SEO-PERFORMANCE-LEGAL-SESSIONS.md). Lighthouse scores and search rankings are not guaranteed and must be tested on the deployed public domain.
