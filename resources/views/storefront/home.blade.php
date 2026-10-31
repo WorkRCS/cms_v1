@@ -105,22 +105,33 @@
                 @foreach ($videoProducts as $videoProduct)
                     @php
                         $homeVideo = is_array($videoProduct->video) ? $videoProduct->video : [];
-                        $homeVideoShort = ($homeVideo['layout'] ?? 'standard') === 'shorts';
+                        $homeVideoYoutube = ($homeVideo['type'] ?? null) === 'youtube';
+                        $homeVideoShort = $homeVideoYoutube && ($homeVideo['layout'] ?? 'standard') === 'shorts';
                     @endphp
                     <div class="col-md-6 col-xl-4">
                         <article class="video-story-card">
                             <div class="video-story-player{{ $homeVideoShort ? ' video-story-player--shorts' : ' video-story-player--standard' }}">
-                                <iframe
-                                    src="{{ $homeVideo['embed_url'] }}"
-                                    title="{{ $homeVideo['title'] ?: ($videoProduct->name.' product video') }}"
-                                    loading="lazy"
-                                    referrerpolicy="strict-origin-when-cross-origin"
-                                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    allowfullscreen
-                                ></iframe>
+                                @if ($homeVideoYoutube)
+                                    <iframe
+                                        src="{{ $homeVideo['embed_url'] }}"
+                                        title="{{ $homeVideo['title'] ?: ($videoProduct->name.' product video') }}"
+                                        loading="lazy"
+                                        referrerpolicy="strict-origin-when-cross-origin"
+                                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        allowfullscreen
+                                    ></iframe>
+                                @else
+                                    <video
+                                        src="{{ $homeVideo['url'] }}"
+                                        title="{{ $homeVideo['title'] ?: ($videoProduct->name.' product video') }}"
+                                        controls
+                                        playsinline
+                                        preload="none"
+                                    ></video>
+                                @endif
                             </div>
                             <div class="video-story-copy">
-                                <span class="eyebrow">{{ $homeVideoShort ? 'SHORT VIDEO' : 'PRODUCT STORY' }}</span>
+                                <span class="eyebrow">{{ $homeVideoShort ? 'SHORT VIDEO' : ($homeVideoYoutube ? 'PRODUCT STORY' : 'UPLOADED VIDEO') }}</span>
                                 <h3><a href="{{ route('product.show', ['slug' => $videoProduct->slug]) }}">{{ $videoProduct->name }}</a></h3>
                                 <p>{{ $videoProduct->short_description }}</p>
                                 <a class="text-link" href="{{ route('product.show', ['slug' => $videoProduct->slug]) }}">Explore product <svg class="icon"><use href="#i-arrow"/></svg></a>
