@@ -252,6 +252,7 @@ class DatabaseSeeder extends Seeder
         Cache::forget('storefront.home.videos.v1');
         Cache::forget('storefront.home.videos.v2');
         Cache::forget('storefront.home.videos.v3');
+        Cache::forget('storefront.home.videos.v4');
         Cache::forget('storefront.home.featured.v1');
         Cache::forget('storefront.home.featured.v2');
         Cache::forget('storefront.home.latest.v1');
