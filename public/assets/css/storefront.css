@@ -1439,3 +1439,37 @@ textarea {
   object-fit: contain;
   background: #101512;
 }
+
+
+/* Persistent storefront language selector */
+.language-select {
+    width: 106px;
+    min-height: 36px;
+    flex: 0 0 106px;
+    margin-left: auto;
+    margin-right: 10px;
+    padding: 5px 26px 5px 10px;
+    border-color: var(--line);
+    border-radius: 24px;
+    background-color: var(--paper);
+    color: var(--ink);
+    font-size: 11px;
+    line-height: 1.2;
+}
+.language-select:focus {
+    border-color: #78917e;
+    box-shadow: 0 0 0 .2rem rgba(63,102,76,.1);
+}
+html[lang="bn-IN"] body {
+    font-family: "Noto Sans Bengali", "Nirmala UI", "Vrinda", system-ui, sans-serif;
+}
+html[lang="hi-IN"] body {
+    font-family: "Noto Sans Devanagari", "Nirmala UI", "Mangal", system-ui, sans-serif;
+}
+@media (max-width: 991.98px) {
+    .language-select {
+        width: 94px;
+        flex-basis: 94px;
+        margin-right: 6px;
+    }
+}
