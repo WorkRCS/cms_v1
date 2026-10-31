@@ -33,7 +33,7 @@ class SecurityHeaders
             "script-src 'nonce-{$nonce}' 'strict-dynamic' 'self' https://cdn.jsdelivr.net",
             "script-src-attr 'none'",
             "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
-            "img-src 'self' data: https://images.unsplash.com https://i.ytimg.com",
+            "img-src 'self' data: https://images.unsplash.com https://i.ytimg.com https://placehold.co",
             "font-src 'self' data: https://cdn.jsdelivr.net",
             "connect-src 'self'",
             "frame-src https://www.youtube-nocookie.com",
@@ -47,7 +47,7 @@ class SecurityHeaders
             $directives[] = 'upgrade-insecure-requests';
             $response->headers->set(
                 'Strict-Transport-Security',
-                'max-age=63072000; includeSubDomains; preload',
+                'max-age=63072000',
             );
         }
 
