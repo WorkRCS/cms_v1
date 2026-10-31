@@ -33,7 +33,7 @@ class ProductImageService
             foreach ($files as $index => $file) {
                 $results[] = $this->storeOne($file, $productName, $index);
             }
-        } catch (\\Throwable $exception) {
+        } catch (\Throwable $exception) {
             if ($this->createdPaths !== []) {
                 Storage::disk('public')->delete($this->createdPaths);
             }
