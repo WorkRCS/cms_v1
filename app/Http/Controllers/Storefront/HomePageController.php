@@ -19,7 +19,12 @@ class HomePageController extends Controller
                 ->where('is_active', true)
                 ->orderBy('sort_order')
                 ->get()
-                ->map(fn (Category $category): array => $category->toArray())
+                ->map(fn (Category $category): array => [
+                    'name' => (string) $category->name,
+                    'slug' => (string) $category->slug,
+                    'product_type' => (string) $category->product_type,
+                    'image' => $category->image ? (string) $category->image : null,
+                ])
                 ->all()
         );
         $categories = collect($categoryRows)->map(fn (array $row) => (object) $row);
@@ -31,7 +36,7 @@ class HomePageController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->limit(4)
                 ->get()
-                ->map(fn (Product $product): array => $product->toArray())
+                ->map(fn (Product $product): array => $this->cacheableProduct($product))
                 ->all()
         );
         $featuredProducts = collect($featuredRows)->map(fn (array $row) => (object) $row);
@@ -97,4 +102,45 @@ class HomePageController extends Controller
             'videoProductsRight',
         ));
     }
+    /**
+     * Return only view-required scalar and array values. This avoids storing
+     * MongoDB BSON objects or Eloquent models in Laravel 13's hardened cache.
+     */
+    private function cacheableProduct(Product $product): array
+    {
+        $images = is_array($product->images) ? $product->images : [];
+        $safeImages = [];
+
+        foreach ($images as $image) {
+            $safeImages[] = [
+                'url' => data_get($image, 'url') ? (string) data_get($image, 'url') : null,
+                'alt' => data_get($image, 'alt') ? (string) data_get($image, 'alt') : null,
+                'is_primary' => (bool) data_get($image, 'is_primary', false),
+                'variants' => [
+                    'thumbnail' => data_get($image, 'variants.thumbnail') ? (string) data_get($image, 'variants.thumbnail') : null,
+                    'medium' => data_get($image, 'variants.medium') ? (string) data_get($image, 'variants.medium') : null,
+                    'large' => data_get($image, 'variants.large') ? (string) data_get($image, 'variants.large') : null,
+                ],
+            ];
+        }
+
+        $video = is_array($product->video) ? $product->video : [];
+
+        return [
+            'name' => (string) $product->name,
+            'slug' => (string) $product->slug,
+            'product_type' => (string) $product->product_type,
+            'brand' => $product->brand ? (string) $product->brand : null,
+            'price_minor' => (int) $product->price_minor,
+            'compare_at_price_minor' => $product->compare_at_price_minor !== null
+                ? (int) $product->compare_at_price_minor
+                : null,
+            'images' => $safeImages,
+            'video' => $video !== [] ? [
+                'type' => $video['type'] ?? null,
+                'url' => $video['url'] ?? null,
+            ] : null,
+        ];
+    }
+
 }
