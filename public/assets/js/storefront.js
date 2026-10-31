@@ -140,7 +140,9 @@
     return '<div class="col-6 col-md-4 col-xl-3"><article class="product-card">' +
       '<a class="product-card-media" href="/product/' + encodeURIComponent(product.slug) + '">' +
       '<img src="' + escapeHtml(imageFor(product)) + '" alt="' + escapeHtml(product.name) + '" data-i18n-ignore loading="lazy">' +
-      '<span class="product-tag">' + type + '</span></a><div class="product-card-body">' +
+      '<span class="product-tag">' + type + '</span>' +
+      (product.video && product.video.url ? '<span class="product-video-badge"><svg class="icon"><use href="#i-play"/></svg> Watch video</span>' : '') +
+      '</a><div class="product-card-body">' +
       '<div class="product-card-type"' + (product.brand ? ' data-i18n-ignore' : '') + '>' + escapeHtml(product.brand || type) + '</div>' +
       '<h3><a href="/product/' + encodeURIComponent(product.slug) + '">' + escapeHtml(product.name) + '</a></h3>' +
       '<div class="product-card-price">' + money(product.price_minor) +
