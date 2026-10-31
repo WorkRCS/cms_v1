@@ -41,6 +41,21 @@ class AdminController extends Controller
                     'name' => (string) $customer->name,
                     'email' => (string) $customer->email,
                     'phone' => $customer->phone,
+                    'address' => collect(is_array($customer->address) ? $customer->address : [])
+                        ->only([
+                            'label',
+                            'house_flat',
+                            'street_area',
+                            'landmark',
+                            'locality',
+                            'city',
+                            'district',
+                            'state',
+                            'postal_code',
+                            'country',
+                        ])
+                        ->filter(fn ($value) => is_scalar($value) && trim((string) $value) !== '')
+                        ->all(),
                     'is_active' => (bool) $customer->is_active,
                     'created_at' => $customer->created_at?->toISOString(),
                 ];
