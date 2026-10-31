@@ -60,7 +60,7 @@
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
     <link rel="dns-prefetch" href="//images.unsplash.com">
     <link href="{{ asset('assets/vendor/bootstrap/bootstrap.min.css') }}?v=5.3.8" rel="stylesheet">
-    <link href="{{ asset('assets/css/storefront.css') }}?v=storefront-admin-video-v2-20261031" rel="stylesheet">
+    <link href="{{ asset('assets/css/storefront.css') }}?v=storefront-admin-video-v3-20261031" rel="stylesheet">
     <script type="application/ld+json" nonce="{{ request()->attributes->get('csp_nonce') }}">{!! json_encode($siteGraph, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}</script>
     @stack('structured_data')
     @stack('head')
@@ -200,8 +200,8 @@
 
 <script src="{{ asset('assets/js/vendor/purify.min.js') }}" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
 <script src="{{ asset('assets/vendor/bootstrap/bootstrap.bundle.min.js') }}?v=5.3.8" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
-<script src="{{ asset('assets/js/storefront.js') }}?v=storefront-admin-video-v3-20261031" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
-<script src="{{ asset('assets/js/storefront-i18n.js') }}?v=storefront-language-v13-20261031" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
+<script src="{{ asset('assets/js/storefront.js') }}?v=storefront-admin-video-v4-20261031" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
+<script src="{{ asset('assets/js/storefront-i18n.js') }}?v=storefront-language-v14-20261031" nonce="{{ request()->attributes->get('csp_nonce') }}" defer></script>
 @stack('scripts')
 </body>
 </html>
