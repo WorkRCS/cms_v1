@@ -14,7 +14,7 @@ Only trusted YouTube hostnames are accepted. The application extracts and valida
 
 On a product page, the video is a selectable gallery thumbnail next to the product images. Selecting an image returns to the image viewer; selecting the video opens the iframe in the same gallery area. The iframe is created on click, not at initial page render. Local MP4/WebM videos use the same gallery control.
 
-The homepage includes a Watch it from the source section with lazy-loaded YouTube iframes for up to three published products that have a YouTube video. Product cards also show a Watch video marker. Videos are included as VideoObject information in the product structured data when the record contains YouTube metadata.
+The homepage includes a Watch it from the source section for up to three published products with a video. YouTube videos use lazy-loaded iframes; uploaded MP4/WebM videos use the native browser video player. Product cards also show a Watch video marker. Videos are included as VideoObject information in the product structured data when the record contains YouTube metadata.
 
 ## Local demo videos
 
@@ -62,7 +62,7 @@ A code change cannot guarantee 100 for every deployment. The final score depends
     php artisan serve
 
 Then check:
-- / — homepage product videos.
+- / — homepage YouTube embeds and uploaded product videos.
 - /product/farm-fresh-vegetable-box — vertical Shorts thumbnail in the image gallery.
 - /product/garden-hand-trowel — standard landscape video thumbnail in the image gallery.
 - /seller — add a product with a YouTube URL or uploaded MP4/WebM.
