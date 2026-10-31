@@ -614,6 +614,8 @@
     let customerQuery = '';
     let searchTimer = null;
     let editProductId = null;
+    let productsRequestSequence = 0;
+    let customersRequestSequence = 0;
 
     const byId = (id) => document.getElementById(id);
     const textValue = (value) => value == null ? '' : String(value);
@@ -678,8 +680,10 @@
 
     async function loadProducts(page) {
       currentProductPage = Math.max(1, Number(page) || 1);
+      const requestSequence = ++productsRequestSequence;
       root.innerHTML = '<tr><td colspan="6" class="text-center py-5 text-secondary">Loading products…</td></tr>';
       const result = await apiRequest('/seller/products?page=' + currentProductPage);
+      if (requestSequence !== productsRequestSequence) return;
       const rows = result.data || [];
       productRecords.clear();
 
@@ -705,9 +709,11 @@
       currentCustomerPage = Math.max(1, Number(page) || 1);
       if (!customersRoot) return;
       customersRoot.innerHTML = '<tr><td colspan="6" class="text-center py-5 text-secondary">Loading customers…</td></tr>';
+      const requestSequence = ++customersRequestSequence;
       const params = new URLSearchParams({ page: String(currentCustomerPage), per_page: '25' });
       if (customerQuery) params.set('q', customerQuery);
       const result = await apiRequest('/seller/customers?' + params.toString());
+      if (requestSequence !== customersRequestSequence) return;
       customersRoot.innerHTML = (result.data || []).map((customer) => {
         const joined = customer.created_at ? new Date(customer.created_at).toLocaleDateString('en-IN') : '—';
         const status = customer.is_active ? 'Active' : 'Disabled';
