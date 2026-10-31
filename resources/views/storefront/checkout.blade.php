@@ -1,5 +1,6 @@
 @extends('layouts.storefront')
 @section('title', 'Checkout')
+@section('robots', 'noindex,nofollow')
 @section('content')
 <section class="page-hero compact-hero"><div class="container"><span class="eyebrow">ALMOST THERE</span><h1>Checkout <em>preview.</em></h1><p>Your delivery and payment details will be collected here.</p></div></section>
 <section class="section-space"><div class="container"><div class="checkout-preview mx-auto">
