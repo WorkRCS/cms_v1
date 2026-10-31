@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#fffefa">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="@yield('meta_description', 'Shop quality farm produce and everyday essentials from one trusted independent seller.')">
     <title>@yield('title', 'Field & Found') — Field & Found</title>
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{ asset('assets/css/storefront.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/storefront.css') }}?v=responsive-20261031" rel="stylesheet">
     @stack('head')
 </head>
 <body>
