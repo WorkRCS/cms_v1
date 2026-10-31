@@ -649,13 +649,31 @@
       if (!container) return;
       const pages = Math.max(1, Number(last) || 1);
       const active = Math.min(pages, Math.max(1, Number(current) || 1));
-      container.innerHTML = Array.from({ length: pages }, (_, index) => {
-        const page = index + 1;
-        return '<li class="page-item ' + (page === active ? 'active' : '') + '">' +
+      if (pages <= 1) {
+        container.replaceChildren();
+        container.hidden = true;
+        return;
+      }
+
+      const visible = new Set([1, pages]);
+      for (let page = Math.max(1, active - 2); page <= Math.min(pages, active + 2); page += 1) {
+        visible.add(page);
+      }
+      const sorted = Array.from(visible).sort((a, b) => a - b);
+      const items = [];
+      let previous = 0;
+      sorted.forEach((page) => {
+        if (previous && page - previous > 1) {
+          items.push('<li class="page-item disabled"><span class="page-link" aria-hidden="true">…</span></li>');
+        }
+        items.push('<li class="page-item ' + (page === active ? 'active' : '') + '">' +
           '<button class="page-link" type="button" data-admin-page="' + attribute + '" data-page="' + page + '"' +
-          (page === active ? ' aria-current="page"' : '') + '>' + page + '</button></li>';
-      }).join('');
-      container.hidden = pages <= 1;
+          (page === active ? ' aria-current="page"' : '') + '>' + page + '</button></li>');
+        previous = page;
+      });
+
+      container.innerHTML = items.join('');
+      container.hidden = false;
     }
 
     async function loadProducts(page) {
