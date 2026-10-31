@@ -392,6 +392,18 @@
     "Could not load seller data. Please sign in again.": ["বিক্রেতার তথ্য লোড করা যায়নি। আবার সাইন ইন করুন।", "विक्रेता का डेटा लोड नहीं हो सका। कृपया फिर से साइन इन करें।"],
     "Profile and address saved successfully.": ["প্রোফাইল ও ঠিকানা সফলভাবে সংরক্ষণ করা হয়েছে।", "प्रोफ़ाइल और पता सफलतापूर्वक सहेजे गए।"],
     "Profile details saved.": ["প্রোফাইলের তথ্য সংরক্ষণ করা হয়েছে।", "प्रोफ़ाइल का विवरण सहेजा गया।"],
+    "Profile details saved successfully.": ["প্রোফাইলের তথ্য সফলভাবে সংরক্ষণ করা হয়েছে।", "प्रोफ़ाइल का विवरण सफलतापूर्वक सहेजा गया।"],
+    "An account with this email already exists.": ["এই ইমেল ঠিকানায় একটি অ্যাকাউন্ট আগে থেকেই আছে।", "इस ईमेल पते से एक खाता पहले से मौजूद है।"],
+    "Account created successfully.": ["অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে।", "खाता सफलतापूर्वक बनाया गया।"],
+    "The supplied credentials are not valid.": ["ইমেল বা পাসওয়ার্ড সঠিক নয়।", "दिए गए लॉगिन विवरण सही नहीं हैं।"],
+    "Signed in successfully.": ["সফলভাবে সাইন ইন হয়েছে।", "सफलतापूर्वक साइन इन हो गया।"],
+    "Signed out successfully.": ["সফলভাবে সাইন আউট হয়েছে।", "सफलतापूर्वक साइन आउट हो गया।"],
+    "Enter a valid 6-digit Indian PIN code, or leave it blank.": ["ভারতের সঠিক ৬ সংখ্যার পিন কোড দিন, অথবা ঘরটি ফাঁকা রাখুন।", "भारत का सही 6 अंकों का पिन कोड दर्ज करें या इसे खाली छोड़ दें।"],
+    "Choose either a YouTube link or an uploaded video, not both.": ["YouTube লিংক অথবা আপলোড করা ভিডিও—যেকোনো একটি বেছে নিন, দুটো নয়।", "YouTube लिंक या अपलोड किया गया वीडियो—दोनों में से एक चुनें, दोनों नहीं।"],
+    "The original price must be greater than or equal to the selling price.": ["আগের দাম বিক্রয়মূল্যের সমান বা বেশি হতে হবে।", "मूल कीमत बिक्री मूल्य के बराबर या उससे अधिक होनी चाहिए।"],
+    "Product created successfully.": ["পণ্য সফলভাবে তৈরি হয়েছে।", "उत्पाद सफलतापूर्वक बनाया गया।"],
+    "Product updated successfully.": ["পণ্য সফলভাবে আপডেট হয়েছে।", "उत्पाद सफलतापूर्वक अपडेट किया गया।"],
+    "Product archived successfully.": ["পণ্য সফলভাবে আর্কাইভ করা হয়েছে।", "उत्पाद सफलतापूर्वक आर्काइव किया गया।"],
     "Selected product preview": ["নির্বাচিত পণ্যের প্রিভিউ", "चुने गए उत्पाद का प्रीव्यू"],
     "No products yet. Add your first product above.": ["এখনও কোনো পণ্য নেই। উপরে আপনার প্রথম পণ্য যোগ করুন।", "अभी कोई उत्पाद नहीं है। ऊपर अपना पहला उत्पाद जोड़ें।"]
   };
@@ -468,6 +480,26 @@
     return Object.prototype.hasOwnProperty.call(languageCodes, value) ? value : 'en';
   }
 
+  const fieldLabels = {
+    name: ['নাম', 'नाम'],
+    email: ['ইমেল', 'ईमेल'],
+    password: ['পাসওয়ার্ড', 'पासवर्ड'],
+    password_confirmation: ['পাসওয়ার্ড নিশ্চিতকরণ', 'पासवर्ड की पुष्टि'],
+    phone: ['ফোন নম্বর', 'फ़ोन नंबर'],
+    category_id: ['বিভাগ', 'श्रेणी'],
+    product_type: ['পণ্যের ধরন', 'उत्पाद का प्रकार'],
+    description: ['বিবরণ', 'विवरण'],
+    short_description: ['সংক্ষিপ্ত বিবরণ', 'संक्षिप्त विवरण'],
+    price_minor: ['দাম', 'कीमत'],
+    compare_at_price_minor: ['তুলনামূলক দাম', 'तुलना मूल्य'],
+    stock: ['স্টকের পরিমাণ', 'स्टॉक की मात्रा'],
+    images: ['পণ্যের ছবি', 'उत्पाद की तस्वीरें'],
+    video: ['ভিডিও', 'वीडियो'],
+    video_youtube_url: ['YouTube ভিডিও লিংক', 'YouTube वीडियो लिंक'],
+    address: ['ঠিকানা', 'पता'],
+    postal_code: ['পিন কোড', 'पिन कोड']
+  };
+
   function translateValue(source, language) {
     const lang = safeLanguage(language);
     if (lang === 'en' || !source) return source;
@@ -511,7 +543,7 @@
           : '© ' + match[1] + ' Field & Found। डेमो ऑनलाइन स्टोर।';
       }
       if (!translated) {
-        match = trimmed.match(/^For questions about these terms, contact (.*?)\. Grievance contact: (.*?)\. Replace these configuration placeholders with monitored business contact details before launch\.$/);
+        match = trimmed.match(/^For questions about these terms, contact (.+)\. Grievance contact: (.+)\. Replace these configuration placeholders with monitored business contact details before launch\.$/);
         if (match) translated = lang === 'bn'
           ? 'এই শর্তাবলি সম্পর্কে প্রশ্ন থাকলে যোগাযোগ করুন ' + match[1] + '। অভিযোগের যোগাযোগ: ' + match[2] + '। চালুর আগে এই অস্থায়ী যোগাযোগের তথ্যের পরিবর্তে পর্যবেক্ষণ করা হয় এমন ব্যবসায়িক যোগাযোগের তথ্য দিন।'
           : 'इन शर्तों के बारे में सवालों के लिए ' + match[1] + ' पर संपर्क करें। शिकायत संपर्क: ' + match[2] + '। लॉन्च से पहले इन अस्थायी विवरणों की जगह निगरानी वाले व्यावसायिक संपर्क विवरण दें।';
@@ -523,7 +555,7 @@
           : 'खाते की जानकारी देखने, सुधारने या हटाने के बारे में पूछने या गोपनीयता संबंधी चिंता बताने के लिए ' + match[1] + ' पर संपर्क करें। अनुरोधों पर पहचान सत्यापन, लागू कानून और किसी भी वैध डेटा-रखरखाव की शर्त के अनुसार कार्रवाई होगी। लॉन्च से पहले वास्तविक दुकान में अनुरोध संभालने और शिकायत निवारण की लिखित प्रक्रिया लागू होनी चाहिए।';
       }
       if (!translated) {
-        match = trimmed.match(/^This notice may be updated as the website's functionality and legal obligations change\. For privacy questions, contact (.*?)\. Grievance contact: (.*?)\.$/);
+        match = trimmed.match(/^This notice may be updated as the website's functionality and legal obligations change\. For privacy questions, contact (.+)\. Grievance contact: (.+)\.$/);
         if (match) translated = lang === 'bn'
           ? 'ওয়েবসাইটের কার্যকারিতা ও আইনি দায়িত্ব পরিবর্তিত হলে এই বিজ্ঞপ্তি হালনাগাদ হতে পারে। গোপনীয়তা সংক্রান্ত প্রশ্নের জন্য যোগাযোগ করুন ' + match[1] + '। অভিযোগের যোগাযোগ: ' + match[2] + '।'
           : 'वेबसाइट की सुविधाओं और कानूनी दायित्वों में बदलाव के अनुसार यह सूचना अपडेट की जा सकती है। गोपनीयता संबंधी सवालों के लिए ' + match[1] + ' पर संपर्क करें। शिकायत संपर्क: ' + match[2] + '।';
@@ -531,9 +563,24 @@
       if (!translated) {
         match = trimmed.match(/^The (.+) field is required\.$/i);
         if (match) {
-          const field = match[1];
+          const rawField = match[1].replace(/\./g, '_');
+          const field = fieldLabels[rawField] ? fieldLabels[rawField][lang === 'bn' ? 0 : 1] : rawField;
           translated = lang === 'bn' ? field + ' ঘরটি পূরণ করা বাধ্যতামূলক।' : field + ' फ़ील्ड भरना आवश्यक है।';
         }
+      }
+      if (!translated) {
+        match = trimmed.match(/^The (.+) must be a valid email address\.$/i);
+        if (match) translated = lang === 'bn' ? 'সঠিক ইমেল ঠিকানা দিতে হবে।' : 'एक मान्य ईमेल पता दर्ज करना होगा।';
+      }
+      if (!translated) {
+        match = trimmed.match(/^The (.+) field confirmation does not match\.$/i);
+        if (match) translated = lang === 'bn' ? 'পাসওয়ার্ড নিশ্চিতকরণ মিলছে না।' : 'पासवर्ड की पुष्टि मेल नहीं खाती।';
+      }
+      if (!translated) {
+        match = trimmed.match(/^The (.+) must be at least (\d+) characters?\.$/i);
+        if (match) translated = lang === 'bn'
+          ? match[1] + ' কমপক্ষে ' + match[2] + ' অক্ষরের হতে হবে।'
+          : match[1] + ' कम से कम ' + match[2] + ' वर्णों का होना चाहिए।';
       }
     }
 
