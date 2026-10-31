@@ -1688,3 +1688,121 @@ html[data-language-pending="true"] body {
         text-align: left;
     }
 }
+
+
+/* Centered action and feedback dialogs */
+.feedback-modal-content,
+#confirmActionModal .modal-content {
+    border: 1px solid rgba(32, 58, 46, .12);
+    border-radius: 14px;
+    box-shadow: 0 18px 54px rgba(20, 35, 25, .2);
+}
+.feedback-modal-icon {
+    display: grid;
+    width: 54px;
+    height: 54px;
+    place-items: center;
+    margin: 0 auto;
+    border-radius: 50%;
+    background: #edf1e8;
+    color: #294b35;
+}
+.feedback-modal-icon.is-success {
+    background: #e8f2e8;
+    color: #236334;
+}
+.feedback-modal-icon.is-error {
+    background: #f8eae7;
+    color: #984333;
+}
+.feedback-modal-icon.is-neutral {
+    background: #edf0ed;
+    color: #445447;
+}
+.feedback-modal-icon .icon {
+    width: 25px;
+    height: 25px;
+}
+.feedback-modal-message {
+    color: #465448;
+    font-size: 13px;
+    line-height: 1.6;
+}
+.form-message:empty {
+    display: none;
+}
+
+/* Admin workspace */
+.admin-orders-note {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 22px;
+    padding: 22px 24px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #f6f6f0;
+}
+.admin-orders-note h2 {
+    color: var(--forest-deep);
+}
+.admin-orders-note p {
+    max-width: 720px;
+    color: #4f5a4d;
+    font-size: 12px;
+    line-height: 1.6;
+}
+.admin-customer-search {
+    width: min(100%, 300px);
+}
+.admin-row-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    min-width: 125px;
+}
+.seller-table td {
+    vertical-align: middle;
+}
+.seller-table .seller-product-cell {
+    min-width: 210px;
+}
+.seller-table .seller-product-cell img {
+    width: 54px;
+    height: 58px;
+    flex: 0 0 54px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+.admin-orders-note .badge {
+    color: #455248 !important;
+    white-space: nowrap;
+}
+#editProductModal .modal-content {
+    border: 0;
+    border-radius: 12px;
+}
+#editProductModal .modal-header {
+    border-bottom-color: var(--line);
+}
+#editProductModal .modal-title {
+    color: var(--forest-deep);
+}
+#editProductModal .modal-footer {
+    border-top-color: var(--line);
+}
+@media (max-width: 767.98px) {
+    .admin-orders-note {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+        padding: 18px;
+    }
+    .admin-customer-search {
+        width: 100%;
+    }
+    .admin-row-actions {
+        min-width: 0;
+    }
+}
