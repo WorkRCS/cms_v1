@@ -225,6 +225,7 @@
     "PIN Code": ["পিন কোড", "पिन कोड"],
     "For India, enter a 6-digit PIN code. This field is optional.": ["ভারতের জন্য ৬ সংখ্যার পিন কোড দিন। এই ঘরটি ঐচ্ছিক।", "भारत के लिए 6 अंकों का पिन कोड दर्ज करें। यह फ़ील्ड वैकल्पिक है।"],
     "Country": ["দেশ", "देश"],
+    "India": ["ভারত", "भारत"],
     "Country (optional)": ["দেশ (ঐচ্ছিক)", "देश (वैकल्पिक)"],
     "Save profile & address": ["প্রোফাইল ও ঠিকানা সংরক্ষণ করুন", "प्रोफ़ाइल और पता सहेजें"],
     "My orders": ["আমার অর্ডার", "मेरे ऑर्डर"],
@@ -447,6 +448,7 @@
     '.product-card-type',
     '.category-card h3',
     '.category-filters [data-category]:not([data-category=""])',
+    '#productCategoryInput option:not([value=""])',
     '.cart-row h5',
     '.cart-row img',
     '.seller-product-cell',
@@ -599,12 +601,36 @@
     document.title = translated + (originalDocumentTitle.endsWith(suffix) ? suffix : '');
   }
 
+  const languageOptionLabels = {
+    en: { en: 'English', bn: 'Bengali', hi: 'Hindi' },
+    bn: { en: 'ইংরেজি', bn: 'বাংলা', hi: 'হিন্দি' },
+    hi: { en: 'अंग्रेज़ी', bn: 'बंगाली', hi: 'हिंदी' }
+  };
+
+  function updateLanguageOptions(language) {
+    if (!select) return;
+    const labels = languageOptionLabels[safeLanguage(language)];
+    select.querySelectorAll('option').forEach((option) => {
+      if (labels[option.value]) option.textContent = labels[option.value];
+    });
+  }
+
+  function updateCountryField(language) {
+    const country = document.getElementById('addressCountry');
+    if (!country) return;
+    if (['India', 'ভারত', 'भारत'].includes(String(country.value || '').trim())) {
+      country.value = translateValue('India', language);
+    }
+  }
+
   function applyLanguage(language) {
     currentLanguage = safeLanguage(language);
     document.documentElement.lang = languageCodes[currentLanguage];
     document.documentElement.dir = 'ltr';
     if (select && select.value !== currentLanguage) select.value = currentLanguage;
+    updateLanguageOptions(currentLanguage);
     translateTree(document.body);
+    updateCountryField(currentLanguage);
     translateDocumentTitle();
     try {
       window.localStorage.setItem(STORAGE_KEY, currentLanguage);
