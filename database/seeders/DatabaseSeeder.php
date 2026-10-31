@@ -22,6 +22,10 @@ class DatabaseSeeder extends Seeder
         $database = DB::connection('mongodb')->getMongoDB();
         $database->selectCollection('users')->createIndex(['email' => 1], ['unique' => true, 'name' => 'users_email_unique']);
         $database->selectCollection('categories')->createIndex(['slug' => 1], ['unique' => true, 'name' => 'categories_slug_unique']);
+        $database->selectCollection('categories')->createIndex(
+            ['is_active' => 1, 'sort_order' => 1],
+            ['name' => 'categories_active_sorted'],
+        );
         $database->selectCollection('products')->createIndex(['slug' => 1], ['unique' => true, 'name' => 'products_slug_unique']);
         $database->selectCollection('products')->createIndex(
             ['product_type' => 1, 'status' => 1, 'created_at' => -1],
