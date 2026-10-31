@@ -196,7 +196,10 @@ class ProductController extends Controller
             ]);
         }
 
-        if ($request->hasFile('images')) {
+        $previousImages = is_array($product->images) ? $product->images : [];
+        $imagesWereReplaced = $request->hasFile('images');
+
+        if ($imagesWereReplaced) {
             $data['images'] = $this->images->store($data['images'], $data['name'] ?? $product->name);
         }
 
@@ -246,6 +249,10 @@ class ProductController extends Controller
 
         $product->fill($data);
         $product->save();
+
+        if ($imagesWereReplaced && $previousImages !== []) {
+            $this->images->delete($previousImages);
+        }
 
         if ($videoWasReplaced && is_string($previousUploadPath) && $previousUploadPath !== '') {
             $nextVideo = is_array($product->video) ? $product->video : [];
