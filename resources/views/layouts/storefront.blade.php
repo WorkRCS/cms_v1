@@ -177,8 +177,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous" defer></script>
-<script src="{{ asset('assets/js/storefront.js') }}?v=storefront-language-v4-20261031" defer></script>
-<script src="{{ asset('assets/js/storefront-i18n.js') }}?v=storefront-language-v5-20261031" defer></script>
+<script src="{{ asset('assets/js/storefront.js') }}?v=storefront-language-v5-20261031" defer></script>
+<script src="{{ asset('assets/js/storefront-i18n.js') }}?v=storefront-language-v6-20261031" defer></script>
 @stack('scripts')
 </body>
 </html>
