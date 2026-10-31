@@ -58,6 +58,7 @@
     @stack('head')
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <svg xmlns="http://www.w3.org/2000/svg" class="svg-defs" aria-hidden="true">
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></symbol>
     <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l1 12H4L5 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></symbol>
@@ -130,7 +131,7 @@
     </a>
 </nav>
 
-<main>
+<main id="main-content" tabindex="-1">
     @yield('content')
 </main>
 
