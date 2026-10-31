@@ -161,7 +161,16 @@ Allowed sort values: latest, price_low, price_high, name. Prices use integer min
 
 ## Image uploads
 
-The seller product form accepts 1–8 JPG/JPEG/PNG/WebP files up to 8 MB each. The backend validates the images and writes WebP versions at up to 320px, 640px and 1200px. Optional product videos accept MP4/WebM up to 50 MB.
+The seller product form accepts 1–8 JPG/JPEG/PNG/WebP files up to 8 MB each. The backend checks decoded dimensions before using GD and rejects images larger than 8,000 pixels per side or 16 megapixels, then writes WebP versions at up to 320px, 640px and 1200px. Optional product videos accept MP4/WebM up to 50 MB. The seller upload endpoint has a separate 10-request-per-minute limit; update/archive operations are also rate-limited.
+
+For PHP, set upload limits large enough for the maximum request while keeping memory bounded. A typical local/production baseline for this form is:
+
+    upload_max_filesize=50M
+    post_max_size=70M
+    max_file_uploads=10
+    memory_limit=256M
+
+Apply these values in the PHP-FPM/Apache php.ini used by the web server (not only the CLI php.ini), then restart the relevant PHP/web service. Tune them to the host's available memory and expected upload traffic.
 
 Uploads are stored on Laravel's public disk. Run php artisan storage:link to expose the storage path locally. Demo product images are remote Unsplash examples; replace them with real product images before public launch.
 
