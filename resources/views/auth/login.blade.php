@@ -6,7 +6,7 @@
     <form id="loginForm" class="mt-4" novalidate>
         <div class="mb-3"><label for="loginEmail" class="form-label">Email address</label><input id="loginEmail" name="email" type="email" class="form-control form-control-lg" autocomplete="email" required></div>
         <div class="mb-3"><label for="loginPassword" class="form-label">Password</label><input id="loginPassword" name="password" type="password" class="form-control form-control-lg" autocomplete="current-password" required></div>
-        <div class="form-check mb-4"><input class="form-check-input" type="checkbox" id="rememberMe" name="remember"><label class="form-check-label" for="rememberMe">Keep me signed in</label></div>
+        <p class="small text-secondary mb-4">Your secure session can remain active for up to 7 days on this device. Signing out ends it immediately.</p>
         <div class="form-message" data-form-message role="alert"></div>
         <button type="submit" class="btn btn-dark btn-lg rounded-pill w-100">Sign in</button>
     </form>
