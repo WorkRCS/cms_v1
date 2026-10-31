@@ -97,6 +97,7 @@
     const featuredNode = document.querySelector('[data-featured-grid]');
     const latestNode = document.querySelector('[data-latest-grid]');
     if (!categoriesNode && !featuredNode && !latestNode) return;
+    if ([categoriesNode, featuredNode, latestNode].filter(Boolean).every((node) => node.dataset.serverRendered === 'true')) return;
     const images = {
       'fresh-produce':'photo-1542838132-92c53300491e',
       'seeds-saplings':'photo-1574323347407-f5e1ad6d020b',
@@ -145,8 +146,10 @@
     const countNode = document.querySelector('[data-result-count]');
     const params = new URLSearchParams(window.location.search);
     let activeCategory = params.get('category') || '';
-    let currentPage = 1;
+    const hasServerRenderedProducts = grid.dataset.serverRendered === 'true';
+    let currentPage = Number(grid.dataset.currentPage) || Number(params.get('page')) || 1;
     type.value = params.get('product_type') || '';
+    sort.value = params.get('sort') || 'latest';
 
     async function loadCategories() {
       const data = await apiRequest('/categories' + (type.value ? '?product_type=' + encodeURIComponent(type.value) : ''));
@@ -201,9 +204,11 @@
       window.clearTimeout(searchTimer);
       searchTimer = window.setTimeout(() => { currentPage = 1; loadProducts(); }, 300);
     });
-    loadCategories().then(loadProducts).catch((error) => {
-      grid.innerHTML = '<div class="col-12"><div class="empty-state">' + escapeHtml(error.message) + '</div></div>';
-    });
+    if (!hasServerRenderedProducts) {
+      loadCategories().then(loadProducts).catch((error) => {
+        grid.innerHTML = '<div class="col-12"><div class="empty-state">' + escapeHtml(error.message) + '</div></div>';
+      });
+    }
   }
 
   async function initProduct() {
