@@ -119,7 +119,7 @@
           const photo = images[category.slug];
           const bg = photo ? 'https://images.unsplash.com/' + photo + '?w=700&q=80' : '';
           const type = category.product_type === 'agriculture' ? 'Farm & garden' : 'Everyday goods';
-          return '<a class="category-card" href="/shop?category=' + encodeURIComponent(category.slug) +
+          return '<a class="category-card" data-category-slug="' + escapeHtml(category.slug) + '" href="/shop?category=' + encodeURIComponent(category.slug) +
             '" style="--category-image:url(\'' + bg + '\')"><div><h3>' + escapeHtml(category.name) +
             '</h3><p>' + type + '</p></div></a>';
         }).join('') || '<div class="empty-state">Categories will appear here soon.</div>';
@@ -543,7 +543,7 @@
     async function loadCategories() {
       const result = await apiRequest('/categories?product_type=' + encodeURIComponent(typeSelect.value));
       categorySelect.innerHTML = '<option value="">Choose a category</option>' + (result.data || []).map((category) =>
-        '<option value="' + escapeHtml(category.id || category._id) + '">' + escapeHtml(category.name) + '</option>'
+        '<option value="' + escapeHtml(category.id || category._id) + '" data-category-slug="' + escapeHtml(category.slug) + '">' + escapeHtml(category.name) + '</option>'
       ).join('');
     }
     async function loadSellerData() {
