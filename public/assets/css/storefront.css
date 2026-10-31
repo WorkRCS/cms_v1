@@ -116,7 +116,7 @@ a:hover { color: var(--forest); }
 .footer-brand { color: white; }
 .footer-brand .brand-icon { color: #d3ddc4; border-color: rgba(255,255,255,.35); }
 .footer-copy { max-width: 310px; color: rgba(255,255,255,.6); font-size: 12px; line-height: 1.8; }
-.site-footer h6 { margin: 8px 0 17px; color: #e6e9dd; font-size: 11px; letter-spacing: .11em; text-transform: uppercase; }
+.site-footer h2 { margin: 8px 0 17px; color: #e6e9dd; font-size: 11px; letter-spacing: .11em; text-transform: uppercase; }
 .site-footer .col-6 a { display: block; margin: 10px 0; color: rgba(255,255,255,.65); font-size: 12px; }
 .site-footer .col-6 a:hover { color: white; }
 .newsletter-form .form-control { border: 0; border-radius: 40px 0 0 40px; background: rgba(255,255,255,.12); color: white; font-size: 11px; }
@@ -134,7 +134,7 @@ a:hover { color: var(--forest); }
 .form-control:focus, .form-select:focus { border-color: #78917e; box-shadow: 0 0 0 .2rem rgba(63,102,76,.1); }
 .result-count { color: var(--muted); font-size: 11px; }
 .filter-panel { position: sticky; top: 105px; padding: 22px; border: 1px solid var(--line); border-radius: 5px; background: white; }
-.filter-panel h5 { margin: 0 0 14px; font-family: Georgia, serif; font-size: 18px; font-weight: 400; }
+.filter-panel h2 { margin: 0 0 14px; font-family: Georgia, serif; font-size: 18px; font-weight: 400; }
 .filter-panel a { display: block; padding: 7px 0; color: #626b60; font-size: 12px; }
 .filter-panel a:hover, .filter-panel a.active { color: var(--forest); font-weight: 700; }
 .category-filter-btn { width: 100%; padding: 7px 0; border: 0; background: transparent; color: #626b60; text-align: left; font-size: 12px; }
@@ -187,7 +187,7 @@ a:hover { color: var(--forest); }
 .cart-row-actions { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
 .cart-row-actions button { border: 0; background: transparent; color: #6c7669; font-size: 11px; }
 .cart-summary { position: sticky; top: 110px; padding: 25px; border: 1px solid var(--line); border-radius: 5px; background: #f8f8f2; }
-.cart-summary h4 { margin-bottom: 22px; font-family: Georgia, serif; font-weight: 400; }
+.cart-summary h2 { margin-bottom: 22px; font-family: Georgia, serif; font-weight: 400; }
 .summary-line { display: flex; justify-content: space-between; gap: 12px; margin: 14px 0; color: #6d756a; font-size: 12px; }
 .summary-line strong { color: var(--ink); }
 .summary-total { color: var(--ink); font-size: 15px; }
@@ -200,7 +200,7 @@ a:hover { color: var(--forest); }
 .account-avatar { flex: 0 0 58px; width: 58px; height: 58px; margin: 0; }
 .account-card h3 { margin: 0; font-family: Georgia, serif; font-weight: 400; }
 .account-feature { height: 100%; padding: 25px; border: 1px solid var(--line); border-radius: 6px; }
-.account-feature h5 { font-family: Georgia, serif; font-weight: 400; }
+.account-feature h3 { font-family: Georgia, serif; font-weight: 400; }
 .account-feature p { color: var(--muted); font-size: 12px; }
 .seller-live { color: #47714d; font-size: 11px; font-weight: 700; }
 .metric-card { height: 100%; padding: 22px; border: 1px solid var(--line); border-radius: 5px; background: white; }
@@ -722,7 +722,7 @@ textarea {
     padding: 14px;
   }
 
-  .filter-panel h5 {
+  .filter-panel h2 {
     margin-bottom: 9px;
     font-size: 16px;
   }
