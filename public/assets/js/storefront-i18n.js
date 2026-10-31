@@ -465,7 +465,6 @@
     '[data-account-email]',
     '.brand-mark',
     '.product-card h3',
-    '.category-card h3',
     '.product-card-media img',
     '[data-product-main]',
     '.product-thumbnails img',
