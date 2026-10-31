@@ -16,6 +16,7 @@
   };
   let loadedLanguage = 'en';
   let dictionaryRequest = null;
+  let languageChangeSequence = 0;
 
   const ignoredSelector = [
     '[data-i18n-ignore]',
@@ -320,8 +321,10 @@
           !dictionary.fieldLabels || !dictionary.categoryTranslations) {
         throw new Error('Language dictionary is invalid.');
       }
-      activeDictionary = dictionary;
-      loadedLanguage = language;
+      if (currentLanguage === language) {
+        activeDictionary = dictionary;
+        loadedLanguage = language;
+      }
     }).finally(() => {
       if (dictionaryRequest && dictionaryRequest.language === language) dictionaryRequest = null;
     });
@@ -330,7 +333,8 @@
     await promise;
   }
 
-  async function applyLanguage(language, initialLoad) {
+  async function applyLanguage(language) {
+    const changeSequence = ++languageChangeSequence;
     currentLanguage = safeLanguage(language);
     document.documentElement.lang = languageCodes[currentLanguage];
     document.documentElement.dir = 'ltr';
@@ -351,8 +355,10 @@
       if (select) select.value = 'en';
       updateLanguageOptions('en');
       await loadLanguageDictionary('en');
+      try { window.localStorage.setItem(STORAGE_KEY, 'en'); } catch (_) {}
     }
 
+    if (changeSequence !== languageChangeSequence) return;
     translateTree(document.body);
     updateCountryField(currentLanguage);
     syncYouTubePlayerLanguage();
@@ -370,10 +376,10 @@
 
   if (select) {
     select.value = savedLanguage;
-    select.addEventListener('change', () => { void applyLanguage(select.value, false); });
+    select.addEventListener('change', () => { void applyLanguage(select.value); });
   }
 
-  void applyLanguage(savedLanguage, true);
+  void applyLanguage(savedLanguage);
 
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
