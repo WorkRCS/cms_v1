@@ -226,7 +226,15 @@
       if (!product) throw new Error('This product could not be found.');
       const images = Array.isArray(product.images) ? product.images : [];
       const main = document.querySelector('[data-product-main]');
+      const imageStage = document.querySelector('[data-product-image-stage]');
+      const videoStage = document.querySelector('[data-product-video-stage]');
       const thumbnails = document.querySelector('[data-product-thumbnails]');
+      const video = product.video && typeof product.video === 'object' ? product.video : null;
+      const isYoutubeVideo = Boolean(video && video.type === 'youtube' && /^[A-Za-z0-9_-]{11}$/.test(String(video.video_id || '')));
+      const isUploadedVideo = Boolean(video && video.url && !isYoutubeVideo);
+      const hasGalleryVideo = isYoutubeVideo || isUploadedVideo;
+      const videoLayout = video && video.layout === 'shorts' ? 'shorts' : 'standard';
+
       const primaryImage = images.find((image) => image && image.is_primary) || images[0];
       main.src = (primaryImage && primaryImage.variants && primaryImage.variants.large) || (primaryImage && primaryImage.url) || imageFor(product);
       main.alt = (primaryImage && primaryImage.alt) || product.name || 'Product image';
@@ -244,17 +252,78 @@
         discount.hidden = false;
         discount.textContent = Math.round((1 - product.price_minor / product.compare_at_price_minor) * 100) + '% off';
       } else { oldPrice.textContent = ''; discount.hidden = true; }
-      thumbnails.innerHTML = images.map((image, index) =>
+
+      const imageButtons = images.map((image, index) =>
         '<button class="product-thumb ' + (index === 0 ? 'active' : '') + '" type="button" data-image-index="' + index +
         '" aria-label="View product image ' + (index + 1) + '"><img src="' +
-        escapeHtml((image.variants && image.variants.thumbnail) || image.url) + '" alt="' +
-        escapeHtml(image.alt || product.name) + '" loading="lazy" decoding="async" width="82" height="82"></button>'
-      ).join('');
+        escapeHtml((image.variants && image.variants.thumbnail) || (image.variants && image.variants.medium) || image.url || imageFor(product)) +
+        '" alt="' + escapeHtml(image.alt || ((product.name || 'Product') + ' image ' + (index + 1))) +
+        '" loading="lazy" decoding="async" width="82" height="82"></button>'
+      );
+
+      if (hasGalleryVideo) {
+        const videoThumbnail = video.thumbnail_url || (isYoutubeVideo
+          ? 'https://i.ytimg.com/vi/' + encodeURIComponent(video.video_id) + '/hqdefault.jpg'
+          : imageFor(product));
+        const videoTitle = video.title || ((product.name || 'Product') + ' video');
+        imageButtons.push(
+          '<button class="product-thumb product-video-thumb ' + (videoLayout === 'shorts' ? 'product-video-thumb--shorts' : '') +
+          '" type="button" data-video-select aria-label="Play ' + escapeHtml(videoTitle) + '">' +
+          '<img src="' + escapeHtml(videoThumbnail) + '" alt="" width="82" height="82" loading="lazy" decoding="async">' +
+          '<span class="product-video-play" aria-hidden="true"><svg class="icon"><use href="#i-play"/></svg></span>' +
+          '<span class="product-video-label">Video</span></button>'
+        );
+      }
+      thumbnails.innerHTML = imageButtons.join('');
+
+      const stopAndHideVideo = () => {
+        videoStage.innerHTML = '';
+        videoStage.hidden = true;
+        imageStage.hidden = false;
+      };
+      const showProductVideo = () => {
+        if (!hasGalleryVideo) return;
+        imageStage.hidden = true;
+        videoStage.hidden = false;
+        videoStage.className = 'product-main-video product-video-frame product-video-frame--' + videoLayout;
+        videoStage.innerHTML = '';
+
+        if (isYoutubeVideo) {
+          const frame = document.createElement('iframe');
+          frame.src = 'https://www.youtube-nocookie.com/embed/' + video.video_id + '?playsinline=1&rel=0';
+          frame.title = video.title || ((product.name || 'Product') + ' video');
+          frame.loading = 'lazy';
+          frame.referrerPolicy = 'strict-origin-when-cross-origin';
+          frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+          frame.allowFullscreen = true;
+          frame.setAttribute('allowfullscreen', '');
+          frame.setAttribute('frameborder', '0');
+          videoStage.appendChild(frame);
+        } else {
+          const player = document.createElement('video');
+          player.src = video.url;
+          player.controls = true;
+          player.preload = 'none';
+          player.playsInline = true;
+          player.setAttribute('aria-label', video.title || ((product.name || 'Product') + ' video'));
+          videoStage.appendChild(player);
+        }
+        thumbnails.querySelectorAll('.product-thumb').forEach((node) => node.classList.toggle('active', node.hasAttribute('data-video-select')));
+      };
+
       thumbnails.addEventListener('click', (event) => {
+        const videoButton = event.target.closest('[data-video-select]');
+        if (videoButton) {
+          showProductVideo();
+          return;
+        }
         const button = event.target.closest('[data-image-index]');
         if (!button) return;
         const selected = images[Number(button.dataset.imageIndex)];
-        main.src = (selected.variants && selected.variants.large) || selected.url || imageFor(product);
+        if (!selected) return;
+        stopAndHideVideo();
+        main.src = (selected.variants && selected.variants.large) || (selected.variants && selected.variants.medium) || selected.url || imageFor(product);
+        main.alt = selected.alt || product.name || 'Product image';
         thumbnails.querySelectorAll('.product-thumb').forEach((node) => node.classList.toggle('active', node === button));
       });
       document.querySelector('[data-product-attributes]').innerHTML = Object.entries(product.attributes || {}).map(([key, value]) =>
