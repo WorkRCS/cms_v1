@@ -103,10 +103,11 @@
         @if ($videoProducts->isNotEmpty())
             <p class="home-video-intro">Browse every product video in the store. Select a video to play it, or open the product to see its full details.</p>
             <div class="home-video-rails" data-home-video-rails>
-                @foreach (['left', 'right'] as $railDirection)
+                @foreach (['left' => $videoProductsLeft, 'right' => $videoProductsRight] as $railDirection => $railProducts)
+                    @if ($railProducts->isNotEmpty())
                     <div class="home-video-rail" data-home-video-rail="{{ $railDirection }}" aria-label="{{ $railDirection === 'left' ? 'Product videos moving left' : 'Product videos moving right' }}">
                         <div class="home-video-rail-track{{ $railDirection === 'left' ? ' is-moving-left' : ' is-moving-right' }}" data-home-video-track data-direction="{{ $railDirection }}">
-                            @foreach (($railDirection === 'left' ? $videoProducts : $videoProducts->reverse()) as $videoProduct)
+                            @foreach ($railProducts as $videoProduct)
                                 @php
                                     $homeVideo = is_array($videoProduct->video) ? $videoProduct->video : [];
                                     $homeVideoYoutube = ($homeVideo['type'] ?? null) === 'youtube';
@@ -154,6 +155,7 @@
                             @endforeach
                         </div>
                     </div>
+                    @endif
                 @endforeach
             </div>
             <p class="home-video-footnote">Each card names the product it belongs to. The video player loads only when you choose to watch.</p>
