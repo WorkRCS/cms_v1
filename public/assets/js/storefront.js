@@ -116,24 +116,36 @@
     }
 
     return new Promise((resolve) => {
-      let settled = false;
+      let approved = false;
       const instance = bootstrap.Modal.getOrCreateInstance(node, { backdrop: true, keyboard: true });
-      const finish = (result) => {
-        if (settled) return;
-        settled = true;
+      const cleanup = () => {
         approve.removeEventListener('click', onApprove);
         node.removeEventListener('hidden.bs.modal', onHidden);
-        if (result) instance.hide();
-        resolve(result);
       };
-      const onApprove = () => finish(true);
-      const onHidden = () => finish(false);
+      const onApprove = () => {
+        approved = true;
+        instance.hide();
+      };
+      const onHidden = () => {
+        cleanup();
+        resolve(approved);
+      };
 
       messageNode.textContent = String(message || '');
       approve.addEventListener('click', onApprove);
       node.addEventListener('hidden.bs.modal', onHidden);
       instance.show();
     });
+  }
+
+  function closeModalAndNotify(modalNode, message, success) {
+    if (!modalNode || !window.bootstrap || !modalNode.classList.contains('show')) {
+      notify(message, success);
+      return;
+    }
+
+    modalNode.addEventListener('hidden.bs.modal', () => notify(message, success), { once: true });
+    bootstrap.Modal.getOrCreateInstance(modalNode).hide();
   }
 
   function addToCart(product, quantity) {
@@ -874,8 +886,7 @@
         form.reset();
         preview.replaceChildren();
         await Promise.all([loadCategories(categorySelect, typeSelect.value), loadDashboard(), loadProducts(1)]);
-        bootstrap.Modal.getOrCreateInstance(document.getElementById('productEditor')).hide();
-        notify('Product published successfully.', true);
+        closeModalAndNotify(document.getElementById('productEditor'), 'Product published successfully.', true);
       } catch (error) {
         setFormMessage(form, error.message);
       } finally {
@@ -919,8 +930,7 @@
       button.disabled = true;
       try {
         await apiRequest('/seller/products/' + encodeURIComponent(editProductId), { method: 'POST', body: payload });
-        bootstrap.Modal.getOrCreateInstance(editModalNode).hide();
-        notify('Product updated successfully.', true);
+        closeModalAndNotify(editModalNode, 'Product updated successfully.', true);
         await Promise.all([loadDashboard(), loadProducts(currentProductPage)]);
       } catch (error) {
         const node = editForm.querySelector('[data-edit-form-message]');
