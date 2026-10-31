@@ -179,7 +179,9 @@ class ProductController extends Controller
         }
 
         $priceMinor = (int) ($data['price_minor'] ?? $product->price_minor);
-        $compareAtMinor = $data['compare_at_price_minor'] ?? $product->compare_at_price_minor;
+        $compareAtMinor = array_key_exists('compare_at_price_minor', $data)
+            ? $data['compare_at_price_minor']
+            : $product->compare_at_price_minor;
 
         if ($compareAtMinor !== null && (int) $compareAtMinor < $priceMinor) {
             throw ValidationException::withMessages([
