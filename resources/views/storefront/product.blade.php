@@ -98,7 +98,7 @@
     <div class="row g-5">
         <div class="col-lg-7">
             <div class="product-gallery">
-                <div class="product-main-image">
+                <div class="product-main-image" data-product-image-stage>
                     <img
                         src="{{ $mainImageUrl }}"
                         @if (data_get($primaryImage, 'variants.medium') && data_get($primaryImage, 'variants.large'))
