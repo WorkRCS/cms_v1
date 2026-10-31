@@ -121,13 +121,13 @@
                             $largeUrl = data_get($image, 'variants.large') ?: data_get($image, 'url');
                         @endphp
                         @if ($thumbnailUrl)
-                            <button class="product-thumb{{ $index === 0 ? ' active' : '' }}" type="button" data-image-index="{{ $index }}" aria-label="View product image {{ $index + 1 }}">
+                            <button class="product-thumb{{ $index === 0 ? ' active' : '' }}" type="button" data-image-index="{{ $index }}" aria-pressed="{{ $index === 0 ? 'true' : 'false' }}" aria-label="View product image {{ $index + 1 }}">
                                 <img src="{{ $thumbnailUrl }}" alt="{{ data_get($image, 'alt') ?: ($product->name.' image '.($index + 1)) }}" width="82" height="82" loading="lazy" decoding="async" data-large-image="{{ $largeUrl }}">
                             </button>
                         @endif
                     @endforeach
                     @if ($isYoutubeVideo || $isUploadedVideo)
-                        <button class="product-thumb product-video-thumb{{ $videoLayout === 'shorts' ? ' product-video-thumb--shorts' : '' }}" type="button" data-video-select aria-label="Play {{ $productVideo['title'] ?? ($product->name.' product video') }}">
+                        <button class="product-thumb product-video-thumb{{ $videoLayout === 'shorts' ? ' product-video-thumb--shorts' : '' }}" type="button" data-video-select aria-pressed="false" aria-label="Play {{ $productVideo['title'] ?? ($product->name.' product video') }}">
                             <img src="{{ $videoThumbnail }}" alt="" width="82" height="82" loading="lazy" decoding="async">
                             <span class="product-video-play" aria-hidden="true"><svg class="icon"><use href="#i-play"/></svg></span>
                             <span class="product-video-label">Video</span>
