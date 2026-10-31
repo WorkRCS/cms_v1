@@ -28,14 +28,15 @@
 
         <h2>2. Information the current website handles</h2>
         <ul>
-            <li><strong>Account details:</strong> name, email address and optional phone number supplied during registration.</li>
+            <li><strong>Account details:</strong> name, email address and optional phone number supplied during registration or profile editing.</li>
+            <li><strong>Saved delivery address:</strong> any optional recipient, house/flat, street/area, landmark, locality, city, district, state, PIN code and country details that you choose to save in your profile.</li>
             <li><strong>Authentication and security:</strong> password hashes (not plain-text passwords), session identifiers, CSRF/security tokens and login activity needed to operate and protect accounts.</li>
             <li><strong>Shopping cart:</strong> the current cart is stored in your browser's local storage. It is not currently submitted to a server as an order.</li>
             <li><strong>Technical information:</strong> the hosting platform or server may process standard request, device, diagnostic and security logs.</li>
         </ul>
 
         <h2>3. Why information is used</h2>
-        <p>Information is used to create and authenticate accounts, maintain sessions, show account pages, protect the service, respond to support requests and maintain the website. The current demo checkout does not take payment or create orders.</p>
+        <p>Information is used to create and authenticate accounts, maintain sessions, show account pages, retain the optional delivery address you choose to save for possible future checkout use, protect the service, respond to support requests and maintain the website. The current demo checkout does not take payment or create orders.</p>
 
         <h2>4. Cookies and local storage</h2>
         <p>The website uses a session cookie for authentication and security. The configured session inactivity lifetime is up to seven days, subject to logout, browser settings, server cleanup and security events. The shopping cart uses browser local storage until you clear it or browser data is removed. Essential session and security storage is not an advertising cookie.</p>
