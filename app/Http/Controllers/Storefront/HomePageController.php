@@ -36,6 +36,15 @@ class HomePageController extends Controller
                 ->get()
         );
 
-        return view('storefront.home', compact('categories', 'featuredProducts', 'latestProducts'));
+        $videoProducts = Cache::remember('storefront.home.videos.v1', now()->addMinutes(2), fn () =>
+            Product::query()
+                ->where('status', 'published')
+                ->where('video.type', 'youtube')
+                ->orderBy('updated_at', 'desc')
+                ->limit(3)
+                ->get()
+        );
+
+        return view('storefront.home', compact('categories', 'featuredProducts', 'latestProducts', 'videoProducts'));
     }
 }
