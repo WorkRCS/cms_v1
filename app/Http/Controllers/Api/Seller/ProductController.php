@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Seller;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\User;
 use App\Services\ProductImageService;
 use App\Services\YouTubeVideoService;
 use Illuminate\Http\JsonResponse;
@@ -35,6 +36,9 @@ class ProductController extends Controller
                 'low_stock_products' => (clone $products)->where('stock', '<=', 5)->count(),
                 'agriculture_products' => (clone $products)->where('product_type', 'agriculture')->count(),
                 'general_products' => (clone $products)->where('product_type', 'general')->count(),
+                'total_customers' => User::where('role', 'customer')->count(),
+                'active_customer_accounts' => User::where('role', 'customer')->where('is_active', true)->count(),
+                'inactive_customer_accounts' => User::where('role', 'customer')->where('is_active', false)->count(),
             ],
         ]);
     }
