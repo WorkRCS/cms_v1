@@ -56,7 +56,7 @@
     ];
     $thumbnailImages = collect($images);
 @endphp
-@section('title', $product->name.' | '.config('store.name', 'Field & Found'))
+@section('title', $product->name)
 @section('meta_description', $seoDescription)
 @section('canonical_url', route('product.show', ['slug' => $product->slug]))
 @section('og_title', $product->name.' | '.config('store.name', 'Field & Found'))
