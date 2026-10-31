@@ -86,6 +86,10 @@
         if (match) translated = lang === 'bn' ? match[1] + '% ছাড়' : match[1] + '% की छूट';
       }
       if (!translated) {
+        match = trimmed.match(/^Play video for (.+)$/i);
+        if (match) translated = (lang === 'bn' ? 'ভিডিও চালান: ' : 'वीडियो चलाएँ: ') + match[1];
+      }
+      if (!translated) {
         match = trimmed.match(/^View product image (\d+)$/i);
         if (match) translated = (lang === 'bn' ? 'পণ্যের ছবি দেখুন ' : 'उत्पाद की तस्वीर देखें ') + match[1];
       }
