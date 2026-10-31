@@ -229,7 +229,7 @@ Read the full deployment, SEO/Search Console, Lighthouse and legal launch checkl
 
 ## Product YouTube videos
 
-Seller Studio lets the seller add an optional YouTube URL, title and video layout when creating a product. Shorts links are auto-detected and displayed vertically (9:16); standard videos use landscape (16:9). The original MP4/WebM upload option is still available. Product-page videos are selectable gallery thumbnails; the homepage renders lazy-loaded product video stories, and product cards mark video-enabled products.
+The owner dashboard lets the seller add a YouTube URL or upload an MP4/WebM file, with a title and Shorts (9:16) or landscape (16:9) layout. The product detail page includes a selectable video thumbnail. On the homepage, every published product with a video appears once in two opposing one-pass rails; the animation stops (it does not loop forever), then each rail can be swipe-scrolled to inspect all remaining cards. Every card identifies its product and links to its product page. Video thumbnails load lazily and the actual YouTube iframe or uploaded video player is created only after the visitor selects Watch video. Product cards mark both YouTube and uploaded-video products.
 
 For the two existing local demo products, run:
 
