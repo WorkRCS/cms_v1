@@ -521,7 +521,17 @@
       payload.append('status', 'published');
       files.forEach((file, index) => payload.append('images[' + index + ']', file));
       const video = form.elements.video.files && form.elements.video.files[0];
+      const youtubeUrl = form.elements.video_youtube_url.value.trim();
+      if (video && youtubeUrl) {
+        setFormMessage(form, 'Choose either a YouTube URL or an uploaded video, not both.');
+        return;
+      }
       if (video) payload.append('video', video);
+      if (youtubeUrl) payload.append('video_youtube_url', youtubeUrl);
+      payload.append('video_layout', form.elements.video_layout.value || 'auto');
+      if (form.elements.video_title.value.trim()) {
+        payload.append('video_title', form.elements.video_title.value.trim());
+      }
       button.disabled = true; setFormMessage(form, '');
       try {
         await apiRequest('/seller/products', {method:'POST', body:payload});
