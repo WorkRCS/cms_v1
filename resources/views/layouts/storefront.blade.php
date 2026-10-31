@@ -163,7 +163,7 @@
             </div>
             <div class="col-lg-3">
                 <h6>Good things, occasionally.</h6><p class="footer-copy">Join our list for product news and seasonal updates.</p>
-                <form class="newsletter-form d-flex" onsubmit="event.preventDefault(); alert('Thanks for your interest! Newsletter signup will be connected soon.');"><input type="email" class="form-control" placeholder="Your email address" aria-label="Your email address" required><button class="btn btn-light" type="submit" aria-label="Subscribe"><svg class="icon"><use href="#i-arrow"/></svg></button></form>
+                <form class="newsletter-form d-flex" onsubmit="event.preventDefault(); alert(window.storefrontTranslate ? window.storefrontTranslate('Thanks for your interest! Newsletter signup will be connected soon.') : 'Thanks for your interest! Newsletter signup will be connected soon.');"><input type="email" class="form-control" placeholder="Your email address" aria-label="Your email address" required><button class="btn btn-light" type="submit" aria-label="Subscribe"><svg class="icon"><use href="#i-arrow"/></svg></button></form>
             </div>
         </div>
         <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between gap-2"><span>© {{ date('Y') }} Field & Found. Demo storefront.</span><span>Made for better everyday shopping.</span></div>
@@ -178,7 +178,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous" defer></script>
 <script src="{{ asset('assets/js/storefront.js') }}?v=storefront-language-v3-20261031" defer></script>
-<script src="{{ asset('assets/js/storefront-i18n.js') }}?v=storefront-language-v3-20261031" defer></script>
+<script src="{{ asset('assets/js/storefront-i18n.js') }}?v=storefront-language-v4-20261031" defer></script>
 @stack('scripts')
 </body>
 </html>
