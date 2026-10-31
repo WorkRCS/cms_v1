@@ -22,6 +22,14 @@
     <url>
         <loc>{{ route('terms') }}</loc>
     </url>
+    @foreach ($categories as $category)
+        <url>
+            <loc>{{ route('shop', ['category' => $category->slug]) }}</loc>
+            @if ($category->updated_at)
+                <lastmod>{{ $category->updated_at->toAtomString() }}</lastmod>
+            @endif
+        </url>
+    @endforeach
     @foreach ($products as $product)
         <url>
             <loc>{{ route('product.show', ['slug' => $product->slug]) }}</loc>
