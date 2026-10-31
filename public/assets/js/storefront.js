@@ -268,7 +268,7 @@
         const videoTitle = video.title || ((product.name || 'Product') + ' video');
         imageButtons.push(
           '<button class="product-thumb product-video-thumb ' + (videoLayout === 'shorts' ? 'product-video-thumb--shorts' : '') +
-          '" type="button" data-video-select aria-label="Play ' + escapeHtml(videoTitle) + '">' +
+          '" type="button" data-video-select aria-pressed="false" aria-label="Play ' + escapeHtml(videoTitle) + '">' +
           '<img src="' + escapeHtml(videoThumbnail) + '" alt="" width="82" height="82" loading="lazy" decoding="async">' +
           '<span class="product-video-play" aria-hidden="true"><svg class="icon"><use href="#i-play"/></svg></span>' +
           '<span class="product-video-label">Video</span></button>'
