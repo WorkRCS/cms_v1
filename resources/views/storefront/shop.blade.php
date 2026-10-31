@@ -26,12 +26,12 @@
         <div class="col-lg-1 text-lg-end"><span class="result-count" data-result-count>{{ $products->total() }} items</span></div>
     </div>
     <div class="row g-4">
-        <aside class="col-lg-3"><div class="filter-panel"><h5>Categories</h5><div class="category-filters" data-shop-categories data-server-rendered="true">
+        <aside class="col-lg-3"><div class="filter-panel"><h2>Categories</h2><div class="category-filters" data-shop-categories data-server-rendered="true">
             <button class="category-filter-btn{{ empty($filters['category']) ? ' active' : '' }}" data-category="">All categories</button>
             @foreach ($categories as $category)
                 <button class="category-filter-btn{{ ($filters['category'] ?? '') === $category->slug ? ' active' : '' }}" data-category="{{ $category->slug }}" data-category-name>{{ $category->name }}</button>
             @endforeach
-        </div><hr><h5>Quick links</h5><a href="{{ route('shop', ['product_type'=>'agriculture']) }}">Farm & garden</a><a href="{{ route('shop', ['product_type'=>'general']) }}">Everyday goods</a><a href="{{ route('shop') }}">All products</a></div></aside>
+        </div><hr><h2>Quick links</h2><a href="{{ route('shop', ['product_type'=>'agriculture']) }}">Farm & garden</a><a href="{{ route('shop', ['product_type'=>'general']) }}">Everyday goods</a><a href="{{ route('shop') }}">All products</a></div></aside>
         <div class="col-lg-9"><div class="row g-4" data-shop-grid data-server-rendered="true" data-current-page="{{ $products->currentPage() }}">
                 @forelse ($products as $product)
                     @include('storefront.partials.product-card', ['product' => $product])
