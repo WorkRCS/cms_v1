@@ -117,7 +117,7 @@
                                         ?? (data_get($videoProduct, 'images.0.variants.medium')
                                             ?: data_get($videoProduct, 'images.0.url')
                                             ?: asset('favicon.svg'));
-                                    $homeVideoTitle = $homeVideo['title'] ?: ($videoProduct->name.' product video');
+                                    $homeVideoTitle = $homeVideo['title'] ?? ($videoProduct->name.' product video');
                                 @endphp
                                 <article class="home-video-card">
                                     <div
