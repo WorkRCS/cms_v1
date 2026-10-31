@@ -296,6 +296,10 @@ class ProductController extends Controller
         $file = $request->file('video');
         $path = $file->store('products/videos', 'public');
 
+        if (! is_string($path) || $path === '') {
+            throw new RuntimeException('The server could not save the uploaded product video.');
+        }
+
         $layout = in_array($request->input('video_layout'), ['shorts', 'standard'], true)
             ? $request->input('video_layout')
             : 'standard';
