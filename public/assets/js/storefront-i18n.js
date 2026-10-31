@@ -553,6 +553,10 @@
     if (!record || visibleText !== record.applied) {
       record = { source: visibleText, applied: null };
     }
+    const option = node.parentElement;
+    if (option.tagName === 'OPTION' && option.closest('#addressState') && !option.hasAttribute('value')) {
+      option.setAttribute('value', record.source.trim());
+    }
     const next = translateValue(record.source, currentLanguage);
     if (node.data !== next) node.data = next;
     record.applied = next;
