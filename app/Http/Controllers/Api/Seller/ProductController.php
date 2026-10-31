@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Services\ProductImageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -101,6 +102,8 @@ class ProductController extends Controller
             'status' => $data['status'] ?? 'draft',
         ]);
 
+        $this->clearPublicCatalogueCache();
+
         return response()->json(['message' => 'Product created successfully.', 'data' => $product], 201);
     }
 
@@ -163,6 +166,7 @@ class ProductController extends Controller
 
         $product->fill($data);
         $product->save();
+        $this->clearPublicCatalogueCache();
 
         return response()->json(['message' => 'Product updated successfully.', 'data' => $product->fresh()]);
     }
@@ -175,8 +179,16 @@ class ProductController extends Controller
 
         $product->status = 'archived';
         $product->save();
+        $this->clearPublicCatalogueCache();
 
         return response()->json(['message' => 'Product archived successfully.']);
+    }
+
+    private function clearPublicCatalogueCache(): void
+    {
+        Cache::forget('seo.sitemap.v1');
+        Cache::forget('storefront.home.featured.v1');
+        Cache::forget('storefront.home.latest.v1');
     }
 
     private function validatedCategory(string $categoryId, string $productType): Category
