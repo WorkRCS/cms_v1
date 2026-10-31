@@ -92,8 +92,8 @@
             </div>
             <div class="table-responsive">
                 <table class="table align-middle seller-table">
-                    <thead><tr><th>Customer</th><th>Email</th><th>Phone</th><th>Account status</th><th>Joined</th></tr></thead>
-                    <tbody data-admin-customers><tr><td colspan="5" class="text-center py-5 text-secondary">Loading customers…</td></tr></tbody>
+                    <thead><tr><th>Customer</th><th>Email</th><th>Phone</th><th>Delivery address</th><th>Account status</th><th>Joined</th></tr></thead>
+                    <tbody data-admin-customers><tr><td colspan="6" class="text-center py-5 text-secondary">Loading customers…</td></tr></tbody>
                 </table>
             </div>
             <nav class="mt-3" aria-label="Customer pages"><ul class="pagination justify-content-center" data-admin-customer-pagination></ul></nav>
