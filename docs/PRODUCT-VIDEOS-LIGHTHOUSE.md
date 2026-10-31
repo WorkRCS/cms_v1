@@ -55,7 +55,7 @@ These protections reduce common attack surfaces but do not make a website “hac
 Run the same URL, viewport, browser version and Lighthouse mode before and after changes. The summary scores alone do not show which audits failed. Open each category and inspect the red/failed audits. In particular:
 - Accessibility: look at the exact contrast, name/label, landmark, heading and ARIA audit. A 94 score may be caused by one or more page-specific DOM elements or contrast pairs.
 - Best Practices: check HTTPS/security, browser-console errors, deprecated API warnings, third-party iframe issues and any failed audits actually listed in that run.
-- Performance: re-run after adding videos; lazy loading defers the iframes, but third-party player payloads still affect a run if the iframe is brought into the viewport.
+- Performance: the homepage initially loads only video thumbnails (not YouTube iframes or uploaded video players). Start a player only when you explicitly test the playback path; a normal initial-page Lighthouse run should not create those third-party player requests.
 - Test the homepage, one product detail page with a Shorts video, one with a standard video, shop, sign-in and seller studio separately. Lighthouse audits a page, not every route in the application.
 
 A code change cannot guarantee 100 for every deployment. The final score depends on the exact route, data, device throttling, browser version, HTTPS configuration, hosting response, third-party video availability and the exact failed audits. Send the detailed Failed audits list (not just the four category scores) to target any remaining page-specific issues.
@@ -68,9 +68,10 @@ A code change cannot guarantee 100 for every deployment. The final score depends
     php artisan serve
 
 Then check:
-- / — the complete product video catalogue, two opposing one-pass rails and click-to-play YouTube/uploaded videos.
+- / — all published product videos, two opposing one-pass rails (then swipe-scroll), product names, and click-to-play YouTube/uploaded videos.
 - /product/farm-fresh-vegetable-box — vertical Shorts thumbnail in the image gallery.
 - /product/garden-hand-trowel — standard landscape video thumbnail in the image gallery.
-- /seller — add a product with a YouTube URL or uploaded MP4/WebM.
+- /admin — product edit modal, paginated products and customer directory.
+- /seller — legacy seller route for adding a product with a YouTube URL or uploaded MP4/WebM.
 
 The site must be deployed on a public HTTPS domain for a public search engine to crawl it. Local 127.0.0.1 testing cannot establish the production HTTPS result.
