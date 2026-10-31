@@ -473,7 +473,7 @@
             password:login.elements.password.value
           })
         });
-        window.location.href = result.user && result.user.role === 'seller' ? '/seller' : '/account';
+        window.location.href = result.user && result.user.role === 'seller' ? '/admin' : '/account';
       } catch (error) { setFormMessage(login, error.message); button.disabled = false; }
     });
 
@@ -634,6 +634,7 @@
         ['Total products', s.total_products],
         ['Published products', s.published_products],
         ['Draft products', s.draft_products],
+        ['Low stock products', s.low_stock_products],
         ['Total customers', s.total_customers],
         ['Active customer accounts', s.active_customer_accounts],
         ['Farm & garden', s.agriculture_products],
@@ -726,7 +727,7 @@
       editForm.elements.is_featured.checked = Boolean(product.is_featured);
       editForm.elements.remove_video.checked = false;
       editForm.elements.video.value = '';
-      editForm.elements['images[]'].value = '';
+      byId('editProductImages').value = '';
       if (editVideoUrl) editVideoUrl.value = product.video && product.video.type === 'youtube' ? product.video.url : '';
 
       loadCategories(editCategorySelect, product.product_type || 'agriculture', product.category_id)
@@ -841,9 +842,10 @@
     editForm?.addEventListener('submit', async (event) => {
       event.preventDefault();
       const button = editForm.querySelector('button[type="submit"]');
-      const imageFiles = Array.from(editForm.elements['images[]'].files || []);
-      const videoFile = editForm.elements.video.files && editForm.elements.video.files[0];
-      const youtubeUrl = editForm.elements.video_youtube_url.value.trim();
+      const imageFiles = Array.from(byId('editProductImages').files || []);
+      const removeVideo = editForm.elements.remove_video.checked;
+      const videoFile = removeVideo ? null : (editForm.elements.video.files && editForm.elements.video.files[0]);
+      const youtubeUrl = removeVideo ? '' : editForm.elements.video_youtube_url.value.trim();
 
       if (imageFiles.length > 8) {
         notify('Choose between 1 and 8 images.', false);
@@ -878,7 +880,7 @@
         await Promise.all([loadDashboard(), loadProducts(currentProductPage)]);
       } catch (error) {
         const node = editForm.querySelector('[data-edit-form-message]');
-        if (node) node.textContent = error.message;
+        if (node) node.textContent = '';
         notify(error.message, false);
       } finally {
         button.disabled = false;
@@ -921,7 +923,7 @@
           field.remove();
           if (!copied) throw new Error('Copy failed');
         }
-        notify('Product link copied.');
+        notify('Product link copied.', true);
       } catch (error) {
         if (error && error.name !== 'AbortError') notify('The product link could not be shared. Copy the page address instead.');
       }
