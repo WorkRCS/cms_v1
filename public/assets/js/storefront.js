@@ -25,8 +25,23 @@
   const imageFor = (product) => {
     const images = Array.isArray(product && product.images) ? product.images : [];
     const image = images.find((item) => item && item.is_primary) || images[0];
-    return (image && image.variants && image.variants.medium) || (image && image.url) ||
+    const source = (image && image.variants && image.variants.medium) || (image && image.url) ||
       'https://placehold.co/640x720/f0f0e9/6c7868?text=Product';
+
+    try {
+      const parsed = new URL(source, window.location.origin);
+      if (parsed.hostname === 'images.unsplash.com') {
+        parsed.searchParams.set('auto', 'format');
+        parsed.searchParams.set('fit', 'crop');
+        parsed.searchParams.set('w', '640');
+        parsed.searchParams.set('q', '68');
+        return parsed.toString();
+      }
+    } catch (_) {
+      // Keep the existing source when it is not a valid URL.
+    }
+
+    return source;
   };
   const notify = (message, success) => {
     const modalNode = document.getElementById('feedbackModal');
@@ -175,7 +190,7 @@
       if (categoriesNode) {
         categoriesNode.innerHTML = (results[0].data || []).map((category) => {
           const photo = images[category.slug];
-          const bg = photo ? 'https://images.unsplash.com/' + photo + '?w=700&q=80' : '';
+          const bg = photo ? 'https://images.unsplash.com/' + photo + '?auto=format&fit=crop&w=480&q=68' : '';
           const type = category.product_type === 'agriculture' ? 'Farm & garden' : 'Everyday goods';
           return '<a class="category-card" data-category-slug="' + escapeHtml(category.slug) + '" href="/shop?category=' + encodeURIComponent(category.slug) +
             '">' + (bg ? '<img class="category-card-image" src="' + escapeHtml(bg) + '" width="480" height="320" loading="lazy" decoding="async" alt="" aria-hidden="true">' : '') +
