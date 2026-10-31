@@ -43,16 +43,16 @@ Route::prefix('api/v1')->group(function (): void {
 
     Route::middleware(['auth', 'throttle:120,1'])->group(function (): void {
         Route::get('/auth/me', [AuthController::class, 'me']);
-        Route::patch('/auth/profile', [AuthController::class, 'updateProfile']);
+        Route::patch('/auth/profile', [AuthController::class, 'updateProfile'])->middleware('throttle:20,1');
         Route::post('/auth/logout', [AuthController::class, 'logout']);
 
         Route::prefix('seller')->middleware(['seller', 'throttle:60,1'])->group(function (): void {
             Route::get('/customers', [SellerAdminController::class, 'customers']);
             Route::get('/dashboard', [SellerProductController::class, 'dashboard']);
             Route::get('/products', [SellerProductController::class, 'index']);
-            Route::post('/products', [SellerProductController::class, 'store']);
-            Route::put('/products/{id}', [SellerProductController::class, 'update']);
-            Route::delete('/products/{id}', [SellerProductController::class, 'destroy']);
+            Route::post('/products', [SellerProductController::class, 'store'])->middleware('throttle:10,1');
+            Route::put('/products/{id}', [SellerProductController::class, 'update'])->middleware('throttle:20,1');
+            Route::delete('/products/{id}', [SellerProductController::class, 'destroy'])->middleware('throttle:20,1');
         });
     });
 });
