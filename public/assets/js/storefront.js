@@ -445,7 +445,12 @@
     const profileForm = document.getElementById('profileForm');
     const setField = (fieldName, value) => {
       const field = profileForm && profileForm.querySelector('[name="' + fieldName + '"]');
-      if (field) field.value = value == null ? '' : String(value);
+      if (!field) return;
+      let displayValue = value == null ? '' : String(value);
+      if (fieldName === 'address.country' && displayValue === 'India' && window.storefrontTranslate) {
+        displayValue = window.storefrontTranslate('India');
+      }
+      field.value = displayValue;
     };
 
     apiRequest('/auth/me').then((result) => {
@@ -488,6 +493,9 @@
         profileForm.querySelectorAll('[name^="address."]').forEach((field) => {
           address[field.name.slice(8)] = field.value.trim() || null;
         });
+
+        const localizedIndia = window.storefrontTranslate ? window.storefrontTranslate('India') : 'India';
+        if (address.country && address.country === localizedIndia) address.country = 'India';
 
         const payload = {
           name: nameField.value.trim(),
