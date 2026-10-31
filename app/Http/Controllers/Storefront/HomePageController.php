@@ -44,6 +44,18 @@ class HomePageController extends Controller
                 ->get(['name', 'slug', 'video', 'short_description', 'images', 'updated_at'])
         );
 
-        return view('storefront.home', compact('categories', 'featuredProducts', 'latestProducts', 'videoProducts'));
+        // Split the full video catalogue between two opposite-direction rails.
+        // Every product appears once instead of duplicating all cards in the DOM.
+        $videoProductsLeft = $videoProducts->filter(fn ($product, $index) => $index % 2 === 0)->values();
+        $videoProductsRight = $videoProducts->filter(fn ($product, $index) => $index % 2 === 1)->reverse()->values();
+
+        return view('storefront.home', compact(
+            'categories',
+            'featuredProducts',
+            'latestProducts',
+            'videoProducts',
+            'videoProductsLeft',
+            'videoProductsRight',
+        ));
     }
 }
