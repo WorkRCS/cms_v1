@@ -954,7 +954,7 @@
         const rail = track.closest('[data-home-video-rail]');
         if (!rail) return;
 
-        const travel = Math.max(0, track.scrollWidth - rail.clientWidth);
+        const travel = Math.max(rail.clientWidth, track.scrollWidth - rail.clientWidth);
         track.style.setProperty('--rail-travel', travel + 'px');
 
         const duration = Math.min(180, Math.max(18, travel / 42));
@@ -1025,6 +1025,7 @@
         player = document.createElement('iframe');
         const playerUrl = new URL(embedUrl);
         playerUrl.searchParams.set('hl', window.storefrontLanguage ? window.storefrontLanguage() : 'en');
+        playerUrl.searchParams.set('autoplay', '1');
         player.src = playerUrl.toString();
         player.title = title;
         player.loading = 'lazy';
