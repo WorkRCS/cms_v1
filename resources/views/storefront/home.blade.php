@@ -94,11 +94,45 @@
     </div>
 </section>
 
-<section class="video-feature">
-    <div class="container"><div class="video-card">
-        <div class="video-copy"><span class="eyebrow light-eyebrow">BEHIND THE GOODS</span><h2>Know where<br><em>good things begin.</em></h2><p>Stories from the people, places and processes behind the products.</p><span class="video-coming"><svg class="icon"><use href="#i-play"/></svg> Store videos coming soon</span></div>
-        <div class="video-visual"><div class="video-visual-inner"><svg class="icon"><use href="#i-play"/></svg></div></div>
-    </div></div>
+<section class="section-space video-feature">
+    <div class="container">
+        <div class="section-heading">
+            <div><span class="eyebrow">BEHIND THE GOODS</span><h2>Watch it from the <em>source.</em></h2></div>
+            <span class="text-link">Product videos & stories</span>
+        </div>
+        @if ($videoProducts->isNotEmpty())
+            <div class="row g-4 align-items-start">
+                @foreach ($videoProducts as $videoProduct)
+                    @php
+                        $homeVideo = is_array($videoProduct->video) ? $videoProduct->video : [];
+                        $homeVideoShort = ($homeVideo['layout'] ?? 'standard') === 'shorts';
+                    @endphp
+                    <div class="col-md-6 col-xl-4">
+                        <article class="video-story-card">
+                            <div class="video-story-player{{ $homeVideoShort ? ' video-story-player--shorts' : ' video-story-player--standard' }}">
+                                <iframe
+                                    src="{{ $homeVideo['embed_url'] }}"
+                                    title="{{ $homeVideo['title'] ?: ($videoProduct->name.' product video') }}"
+                                    loading="lazy"
+                                    referrerpolicy="strict-origin-when-cross-origin"
+                                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen
+                                ></iframe>
+                            </div>
+                            <div class="video-story-copy">
+                                <span class="eyebrow">{{ $homeVideoShort ? 'SHORT VIDEO' : 'PRODUCT STORY' }}</span>
+                                <h3><a href="{{ route('product.show', ['slug' => $videoProduct->slug]) }}">{{ $videoProduct->name }}</a></h3>
+                                <p>{{ $videoProduct->short_description }}</p>
+                                <a class="text-link" href="{{ route('product.show', ['slug' => $videoProduct->slug]) }}">Explore product <svg class="icon"><use href="#i-arrow"/></svg></a>
+                            </div>
+                        </article>
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <div class="empty-state">Product videos will appear here when the seller adds a YouTube link.</div>
+        @endif
+    </div>
 </section>
 
 <section id="faq" class="section-space faq-section">
