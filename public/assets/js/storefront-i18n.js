@@ -18,6 +18,14 @@
     "Home": ["হোম", "होम"],
     "Shop all": ["সব পণ্য দেখুন", "सभी सामान देखें"],
     "Farm & garden": ["কৃষি ও বাগান", "खेती और बागवानी"],
+    "Fresh Produce": ["তাজা কৃষিপণ্য", "ताज़ी कृषि उपज"],
+    "Seeds & Saplings": ["বীজ ও চারা", "बीज और पौधे"],
+    "Organic Farm Inputs": ["জৈব কৃষি উপকরণ", "जैविक कृषि सामग्री"],
+    "Gardening Tools": ["বাগানের সরঞ্জাম", "बागवानी के औज़ार"],
+    "Apparel": ["পোশাক", "कपड़े"],
+    "Electronics": ["ইলেকট্রনিক পণ্য", "इलेक्ट्रॉनिक सामान"],
+    "Watches": ["ঘড়ি", "घड़ियाँ"],
+    "Bags & Travel": ["ব্যাগ ও ভ্রমণ", "बैग और यात्रा"],
     "Everyday goods": ["দৈনন্দিন পণ্য", "रोज़मर्रा के सामान"],
     "Everyday": ["দৈনন্দিন", "रोज़मर्रा के"],
     "draft": ["খসড়া", "मसौदा"],
@@ -466,8 +474,6 @@
     '.video-story-copy h3',
     '.video-story-copy p',
     '.cart-row img',
-    '.category-filters [data-category]:not([data-category=""])',
-    '#productCategoryInput option:not([value=""])',
     '.cart-row h5',
     '.cart-row img',
     '.seller-product-cell',
@@ -478,6 +484,17 @@
     'input',
     'textarea'
   ].join(',');
+
+  const categoryTranslations = {
+    'fresh-produce': ['তাজা কৃষিপণ্য', 'ताज़ी कृषि उपज'],
+    'seeds-saplings': ['বীজ ও চারা', 'बीज और पौधे'],
+    'organic-farm-inputs': ['জৈব কৃষি উপকরণ', 'जैविक कृषि सामग्री'],
+    'gardening-tools': ['বাগানের সরঞ্জাম', 'बागवानी के औज़ार'],
+    apparel: ['পোশাক', 'कपड़े'],
+    electronics: ['ইলেকট্রনিক পণ্য', 'इलेक्ट्रॉनिक सामान'],
+    watches: ['ঘড়ি', 'घड़ियाँ'],
+    'bags-travel': ['ব্যাগ ও ভ্রমণ', 'बैग और यात्रा']
+  };
 
   const textCache = new WeakMap();
   const attributeCache = new WeakMap();
@@ -611,6 +628,22 @@
     if (option.tagName === 'OPTION' && option.closest('#addressState') && !option.hasAttribute('value')) {
       option.setAttribute('value', record.source.trim());
     }
+
+    const categoryNode = node.parentElement.closest('[data-category-slug], [data-category]');
+    const categorySlug = categoryNode
+      ? (categoryNode.getAttribute('data-category-slug') || categoryNode.getAttribute('data-category') || '')
+      : '';
+    const categoryCopy = categoryTranslations[categorySlug];
+    if (categoryNode && categorySlug) {
+      const categoryText = currentLanguage === 'en'
+        ? record.source
+        : (categoryCopy ? categoryCopy[currentLanguage === 'bn' ? 0 : 1] : record.source);
+      if (node.data !== categoryText) node.data = categoryText;
+      record.applied = categoryText;
+      textCache.set(node, record);
+      return;
+    }
+
     const next = translateValue(record.source, currentLanguage);
     if (node.data !== next) node.data = next;
     record.applied = next;
