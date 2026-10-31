@@ -1,8 +1,15 @@
 @php
     $cardImages = is_array($product->images) ? $product->images : [];
     $cardPrimary = collect($cardImages)->firstWhere('is_primary', true) ?? ($cardImages[0] ?? null);
-    $cardImage = data_get($cardPrimary, 'variants.medium') ?: data_get($cardPrimary, 'variants.thumbnail') ?: data_get($cardPrimary, 'url') ?: asset('favicon.svg');
-    $cardImageLarge = data_get($cardPrimary, 'variants.large') ?: data_get($cardPrimary, 'url');
+    $cardMediumVariant = data_get($cardPrimary, 'variants.medium');
+    $cardThumbnailVariant = data_get($cardPrimary, 'variants.thumbnail');
+    $cardImage = $cardMediumVariant ?: $cardThumbnailVariant ?: data_get($cardPrimary, 'url') ?: asset('favicon.svg');
+    $cardImageLarge = $cardMediumVariant ? data_get($cardPrimary, 'variants.large') : null;
+    if (! $cardMediumVariant && ! $cardThumbnailVariant && str_contains($cardImage, 'images.unsplash.com/')) {
+        $cardImage = preg_replace('/([?&])w=\\d+/', '$1w=640', $cardImage);
+        $cardImage = preg_replace('/([?&])q=\\d+/', '$1q=68', $cardImage);
+        $cardImage .= (str_contains($cardImage, '?') ? '&' : '?').'auto=format&fit=crop';
+    }
     $cardType = $product->product_type === 'agriculture' ? 'Farm & garden' : 'Everyday goods';
 @endphp
 <div class="col-6 col-md-4 col-xl-3">
