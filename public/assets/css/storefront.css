@@ -188,7 +188,7 @@ a:hover { color: var(--forest); }
 .cart-row-actions button { border: 0; background: transparent; color: #626b60; font-size: 11px; }
 .cart-summary { position: sticky; top: 110px; padding: 25px; border: 1px solid var(--line); border-radius: 5px; background: #f8f8f2; }
 .cart-summary h2 { margin-bottom: 22px; font-family: Georgia, serif; font-weight: 400; }
-.summary-line { display: flex; justify-content: space-between; gap: 12px; margin: 14px 0; color: #6d756a; font-size: 12px; }
+.summary-line { display: flex; justify-content: space-between; gap: 12px; margin: 14px 0; color: #626b60; font-size: 12px; }
 .summary-line strong { color: var(--ink); }
 .summary-total { color: var(--ink); font-size: 15px; }
 .summary-total strong { color: var(--forest); font-size: 20px; }
