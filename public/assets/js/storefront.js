@@ -35,10 +35,11 @@
     const iconNode = document.getElementById('feedbackModalIcon');
     if (modalNode && messageNode && titleNode && window.bootstrap) {
       messageNode.textContent = String(message || '');
-      titleNode.textContent = success ? 'Done' : 'Please note';
+      titleNode.textContent = success === true ? 'Done' : (success === false ? 'Please note' : 'Notice');
       if (iconNode) {
         iconNode.classList.toggle('is-success', Boolean(success));
-        iconNode.classList.toggle('is-error', !success);
+        iconNode.classList.toggle('is-error', success === false);
+        iconNode.classList.toggle('is-neutral', success == null);
       }
       bootstrap.Modal.getOrCreateInstance(modalNode, { backdrop: true, keyboard: true }).show();
       return;
@@ -91,6 +92,35 @@
     const count = getCart().reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
     document.querySelectorAll('[data-cart-count]').forEach((node) => { node.textContent = String(count); });
   }
+  function askConfirm(message) {
+    const node = document.getElementById('confirmActionModal');
+    const messageNode = document.getElementById('confirmActionMessage');
+    const approve = document.getElementById('confirmActionApprove');
+    if (!node || !messageNode || !approve || !window.bootstrap) {
+      return Promise.resolve(window.confirm(message));
+    }
+
+    return new Promise((resolve) => {
+      let settled = false;
+      const instance = bootstrap.Modal.getOrCreateInstance(node, { backdrop: true, keyboard: true });
+      const finish = (result) => {
+        if (settled) return;
+        settled = true;
+        approve.removeEventListener('click', onApprove);
+        node.removeEventListener('hidden.bs.modal', onHidden);
+        if (result) instance.hide();
+        resolve(result);
+      };
+      const onApprove = () => finish(true);
+      const onHidden = () => finish(false);
+
+      messageNode.textContent = String(message || '');
+      approve.addEventListener('click', onApprove);
+      node.addEventListener('hidden.bs.modal', onHidden);
+      instance.show();
+    });
+  }
+
   function addToCart(product, quantity) {
     const cart = getCart();
     const existing = cart.find((item) => item.slug === product.slug);
@@ -102,7 +132,7 @@
       image: imageFor(product), quantity: Math.max(1, Math.min(available, quantity))
     });
     saveCart(cart);
-    notify('Added to your cart.');
+    notify('Added to your cart.', true);
   }
   function productCard(product) {
     const type = product.product_type === 'agriculture' ? 'Farm & garden' : 'Everyday goods';
@@ -607,10 +637,10 @@
     });
     root.addEventListener('click', async (event) => {
       const button = event.target.closest('[data-archive-product]');
-      if (!button || !await askConfirm('Archive this product? It will no longer appear in the public shop.')) return;
+      if (!button || !await askConfirm(window.storefrontTranslate ? window.storefrontTranslate('Archive this product? It will no longer appear in the public shop.') : 'Archive this product? It will no longer appear in the public shop.')) return;
       try {
         await apiRequest('/seller/products/' + encodeURIComponent(button.dataset.archiveProduct), {method:'DELETE', body:'{}'});
-        notify('Product archived.'); await loadSellerData();
+        notify('Product archived.', true); await loadSellerData();
       } catch (error) { notify(error.message); }
     });
     form.addEventListener('submit', async (event) => {
@@ -647,7 +677,7 @@
         form.reset(); preview.innerHTML = '';
         await loadCategories(); await loadSellerData();
         bootstrap.Collapse.getOrCreateInstance(document.getElementById('productEditor')).hide();
-        notify('Product published successfully.');
+        notify('Product published successfully.', true);
       } catch (error) { setFormMessage(form, error.message); }
       finally { button.disabled = false; }
     });
