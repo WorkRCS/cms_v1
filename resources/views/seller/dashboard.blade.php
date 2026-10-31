@@ -39,15 +39,18 @@
                     <span class="eyebrow">YOUR CATALOGUE</span>
                     <h2 class="mb-0">Products</h2>
                 </div>
-                <button class="btn btn-dark rounded-pill px-4" type="button" data-bs-toggle="collapse" data-bs-target="#productEditor">＋ Add a product</button>
+                <button class="btn btn-dark rounded-pill px-4" type="button" data-bs-toggle="modal" data-bs-target="#productEditor">＋ Add a product</button>
             </div>
 
-            <div class="collapse mb-4" id="productEditor">
-                <div class="editor-card">
-                    <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
-                        <div><h3 class="h5">Add a product</h3><p class="small text-secondary mb-0">Add product details and up to 8 product images.</p></div>
-                        <span class="badge rounded-pill text-bg-light">New listing</span>
-                    </div>
+            <div class="modal fade" id="productEditor" tabindex="-1" aria-labelledby="addProductModalTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                    <div class="modal-content admin-product-modal">
+                        <div class="modal-header">
+                            <div><span class="eyebrow">CATALOGUE MANAGEMENT</span><h2 class="modal-title h5" id="addProductModalTitle">Add a product</h2><p class="small text-secondary mb-0">Add product details and up to 8 product images.</p></div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="editor-card">
                     <form id="sellerProductForm" enctype="multipart/form-data" novalidate>
                         <div class="row g-3">
                             <div class="col-md-8"><label class="form-label" for="productNameInput">Product name</label><input class="form-control" id="productNameInput" name="name" required maxlength="180"></div>
@@ -73,6 +76,9 @@
                         <div class="form-message mt-3" data-form-message role="alert"></div>
                         <div class="d-flex justify-content-end gap-2 mt-4"><button class="btn btn-outline-secondary rounded-pill" type="reset">Clear</button><button class="btn btn-dark rounded-pill px-4" type="submit">Publish product</button></div>
                     </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
