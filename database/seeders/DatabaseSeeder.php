@@ -32,6 +32,14 @@ class DatabaseSeeder extends Seeder
             ['name' => 'products_by_seller'],
         );
         $database->selectCollection('products')->createIndex(
+            ['seller_id' => 1, 'created_at' => -1],
+            ['name' => 'products_seller_created'],
+        );
+        $database->selectCollection('products')->createIndex(
+            ['status' => 1, 'created_at' => -1],
+            ['name' => 'products_status_created'],
+        );
+        $database->selectCollection('products')->createIndex(
             ['status' => 1, 'video.url' => 1, 'updated_at' => -1],
             ['name' => 'products_published_videos'],
         );
