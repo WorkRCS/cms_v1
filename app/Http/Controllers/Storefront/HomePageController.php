@@ -39,7 +39,7 @@ class HomePageController extends Controller
         $videoProducts = Cache::remember('storefront.home.videos.v1', now()->addMinutes(2), fn () =>
             Product::query()
                 ->where('status', 'published')
-                ->where('video.type', 'youtube')
+                ->whereNotNull('video.url')
                 ->orderBy('updated_at', 'desc')
                 ->limit(3)
                 ->get()
