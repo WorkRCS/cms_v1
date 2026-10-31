@@ -249,6 +249,8 @@ class DatabaseSeeder extends Seeder
             );
         }
 
+        Cache::forget('storefront.home.categories.v1');
+        Cache::forget('storefront.home.categories.v2');
         Cache::forget('storefront.home.videos.v1');
         Cache::forget('storefront.home.videos.v2');
         Cache::forget('storefront.home.videos.v3');
