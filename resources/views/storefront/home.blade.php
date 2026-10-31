@@ -33,14 +33,44 @@
 <section class="section-space">
     <div class="container">
         <div class="section-heading"><div><span class="eyebrow">FIND YOUR SOMETHING</span><h2>Shop by <em>category</em></h2></div><a class="text-link" href="{{ route('shop') }}">View everything <svg class="icon"><use href="#i-arrow"/></svg></a></div>
-        <div class="category-grid" data-category-grid><div class="loading-line">Loading categories…</div></div>
+        @php
+            $categoryImages = [
+                'fresh-produce' => 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=700&q=80',
+                'seeds-saplings' => 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=700&q=80',
+                'organic-farm-inputs' => 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=700&q=80',
+                'gardening-tools' => 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=700&q=80',
+                'apparel' => 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=700&q=80',
+                'electronics' => 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700&q=80',
+                'watches' => 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700&q=80',
+                'bags-travel' => 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700&q=80',
+            ];
+        @endphp
+        <div class="category-grid" data-category-grid data-server-rendered="true">
+            @forelse ($categories as $category)
+                @php $categoryImage = $category->image ?: ($categoryImages[$category->slug] ?? null); @endphp
+                <a class="category-card" href="{{ route('shop', ['category' => $category->slug]) }}" @if($categoryImage) style="--category-image:url('{{ $categoryImage }}')" @endif>
+                    <div>
+                        <h3>{{ $category->name }}</h3>
+                        <p>{{ $category->product_type === 'agriculture' ? 'Farm & garden' : 'Everyday goods' }}</p>
+                    </div>
+                </a>
+            @empty
+                <div class="empty-state">Categories will appear here soon.</div>
+            @endforelse
+        </div>
     </div>
 </section>
 
 <section class="section-space section-tint">
     <div class="container">
         <div class="section-heading"><div><span class="eyebrow">A FEW GOOD PICKS</span><h2>Featured <em>finds</em></h2></div><a class="text-link" href="{{ route('shop', ['featured'=>1]) }}">Shop featured <svg class="icon"><use href="#i-arrow"/></svg></a></div>
-        <div class="row g-4" data-featured-grid><div class="col-12"><div class="loading-line">Loading featured products…</div></div></div>
+        <div class="row g-4" data-featured-grid data-server-rendered="true">
+            @forelse ($featuredProducts as $product)
+                @include('storefront.partials.product-card', ['product' => $product])
+            @empty
+                <div class="col-12"><div class="empty-state">No featured products yet.</div></div>
+            @endforelse
+        </div>
     </div>
 </section>
 
@@ -53,7 +83,13 @@
 
 <section class="section-space">
     <div class="container"><div class="section-heading"><div><span class="eyebrow">JUST ARRIVED</span><h2>Fresh to the <em>store</em></h2></div><a class="text-link" href="{{ route('shop') }}">Shop all products <svg class="icon"><use href="#i-arrow"/></svg></a></div>
-        <div class="row g-4" data-latest-grid><div class="col-12"><div class="loading-line">Loading latest products…</div></div></div>
+        <div class="row g-4" data-latest-grid data-server-rendered="true">
+            @forelse ($latestProducts as $product)
+                @include('storefront.partials.product-card', ['product' => $product])
+            @empty
+                <div class="col-12"><div class="empty-state">Products will appear here soon.</div></div>
+            @endforelse
+        </div>
     </div>
 </section>
 
