@@ -15,6 +15,11 @@
     "Shop all": ["সব পণ্য দেখুন", "सभी सामान देखें"],
     "Farm & garden": ["কৃষি ও বাগান", "खेती और बागवानी"],
     "Everyday goods": ["দৈনন্দিন পণ্য", "रोज़मर्रा के सामान"],
+    "Everyday": ["দৈনন্দিন", "रोज़मर्रा के"],
+    "draft": ["খসড়া", "मसौदा"],
+    "archived": ["আর্কাইভ করা", "आर्काइव किया गया"],
+    "customer": ["ক্রেতা", "ग्राहक"],
+    "seller": ["বিক্রেতা", "विक्रेता"],
     "Account": ["অ্যাকাউন্ট", "खाता"],
     "Studio": ["স্টুডিও", "स्टूडियो"],
     "Cart": ["কার্ট", "कार्ट"],
@@ -26,6 +31,10 @@
     "Contact us": ["যোগাযোগ করুন", "संपर्क करें"],
     "My account": ["আমার অ্যাকাউন্ট", "मेरा खाता"],
     "Terms & conditions": ["শর্তাবলি", "नियम और शर्तें"],
+    "Terms & Conditions": ["শর্তাবলি", "नियम और शर्तें"],
+    "Privacy Policy": ["গোপনীয়তা নীতি", "गोपनीयता नीति"],
+    "Data Privacy & Your Rights": ["তথ্যের গোপনীয়তা ও আপনার অধিকার", "डेटा गोपनीयता और आपके अधिकार"],
+    "Seller dashboard": ["বিক্রেতার ড্যাশবোর্ড", "विक्रेता डैशबोर्ड"],
     "Privacy policy": ["গোপনীয়তা নীতি", "गोपनीयता नीति"],
     "Data privacy & rights": ["তথ্যের গোপনীয়তা ও অধিকার", "डेटा गोपनीयता और अधिकार"],
     "Good things, occasionally.": ["মাঝেমধ্যে ভালো কিছু খবর।", "कभी-कभी कुछ अच्छी ख़बरें।"],
@@ -100,13 +109,14 @@
     "Newest first": ["নতুন পণ্য আগে", "नए उत्पाद पहले"],
     "Price: low to high": ["দাম: কম থেকে বেশি", "कीमत: कम से ज़्यादा"],
     "Price: high to low": ["দাম: বেশি থেকে কম", "कीमत: ज़्यादा से कम"],
-    "Name: A to Z": ["নাম: A থেকে Z", "नाम: A से Z"],
+    "Name: A to Z": ["নাম: বর্ণানুক্রমে", "नाम: वर्णक्रम में"],
     "Categories": ["বিভাগসমূহ", "श्रेणियाँ"],
     "All categories": ["সব বিভাগ", "सभी श्रेणियाँ"],
     "Quick links": ["দ্রুত লিংক", "त्वरित लिंक"],
     "All products": ["সব পণ্য", "सभी उत्पाद"],
     "No products match those filters. Try another search.": ["এই ফিল্টারগুলোর সঙ্গে মেলে এমন পণ্য নেই। অন্যভাবে খুঁজে দেখুন।", "इन फ़िल्टर से मेल खाने वाले उत्पाद नहीं मिले। कोई दूसरी खोज करें।"],
     "Search products": ["পণ্য খুঁজুন", "उत्पाद खोजें"],
+    "breadcrumb": ["পথনির্দেশক নেভিগেশন", "ब्रेडक्रंब नेविगेशन"],
     "Product type": ["পণ্যের ধরন", "उत्पाद का प्रकार"],
     "Sort products": ["পণ্য সাজান", "उत्पाद क्रमबद्ध करें"],
     "Product pages": ["পণ্যের পৃষ্ঠা", "उत्पाद पृष्ठ"],
@@ -489,6 +499,24 @@
         if (match) translated = lang === 'bn'
           ? '© ' + match[1] + ' Field & Found। ডেমো অনলাইন স্টোর।'
           : '© ' + match[1] + ' Field & Found। डेमो ऑनलाइन स्टोर।';
+      }
+      if (!translated) {
+        match = trimmed.match(/^For questions about these terms, contact (.*?)\. Grievance contact: (.*?)\. Replace these configuration placeholders with monitored business contact details before launch\.$/);
+        if (match) translated = lang === 'bn'
+          ? 'এই শর্তাবলি সম্পর্কে প্রশ্ন থাকলে যোগাযোগ করুন ' + match[1] + '। অভিযোগের যোগাযোগ: ' + match[2] + '। চালুর আগে এই অস্থায়ী যোগাযোগের তথ্যের পরিবর্তে পর্যবেক্ষণ করা হয় এমন ব্যবসায়িক যোগাযোগের তথ্য দিন।'
+          : 'इन शर्तों के बारे में सवालों के लिए ' + match[1] + ' पर संपर्क करें। शिकायत संपर्क: ' + match[2] + '। लॉन्च से पहले इन अस्थायी विवरणों की जगह निगरानी वाले व्यावसायिक संपर्क विवरण दें।';
+      }
+      if (!translated) {
+        match = trimmed.match(/^Contact (.*?) to ask about access to, correction of or deletion of account information, or to raise a privacy concern\. Requests will be handled subject to identity verification, applicable law and any lawful retention requirement\. The production store should implement a documented request-handling and grievance process before launch\.$/);
+        if (match) translated = lang === 'bn'
+          ? 'অ্যাকাউন্টের তথ্য দেখা, সংশোধন বা মুছে ফেলার বিষয়ে জানতে অথবা গোপনীয়তার উদ্বেগ জানাতে ' + match[1] + ' যোগাযোগ করুন। পরিচয় যাচাই, প্রযোজ্য আইন ও আইনসম্মত তথ্য সংরক্ষণের শর্ত অনুযায়ী অনুরোধের ব্যবস্থা নেওয়া হবে। চালুর আগে প্রকৃত স্টোরে নথিভুক্ত অনুরোধ-পরিচালনা ও অভিযোগ নিষ্পত্তির প্রক্রিয়া চালু করা উচিত।'
+          : 'खाते की जानकारी देखने, सुधारने या हटाने के बारे में पूछने या गोपनीयता संबंधी चिंता बताने के लिए ' + match[1] + ' पर संपर्क करें। अनुरोधों पर पहचान सत्यापन, लागू कानून और किसी भी वैध डेटा-रखरखाव की शर्त के अनुसार कार्रवाई होगी। लॉन्च से पहले वास्तविक दुकान में अनुरोध संभालने और शिकायत निवारण की लिखित प्रक्रिया लागू होनी चाहिए।';
+      }
+      if (!translated) {
+        match = trimmed.match(/^This notice may be updated as the website's functionality and legal obligations change\. For privacy questions, contact (.*?)\. Grievance contact: (.*?)\.$/);
+        if (match) translated = lang === 'bn'
+          ? 'ওয়েবসাইটের কার্যকারিতা ও আইনি দায়িত্ব পরিবর্তিত হলে এই বিজ্ঞপ্তি হালনাগাদ হতে পারে। গোপনীয়তা সংক্রান্ত প্রশ্নের জন্য যোগাযোগ করুন ' + match[1] + '। অভিযোগের যোগাযোগ: ' + match[2] + '।'
+          : 'वेबसाइट की सुविधाओं और कानूनी दायित्वों में बदलाव के अनुसार यह सूचना अपडेट की जा सकती है। गोपनीयता संबंधी सवालों के लिए ' + match[1] + ' पर संपर्क करें। शिकायत संपर्क: ' + match[2] + '।';
       }
       if (!translated) {
         match = trimmed.match(/^The (.+) field is required\.$/i);
