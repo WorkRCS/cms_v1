@@ -24,6 +24,9 @@
     <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
     <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+    <symbol id="i-sprout" viewBox="0 0 24 24"><path d="M12 21v-9"/><path d="M12 12C6 12 4 8 4 4c5 0 8 2 8 8Z"/><path d="M12 15c0-5 3-8 8-8 0 5-2 8-8 8Z"/></symbol>
 </svg>
 
 <div class="announcement-bar">
@@ -45,11 +48,40 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('shop', ['product_type' => 'general']) }}">Everyday goods</a></li>
             </ul>
             <div class="nav-actions d-flex align-items-center gap-3">
-                <a class="icon-link" href="{{ route('login') }}" aria-label="Account"><svg class="icon"><use href="#i-user"/></svg><span class="d-lg-none">Account</span></a>
+                <a class="icon-link" href="{{ auth()->check() ? (auth()->user()->role === 'seller' ? route('seller.dashboard') : route('account')) : route('login') }}" aria-label="Account"><svg class="icon"><use href="#i-user"/></svg><span class="d-lg-none">Account</span></a>
                 <a class="icon-link cart-link" href="{{ route('cart') }}" aria-label="Shopping cart"><svg class="icon"><use href="#i-bag"/></svg><span class="cart-count" data-cart-count>0</span><span class="d-lg-none">Cart</span></a>
             </div>
         </div>
     </div>
+</nav>
+
+@php
+    $mobileAccountUrl = route('login');
+    $mobileAccountLabel = 'Account';
+    $mobileAccountActive = request()->routeIs('login', 'register');
+    if (auth()->check()) {
+        $mobileIsSeller = auth()->user()->role === 'seller';
+        $mobileAccountUrl = $mobileIsSeller ? route('seller.dashboard') : route('account');
+        $mobileAccountLabel = $mobileIsSeller ? 'Studio' : 'Account';
+        $mobileAccountActive = $mobileIsSeller ? request()->routeIs('seller.*') : request()->routeIs('account');
+    }
+@endphp
+<nav class="mobile-bottom-nav" aria-label="Primary mobile navigation">
+    <a class="mobile-nav-item{{ request()->routeIs('home') ? ' active' : '' }}" href="{{ route('home') }}" @if(request()->routeIs('home')) aria-current="page" @endif>
+        <svg class="icon"><use href="#i-home"/></svg><span>Home</span>
+    </a>
+    <a class="mobile-nav-item{{ (request()->routeIs('shop', 'product.show') && !(request()->routeIs('shop') && request()->query('product_type') === 'agriculture')) ? ' active' : '' }}" href="{{ route('shop') }}" @if(request()->routeIs('shop', 'product.show') && !(request()->routeIs('shop') && request()->query('product_type') === 'agriculture')) aria-current="page" @endif>
+        <svg class="icon"><use href="#i-grid"/></svg><span>Shop</span>
+    </a>
+    <a class="mobile-nav-item{{ (request()->routeIs('shop') && request()->query('product_type') === 'agriculture') ? ' active' : '' }}" href="{{ route('shop', ['product_type' => 'agriculture']) }}" @if(request()->routeIs('shop') && request()->query('product_type') === 'agriculture') aria-current="page" @endif>
+        <svg class="icon"><use href="#i-sprout"/></svg><span>Farm</span>
+    </a>
+    <a class="mobile-nav-item{{ request()->routeIs('cart', 'checkout') ? ' active' : '' }}" href="{{ route('cart') }}" @if(request()->routeIs('cart', 'checkout')) aria-current="page" @endif>
+        <span class="mobile-nav-icon-wrap"><svg class="icon"><use href="#i-bag"/></svg><span class="mobile-cart-count" data-cart-count>0</span></span><span>Cart</span>
+    </a>
+    <a class="mobile-nav-item{{ $mobileAccountActive ? ' active' : '' }}" href="{{ $mobileAccountUrl }}" @if($mobileAccountActive) aria-current="page" @endif>
+        <svg class="icon"><use href="#i-user"/></svg><span>{{ $mobileAccountLabel }}</span>
+    </a>
 </nav>
 
 <main>
