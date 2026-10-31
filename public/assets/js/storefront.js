@@ -368,11 +368,81 @@
   function initAccount() {
     const name = document.querySelector('[data-account-name]');
     if (!name) return;
+
+    const profileForm = document.getElementById('profileForm');
+    const setField = (fieldName, value) => {
+      const field = profileForm && profileForm.querySelector('[name="' + fieldName + '"]');
+      if (field) field.value = value == null ? '' : String(value);
+    };
+
     apiRequest('/auth/me').then((result) => {
-      name.textContent = (result.user && result.user.name) || 'Customer';
-      document.querySelector('[data-account-email]').textContent = (result.user && result.user.email) || '';
-      document.querySelector('[data-account-role]').textContent = (result.user && result.user.role) || 'customer';
+      const user = result.user || {};
+      const address = user.address || {};
+
+      name.textContent = user.name || 'Customer';
+      document.querySelector('[data-account-email]').textContent = user.email || '';
+      document.querySelector('[data-account-role]').textContent = user.role || 'customer';
+
+      if (profileForm) {
+        setField('name', user.name);
+        setField('phone', user.phone);
+        setField('address.label', address.label);
+        setField('address.full_name', address.full_name);
+        setField('address.phone', address.phone);
+        setField('address.house_flat', address.house_flat);
+        setField('address.street_area', address.street_area);
+        setField('address.landmark', address.landmark);
+        setField('address.locality', address.locality);
+        setField('address.city', address.city);
+        setField('address.district', address.district);
+        setField('address.state', address.state);
+        setField('address.postal_code', address.postal_code);
+        setField('address.country', address.country || 'India');
+        setField('name', user.name);
+        const email = document.getElementById('profileEmail');
+        if (email) email.value = user.email || '';
+      }
     }).catch(() => { window.location.href = '/login'; });
+
+    if (profileForm) {
+      profileForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const button = profileForm.querySelector('button[type="submit"]');
+        const nameField = profileForm.querySelector('[name="name"]');
+        const phoneField = profileForm.querySelector('[name="phone"]');
+        const address = {};
+
+        profileForm.querySelectorAll('[name^="address."]').forEach((field) => {
+          address[field.name.slice(8)] = field.value.trim() || null;
+        });
+
+        const payload = {
+          name: nameField.value.trim(),
+          phone: phoneField.value.trim() || null,
+          address
+        };
+
+        button.disabled = true;
+        setFormMessage(profileForm, '');
+
+        try {
+          const result = await apiRequest('/auth/profile', {
+            method: 'PATCH',
+            body: JSON.stringify(payload)
+          });
+
+          const updatedUser = result.user || {};
+          name.textContent = updatedUser.name || 'Customer';
+          setFormMessage(profileForm, result.message || 'Profile and address saved successfully.', true);
+          notify('Profile details saved.');
+        } catch (error) {
+          setFormMessage(profileForm, error.message);
+        } finally {
+          button.disabled = false;
+        }
+      });
+    }
+
     document.querySelector('[data-logout]')?.addEventListener('click', async () => {
       try { await apiRequest('/auth/logout', {method:'POST', body:'{}'}); window.location.href = '/'; }
       catch (error) { notify(error.message); }
