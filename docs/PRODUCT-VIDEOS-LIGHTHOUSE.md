@@ -41,8 +41,14 @@ YouTube's official embed documentation specifies a 200px by 200px minimum player
 - Product image/video selection exposes aria-pressed state.
 - Iframes have descriptive titles.
 - Increased contrast of several small-text styles and made the skip link visible on keyboard focus.
-- Added baseline response headers: X-Content-Type-Options, X-Frame-Options, Referrer-Policy and Permissions-Policy. HSTS is added only for HTTPS requests in production; deployment must still actually serve HTTPS.
+- Added X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions Policy and Cross-Origin-Opener-Policy (same-origin).
+- Added a per-response nonce Content Security Policy with strict-dynamic, no inline script attributes, same-origin scripts, YouTube privacy-enhanced frames only, and a Trusted Types requirement for script sinks.
+- Added DOMPurify as the default Trusted Types HTML sanitizer for dynamic HTML sinks.
+- HSTS is sent only for HTTPS requests in production, with a two-year max-age. The deployment must actually serve HTTPS and configure trusted proxies correctly when TLS terminates at a reverse proxy.
 - Permissions Policy explicitly allows fullscreen only for the first-party page and YouTube's privacy-enhanced embed host; camera, microphone and geolocation are disabled.
+- Bootstrap 5.3.8 CSS/JS and DOMPurify are served locally. This removes the Bootstrap CDN dependency from initial page loads; YouTube remains a third-party service only when a visitor starts a video.
+
+These protections reduce common attack surfaces but do not make a website “hacking-proof”. Keep dependencies patched, restrict database and storage access, monitor logs, rotate secrets if exposed, back up data and test the live deployment.
 
 ## Retest Lighthouse
 
