@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\Seller\ProductController as SellerProductController;
+use App\Http\Controllers\Api\Seller\AdminController as SellerAdminController;
 use App\Http\Controllers\Storefront\ProductPageController;
 use App\Http\Controllers\Storefront\HomePageController;
 use App\Http\Controllers\Storefront\ShopPageController;
@@ -27,14 +28,15 @@ Route::view('/checkout', 'storefront.checkout')->name('checkout');
 
 Route::view('/account', 'customer.account')->middleware('auth')->name('account');
 Route::view('/seller', 'seller.dashboard')->middleware(['auth', 'seller'])->name('seller.dashboard');
+Route::view('/admin', 'seller.dashboard')->middleware(['auth', 'seller'])->name('admin.dashboard');
 
 Route::prefix('api/v1')->group(function (): void {
     Route::get('/health', [HealthController::class, 'show']);
     Route::get('/csrf-token', fn () => response()->json(['token' => csrf_token()]));
 
-    Route::get('/categories', [CategoryController::class, 'index']);
-    Route::get('/products', [ProductController::class, 'index']);
-    Route::get('/products/{slug}', [ProductController::class, 'show']);
+    Route::get('/categories', [CategoryController::class, 'index'])->middleware('throttle:120,1');
+    Route::get('/products', [ProductController::class, 'index'])->middleware('throttle:120,1');
+    Route::get('/products/{slug}', [ProductController::class, 'show'])->middleware('throttle:120,1');
 
     Route::post('/auth/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
     Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
@@ -44,7 +46,8 @@ Route::prefix('api/v1')->group(function (): void {
         Route::patch('/auth/profile', [AuthController::class, 'updateProfile']);
         Route::post('/auth/logout', [AuthController::class, 'logout']);
 
-        Route::prefix('seller')->middleware('seller')->group(function (): void {
+        Route::prefix('seller')->middleware(['seller', 'throttle:60,1'])->group(function (): void {
+            Route::get('/customers', [SellerAdminController::class, 'customers']);
             Route::get('/dashboard', [SellerProductController::class, 'dashboard']);
             Route::get('/products', [SellerProductController::class, 'index']);
             Route::post('/products', [SellerProductController::class, 'store']);
