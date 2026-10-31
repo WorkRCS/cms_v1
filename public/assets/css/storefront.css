@@ -1806,3 +1806,12 @@ html[data-language-pending="true"] body {
         min-width: 0;
     }
 }
+
+.admin-customer-address {
+    min-width: 220px;
+    max-width: 360px;
+    color: #4d594c;
+    font-size: 12px;
+    line-height: 1.55;
+    white-space: normal;
+}
