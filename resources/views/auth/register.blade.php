@@ -1,5 +1,6 @@
 @extends('layouts.storefront')
 @section('title', 'Create an account')
+@section('robots', 'noindex,nofollow')
 @section('content')
 <section class="auth-section"><div class="container"><div class="auth-card">
     <span class="eyebrow">JOIN THE STORE</span><h1>Your good things<br><em>start here.</em></h1><p class="body-copy">Create an account to save your details and keep track of future orders.</p>
