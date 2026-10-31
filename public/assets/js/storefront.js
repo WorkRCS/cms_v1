@@ -243,7 +243,7 @@
         '<button class="product-thumb ' + (index === 0 ? 'active' : '') + '" type="button" data-image-index="' + index +
         '" aria-label="View product image ' + (index + 1) + '"><img src="' +
         escapeHtml((image.variants && image.variants.thumbnail) || image.url) + '" alt="' +
-        escapeHtml(image.alt || product.name) + '"></button>'
+        escapeHtml(image.alt || product.name) + '" loading="lazy" decoding="async" width="82" height="82"></button>'
       ).join('');
       thumbnails.addEventListener('click', (event) => {
         const button = event.target.closest('[data-image-index]');
