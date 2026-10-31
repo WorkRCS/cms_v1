@@ -22,12 +22,14 @@ A single-seller B2C ecommerce starter for agriculture products and general merch
 - Customer registration, login, logout and editable profile with optional Indian delivery address
 - Checkout preview (order placement is not yet connected)
 
-### Seller area
-- Authenticated seller dashboard and product counts
-- Product list and archive action
+### Store admin area
+- Authenticated owner dashboard at /admin (currently protected by the existing seller role; no separate admin role has been created)
+- Product, published, draft, stock and customer-account summary counts
+- Paginated customer directory with name/email search and basic contact/account status
+- Paginated seller-owned product list with product edit modal and archive action
 - Add product form with agriculture/general product type
-- Multiple product image upload (1–8 files) and optional MP4/WebM video
-- Server-side conversion to WebP thumbnail, medium and large variants
+- Multiple product image upload (1–8 files) and optional MP4/WebM or YouTube video
+- Customer data responses expose only name, email, phone, enabled/disabled status and join date; password hashes are never returned
 
 ### Backend
 - MongoDB connection and health endpoint
@@ -37,7 +39,7 @@ A single-seller B2C ecommerce starter for agriculture products and general merch
 - Local-only demo seeder: 8 categories and 8 published products (4 agriculture + 4 general)
 - MongoDB indexes for email, category slug, product slug and catalogue lookups
 
-Orders, payment gateway, customer order history, coupon and video CMS are future milestones. The checkout page intentionally explains this rather than pretending to submit a real order.
+Orders, payment gateway, customer order history, coupon management and video CMS are future milestones. The checkout page intentionally explains this rather than pretending to submit a real order. The admin dashboard therefore labels order management as not enabled and does not show fabricated order counts.
 
 ## Requirements
 
@@ -118,10 +120,11 @@ Open:
 - Storefront: http://127.0.0.1:8000/
 - Shop: http://127.0.0.1:8000/shop
 - Seller login: http://127.0.0.1:8000/login
-- Seller dashboard: http://127.0.0.1:8000/seller
+- Store admin dashboard: http://127.0.0.1:8000/admin
+- Legacy seller dashboard route: http://127.0.0.1:8000/seller
 - MongoDB health: http://127.0.0.1:8000/api/v1/health
 
-No Node.js or npm build is required for this first frontend milestone. Bootstrap CSS/JS are loaded from jsDelivr, while the store-specific CSS and JavaScript are local files under public/assets/.
+No Node.js or npm build is required for this frontend milestone. Bootstrap 5.3.8 CSS/JS and DOMPurify are vendored under public/assets/vendor; store-specific CSS, JavaScript and lazy-loaded Bengali/Hindi dictionaries are also local files under public/assets/.
 
 ## API routes
 
@@ -139,7 +142,8 @@ All JSON APIs use /api/v1.
 | GET | /api/v1/auth/me | Authenticated | Current user and saved profile/address |
 | PATCH | /api/v1/auth/profile | Authenticated | Update optional profile and delivery-address fields |
 | POST | /api/v1/auth/logout | Authenticated | Sign out |
-| GET | /api/v1/seller/dashboard | Seller | Product summary |
+| GET | /api/v1/seller/dashboard | Seller | Product and customer-account summary |
+| GET | /api/v1/seller/customers | Seller | Paginated customer directory with search |
 | GET | /api/v1/seller/products | Seller | List seller's products |
 | POST | /api/v1/seller/products | Seller | Create product |
 | PUT | /api/v1/seller/products/{id} | Seller | Update seller-owned product |
@@ -165,7 +169,7 @@ Uploads are stored on Laravel's public disk. Run php artisan storage:link to exp
 
 The JSON endpoints are in Laravel's web middleware stack to use same-origin session cookies. Browser POST/PUT/DELETE requests acquire a CSRF token from /api/v1/csrf-token and send it in X-CSRF-TOKEN. The JavaScript uses credentials: same-origin.
 
-Registration always creates a customer role; there is no public seller registration. Seller pages and APIs require an active, authenticated seller. Login and registration are rate-limited. Use HTTPS and SESSION_SECURE_COOKIE=true outside local development.
+Registration always creates a customer role; there is no public seller registration. The /admin page and /api/v1/seller/* endpoints require an authenticated, active seller account and are rate-limited. Public catalogue/CSRF endpoints are rate-limited and login/registration use a stricter limit. Security response headers include a per-response nonce CSP, Trusted Types, COOP, Permissions Policy, and HSTS on production HTTPS requests. Use HTTPS and SESSION_SECURE_COOKIE=true outside local development. These controls reduce risk but cannot make any internet-facing application “hacking-proof”; review logs, patch dependencies, use least-privilege database credentials and test the deployed configuration.
 
 ## Verification commands
 
@@ -175,6 +179,28 @@ Registration always creates a customer role; there is no public seller registrat
     php artisan serve
 
 Then browse the homepage, filter agriculture/general products, open a product and test its image gallery, add items to the cart, sign in with the local demo seller and publish a test product.
+
+## Homepage video rails and admin workspace
+
+The homepage renders all published products that contain a video in two one-pass rails moving in opposite directions. Each product video is represented by a thumbnail and product name; a player is created only after a visitor chooses to watch. Video rails pause on hover/focus and turn off motion when the visitor requests reduced motion. The product page includes a share action using the Web Share API where available, with a copy-link fallback.
+
+The admin dashboard currently covers product management and customer account information. Product edits are restricted server-side to the authenticated seller's own products. Customer lists are paginated; “active customer accounts” means accounts enabled for use, not users currently online. Actual orders cannot be counted until order creation, persistence, and order management APIs exist.
+
+## Operational scaling
+
+For multiple production application instances, use a managed Redis service for shared cache, sessions and rate-limit state. The repository includes optional Redis configuration; local defaults remain file cache/session and synchronous jobs. Production environment settings (after installing/enabling the PHP Redis extension and provisioning Redis) can include:
+
+    CACHE_STORE=redis
+    CACHE_LIMITER=default
+    SESSION_DRIVER=redis
+    SESSION_CONNECTION=default
+    QUEUE_CONNECTION=redis
+    REDIS_CLIENT=phpredis
+    REDIS_HOST=<managed-redis-host>
+    REDIS_PASSWORD=<managed-redis-password>
+    REDIS_PORT=6379
+
+Do not use these settings until a reachable Redis service and the PHP Redis extension are available. For real multi-instance scale, also provision shared object storage for product images/videos (the current default public disk is local), a CDN, MongoDB Atlas sizing/backups/monitoring, queue workers, PHP-FPM capacity and load tests for the expected concurrency. Indexes are created by the local seeders; production index changes should be applied through a reviewed deployment/migration process rather than running demo seeders against production.
 
 ## Production checklist
 
