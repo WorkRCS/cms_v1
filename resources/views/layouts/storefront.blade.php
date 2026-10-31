@@ -3,6 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <script>
+        try {
+            const savedStorefrontLanguage = localStorage.getItem('field-found-language');
+            if (['en', 'bn', 'hi'].includes(savedStorefrontLanguage)) {
+                document.documentElement.lang = savedStorefrontLanguage === 'bn' ? 'bn-IN' : (savedStorefrontLanguage === 'hi' ? 'hi-IN' : 'en-IN');
+            }
+        } catch (_) {}
+    </script>
     <meta name="theme-color" content="#fffefa">
     @php
         $storeName = config('store.name', 'Field & Found');
@@ -52,7 +60,7 @@
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
     <link rel="dns-prefetch" href="//images.unsplash.com">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link href="{{ asset('assets/css/storefront.css') }}?v=youtube-gallery-a11y-v4-20261031" rel="stylesheet">
+    <link href="{{ asset('assets/css/storefront.css') }}?v=storefront-language-v1-20261031" rel="stylesheet">
     <script type="application/ld+json">{!! json_encode($siteGraph, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}</script>
     @stack('structured_data')
     @stack('head')
@@ -86,6 +94,11 @@
 <nav class="navbar navbar-expand-lg site-nav sticky-top">
     <div class="container">
         <a class="navbar-brand brand-mark" href="{{ route('home') }}"><span class="brand-icon"><svg><use href="#i-leaf"/></svg></span>field<span>&</span>found</a>
+        <select id="siteLanguageSelect" class="form-select form-select-sm language-select" aria-label="Choose language">
+            <option value="en">English</option>
+            <option value="bn">বাংলা</option>
+            <option value="hi">हिन्दी</option>
+        </select>
         <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation"><svg class="icon"><use href="#i-menu"/></svg></button>
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav mx-auto gap-lg-3">
@@ -165,6 +178,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous" defer></script>
 <script src="{{ asset('assets/js/storefront.js') }}?v=youtube-gallery-a11y-v4-20261031" defer></script>
+<script src="{{ asset('assets/js/storefront-i18n.js') }}?v=storefront-language-v1-20261031" defer></script>
 @stack('scripts')
 </body>
 </html>
