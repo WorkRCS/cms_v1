@@ -751,6 +751,21 @@
     }
   }
 
+  function syncYouTubePlayerLanguage() {
+    const language = currentLanguage;
+    document.querySelectorAll('iframe[src*="youtube-nocookie.com/embed/"]').forEach((frame) => {
+      try {
+        const source = frame.getAttribute('src') || frame.src;
+        const url = new URL(source, window.location.href);
+        url.searchParams.set('hl', language);
+        const localizedSource = url.toString();
+        if (frame.src !== localizedSource) frame.src = localizedSource;
+      } catch (_) {
+        // Keep a video playable if a browser cannot parse an embed URL.
+      }
+    });
+  }
+
   function applyLanguage(language) {
     currentLanguage = safeLanguage(language);
     document.documentElement.lang = languageCodes[currentLanguage];
@@ -759,6 +774,7 @@
     updateLanguageOptions(currentLanguage);
     translateTree(document.body);
     updateCountryField(currentLanguage);
+    syncYouTubePlayerLanguage();
     translateDocumentTitle();
     try {
       window.localStorage.setItem(STORAGE_KEY, currentLanguage);
