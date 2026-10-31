@@ -10,6 +10,13 @@ use RuntimeException;
 class ProductImageService
 {
     /**
+     * Files created during the current upload batch, removed if any later
+     * image fails validation or conversion.
+     *
+     * @var array<int, string>
+     */
+    private array $createdPaths = [];
+    /**
      * @param array<int, UploadedFile> $files
      * @return array<int, array<string, mixed>>
      */
@@ -20,9 +27,22 @@ class ProductImageService
         }
 
         $results = [];
-        foreach ($files as $index => $file) {
-            $results[] = $this->storeOne($file, $productName, $index);
+        $this->createdPaths = [];
+
+        try {
+            foreach ($files as $index => $file) {
+                $results[] = $this->storeOne($file, $productName, $index);
+            }
+        } catch (\\Throwable $exception) {
+            if ($this->createdPaths !== []) {
+                Storage::disk('public')->delete($this->createdPaths);
+            }
+
+            $this->createdPaths = [];
+            throw $exception;
         }
+
+        $this->createdPaths = [];
 
         return $results;
     }
@@ -90,6 +110,7 @@ class ProductImageService
                 imagedestroy($source);
                 throw new RuntimeException('The server could not save an optimized product image.');
             }
+            $this->createdPaths[] = $path;
             $variants[$variant] = Storage::disk('public')->url($path);
         }
 
