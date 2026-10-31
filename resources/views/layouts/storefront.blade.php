@@ -60,7 +60,7 @@
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
     <link rel="dns-prefetch" href="//images.unsplash.com">
     <link href="{{ asset('assets/vendor/bootstrap/bootstrap.min.css') }}?v=5.3.8" rel="stylesheet">
-    <link href="{{ asset('assets/css/storefront.css') }}?v=storefront-admin-video-v8-20261031" rel="stylesheet">
+    <link href="{{ asset('assets/css/storefront.css') }}?v=storefront-admin-video-v9-20261031" rel="stylesheet">
     <script type="application/ld+json" nonce="{{ request()->attributes->get('csp_nonce') }}">{!! json_encode($siteGraph, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}</script>
     @stack('structured_data')
     @stack('head')
