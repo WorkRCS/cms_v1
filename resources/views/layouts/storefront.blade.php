@@ -52,7 +52,7 @@
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
     <link rel="dns-prefetch" href="//images.unsplash.com">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{ asset('assets/css/storefront.css') }}?v=profile-address-20261031" rel="stylesheet">
+    <link href="{{ asset('assets/css/storefront.css') }}?v=youtube-gallery-a11y-20261031" rel="stylesheet">
     <script type="application/ld+json">{!! json_encode($siteGraph, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}</script>
     @stack('structured_data')
     @stack('head')
@@ -164,7 +164,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
-<script src="{{ asset('assets/js/storefront.js') }}?v=profile-address-20261031" defer></script>
+<script src="{{ asset('assets/js/storefront.js') }}?v=youtube-gallery-a11y-20261031" defer></script>
 @stack('scripts')
 </body>
 </html>
