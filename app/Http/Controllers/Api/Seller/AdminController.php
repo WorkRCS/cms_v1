@@ -1,11 +1,11 @@
 <?php
 
-namespace App\\Http\\Controllers\\Api\\Seller;
+namespace App\Http\Controllers\Api\Seller;
 
-use App\\Http\\Controllers\\Controller;
-use App\\Models\\User;
-use Illuminate\\Http\\JsonResponse;
-use Illuminate\\Http\\Request;
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
