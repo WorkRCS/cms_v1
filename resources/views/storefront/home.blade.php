@@ -51,7 +51,7 @@
                 @php $categoryImage = $category->image ?: ($categoryImages[$category->slug] ?? null); @endphp
                 <a class="category-card" data-category-slug="{{ $category->slug }}" href="{{ route('shop', ['category' => $category->slug]) }}" @if($categoryImage) style="--category-image:url('{{ $categoryImage }}')" @endif>
                     <div>
-                        <h3>{{ $category->name }}</h3>
+                        <h3 data-category-name data-category-slug="{{ $category->slug }}">{{ $category->name }}</h3>
                         <p>{{ $category->product_type === 'agriculture' ? 'Farm & garden' : 'Everyday goods' }}</p>
                     </div>
                 </a>
