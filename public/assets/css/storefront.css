@@ -1838,3 +1838,9 @@ html[data-language-pending="true"] body {
     line-height: 1.55;
     white-space: normal;
 }
+
+.home-video-rail:focus-visible {
+    outline: 3px solid #526b4d;
+    outline-offset: 4px;
+    border-radius: 6px;
+}
