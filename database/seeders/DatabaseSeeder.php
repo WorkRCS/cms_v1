@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 
 class DatabaseSeeder extends Seeder
 {
@@ -90,6 +91,16 @@ class DatabaseSeeder extends Seeder
                     $image('https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=1200&q=85', 'Fresh produce close-up', 2),
                     $image('https://images.unsplash.com/photo-1518843875459-f738682238a6?w=1200&q=85', 'Farm vegetables from another angle', 3),
                 ],
+                'video' => [
+                    'type' => 'youtube',
+                    'provider' => 'youtube',
+                    'video_id' => 'j_ZOWRaWBbM',
+                    'url' => 'https://www.youtube.com/watch?v=j_ZOWRaWBbM',
+                    'embed_url' => 'https://www.youtube-nocookie.com/embed/j_ZOWRaWBbM?playsinline=1&rel=0',
+                    'thumbnail_url' => 'https://i.ytimg.com/vi/j_ZOWRaWBbM/hqdefault.jpg',
+                    'layout' => 'shorts',
+                    'title' => 'Organic vegetable harvesting — demo Short',
+                ],
             ],
             [
                 'name' => 'Premium Wheat Seeds - 1 kg', 'slug' => 'premium-wheat-seeds-1kg', 'category' => 'seeds-saplings',
@@ -128,6 +139,16 @@ class DatabaseSeeder extends Seeder
                     $image('https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1200&q=85', 'Gardening tools', 1),
                     $image('https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=1200&q=85', 'Garden hand tools', 2),
                     $image('https://images.unsplash.com/photo-1599685315640-7ec1f4d5f1a2?w=1200&q=85', 'Tool and garden detail', 3),
+                ],
+                'video' => [
+                    'type' => 'youtube',
+                    'provider' => 'youtube',
+                    'video_id' => '4AKiaL4UoC8',
+                    'url' => 'https://www.youtube.com/watch?v=4AKiaL4UoC8',
+                    'embed_url' => 'https://www.youtube-nocookie.com/embed/4AKiaL4UoC8?playsinline=1&rel=0',
+                    'thumbnail_url' => 'https://i.ytimg.com/vi/4AKiaL4UoC8/hqdefault.jpg',
+                    'layout' => 'standard',
+                    'title' => 'FAO home vegetable garden harvest — demo video',
                 ],
             ],
             [
@@ -199,6 +220,11 @@ class DatabaseSeeder extends Seeder
                 ],
             );
         }
+
+        Cache::forget('storefront.home.videos.v1');
+        Cache::forget('storefront.home.featured.v1');
+        Cache::forget('storefront.home.latest.v1');
+        Cache::forget('seo.sitemap.v1');
 
         $this->command?->info('Demo seller, 8 categories and 8 demo products have been seeded.');
     }
