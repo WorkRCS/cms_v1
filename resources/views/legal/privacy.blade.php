@@ -40,6 +40,7 @@
 
         <h2>4. Cookies and local storage</h2>
         <p>The website uses a session cookie for authentication and security. The configured session inactivity lifetime is up to seven days, subject to logout, browser settings, server cleanup and security events. The shopping cart uses browser local storage until you clear it or browser data is removed. Essential session and security storage is not an advertising cookie.</p>
+        <p>The selected storefront language (English, Bengali or Hindi) is saved in your browser's local storage so your choice is remembered as you move between pages. This preference does not contain account or payment details.</p>
 
         <h2>5. Sharing and service providers</h2>
         <p>Personal information may be processed by hosting, database, security and technical service providers strictly as needed to operate the website. Product pages and the homepage may contain YouTube video embeds; when a video frame loads or is played, YouTube may receive technical request and device information under its own privacy terms. The product gallery creates its player after a visitor selects the video, while homepage players use lazy loading. The current codebase does not include a payment gateway, behavioural analytics integration or an active newsletter mailing service. This statement must be revised if any such provider is added.</p>
