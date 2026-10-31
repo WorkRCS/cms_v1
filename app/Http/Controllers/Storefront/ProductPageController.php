@@ -1,10 +1,10 @@
 <?php
 
-namespace App\\Http\\Controllers\\Storefront;
+namespace App\Http\Controllers\Storefront;
 
-use App\\Http\\Controllers\\Controller;
-use App\\Models\\Product;
-use Illuminate\\View\\View;
+use App\Http\Controllers\Controller;
+use App\Models\Product;
+use Illuminate\View\View;
 
 class ProductPageController extends Controller
 {
