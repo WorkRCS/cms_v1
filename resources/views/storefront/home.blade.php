@@ -110,7 +110,7 @@
                     @endphp
                     <div class="col-md-6 col-xl-4">
                         <article class="video-story-card">
-                            <div class="video-story-player{{ $homeVideoShort ? ' video-story-player--shorts' : ' video-story-player--standard' }}">
+                            <div data-i18n-ignore class="video-story-player{{ $homeVideoShort ? ' video-story-player--shorts' : ' video-story-player--standard' }}">
                                 @if ($homeVideoYoutube)
                                     <iframe
                                         src="{{ $homeVideo['embed_url'] }}"
@@ -132,8 +132,8 @@
                             </div>
                             <div class="video-story-copy">
                                 <span class="eyebrow">{{ $homeVideoShort ? 'SHORT VIDEO' : ($homeVideoYoutube ? 'PRODUCT STORY' : 'UPLOADED VIDEO') }}</span>
-                                <h3><a href="{{ route('product.show', ['slug' => $videoProduct->slug]) }}">{{ $videoProduct->name }}</a></h3>
-                                <p>{{ $videoProduct->short_description }}</p>
+                                <h3 data-i18n-ignore><a href="{{ route('product.show', ['slug' => $videoProduct->slug]) }}">{{ $videoProduct->name }}</a></h3>
+                                <p data-i18n-ignore>{{ $videoProduct->short_description }}</p>
                                 <a class="text-link" href="{{ route('product.show', ['slug' => $videoProduct->slug]) }}">Explore product <svg class="icon"><use href="#i-arrow"/></svg></a>
                             </div>
                         </article>
