@@ -1,5 +1,6 @@
 @extends('layouts.storefront')
 @section('title', 'My account')
+@section('robots', 'noindex,nofollow')
 @section('content')
 <section class="page-hero compact-hero"><div class="container"><span class="eyebrow">YOUR ACCOUNT</span><h1>Hello, <em>there.</em></h1><p>Manage your account and shopping activity.</p></div></section>
 <section class="section-space"><div class="container"><div class="account-card">
