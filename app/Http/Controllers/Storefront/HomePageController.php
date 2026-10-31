@@ -109,20 +109,17 @@ class HomePageController extends Controller
     private function cacheableProduct(Product $product): array
     {
         $images = is_array($product->images) ? $product->images : [];
-        $safeImages = [];
-
-        foreach ($images as $image) {
-            $safeImages[] = [
-                'url' => data_get($image, 'url') ? (string) data_get($image, 'url') : null,
-                'alt' => data_get($image, 'alt') ? (string) data_get($image, 'alt') : null,
-                'is_primary' => (bool) data_get($image, 'is_primary', false),
-                'variants' => [
-                    'thumbnail' => data_get($image, 'variants.thumbnail') ? (string) data_get($image, 'variants.thumbnail') : null,
-                    'medium' => data_get($image, 'variants.medium') ? (string) data_get($image, 'variants.medium') : null,
-                    'large' => data_get($image, 'variants.large') ? (string) data_get($image, 'variants.large') : null,
-                ],
-            ];
-        }
+        $primaryImage = collect($images)->firstWhere('is_primary', true) ?? ($images[0] ?? null);
+        $safeImages = $primaryImage ? [[
+            'url' => data_get($primaryImage, 'url') ? (string) data_get($primaryImage, 'url') : null,
+            'alt' => data_get($primaryImage, 'alt') ? (string) data_get($primaryImage, 'alt') : null,
+            'is_primary' => true,
+            'variants' => [
+                'thumbnail' => data_get($primaryImage, 'variants.thumbnail') ? (string) data_get($primaryImage, 'variants.thumbnail') : null,
+                'medium' => data_get($primaryImage, 'variants.medium') ? (string) data_get($primaryImage, 'variants.medium') : null,
+                'large' => data_get($primaryImage, 'variants.large') ? (string) data_get($primaryImage, 'variants.large') : null,
+            ],
+        ]] : [];
 
         $video = is_array($product->video) ? $product->video : [];
 
