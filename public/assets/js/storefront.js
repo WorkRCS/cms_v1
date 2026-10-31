@@ -487,7 +487,11 @@
       node.textContent = '';
       node.classList.remove('success');
     }
-    if (message) notify(message, success);
+    if (!message) return;
+
+    const activeModal = form.closest('.modal.show');
+    if (activeModal) closeModalAndNotify(activeModal, message, false);
+    else notify(message, success);
   }
   function initAuthForms() {
     const login = document.getElementById('loginForm');
@@ -903,11 +907,11 @@
       const youtubeUrl = removeVideo ? '' : editForm.elements.video_youtube_url.value.trim();
 
       if (imageFiles.length > 8) {
-        notify('Choose between 1 and 8 images.', false);
+        closeModalAndNotify(editModalNode, 'Choose between 1 and 8 images.', false);
         return;
       }
       if (videoFile && youtubeUrl) {
-        notify('Choose either a YouTube URL or an uploaded video, not both.', false);
+        closeModalAndNotify(editModalNode, 'Choose either a YouTube URL or an uploaded video, not both.', false);
         return;
       }
 
@@ -935,7 +939,7 @@
       } catch (error) {
         const node = editForm.querySelector('[data-edit-form-message]');
         if (node) node.textContent = '';
-        notify(error.message, false);
+        closeModalAndNotify(editModalNode, error.message, false);
       } finally {
         button.disabled = false;
       }
