@@ -166,7 +166,7 @@
       try {
         const result = await apiRequest('/products?' + query.toString());
         const data = result.data || [];
-        grid.innerHTML = data.length ? data.map(productCard).join() :
+        grid.innerHTML = data.length ? data.map(productCard).join('') :
           '<div class="col-12"><div class="empty-state">No products match those filters. Try another search.</div></div>';
         countNode.textContent = (result.meta && result.meta.total != null ? result.meta.total : data.length) + ' items';
         const pages = Number(result.meta && result.meta.last_page) || 1;
