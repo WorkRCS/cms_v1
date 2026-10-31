@@ -243,6 +243,7 @@ class ProductController extends Controller
         Cache::forget('storefront.home.videos.v1');
         Cache::forget('storefront.home.videos.v2');
         Cache::forget('storefront.home.videos.v3');
+        Cache::forget('storefront.home.videos.v4');
     }
 
     private function validatedCategory(string $categoryId, string $productType): Category
