@@ -125,7 +125,6 @@
                                 <article class="home-video-card">
                                     <div
                                         class="home-video-card-media home-video-card-media--{{ $homeVideoLayout }}"
-                                        data-i18n-ignore
                                         data-home-video-player
                                         data-video-type="{{ $homeVideoYoutube ? 'youtube' : 'upload' }}"
                                         data-video-embed-url="{{ $homeVideo['embed_url'] ?? '' }}"
@@ -136,6 +135,7 @@
                                         <img
                                             src="{{ $homeVideoThumbnail }}"
                                             alt="{{ $videoProduct->name }} video thumbnail"
+                                            data-i18n-ignore
                                             width="{{ $homeVideoShort ? 480 : 640 }}"
                                             height="{{ $homeVideoShort ? 854 : 360 }}"
                                             loading="lazy"
