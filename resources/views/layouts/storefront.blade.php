@@ -157,13 +157,13 @@
                 <p class="footer-copy mt-3">A little closer to the source. Discover thoughtful farm goods and everyday essentials, all from one independent store.</p>
             </div>
             <div class="col-6 col-lg-2 offset-lg-1">
-                <h6>Explore</h6><a href="{{ route('shop') }}">Shop all</a><a href="{{ route('shop', ['product_type'=>'agriculture']) }}">Farm & garden</a><a href="{{ route('shop', ['product_type'=>'general']) }}">Everyday goods</a>
+                <h2>Explore</h2><a href="{{ route('shop') }}">Shop all</a><a href="{{ route('shop', ['product_type'=>'agriculture']) }}">Farm & garden</a><a href="{{ route('shop', ['product_type'=>'general']) }}">Everyday goods</a>
             </div>
             <div class="col-6 col-lg-2">
-                <h6>Help & policies</h6><a href="{{ route('home') }}#faq">FAQs</a><a href="mailto:{{ config('store.contact_email') }}">Contact us</a><a href="{{ route('login') }}">My account</a><a href="{{ route('terms') }}">Terms & conditions</a><a href="{{ route('privacy-policy') }}">Privacy policy</a><a href="{{ route('data-privacy') }}">Data privacy & rights</a>
+                <h2>Help & policies</h2><a href="{{ route('home') }}#faq">FAQs</a><a href="mailto:{{ config('store.contact_email') }}">Contact us</a><a href="{{ route('login') }}">My account</a><a href="{{ route('terms') }}">Terms & conditions</a><a href="{{ route('privacy-policy') }}">Privacy policy</a><a href="{{ route('data-privacy') }}">Data privacy & rights</a>
             </div>
             <div class="col-lg-3">
-                <h6>Good things, occasionally.</h6><p class="footer-copy">Join our list for product news and seasonal updates.</p>
+                <h2>Good things, occasionally.</h2><p class="footer-copy">Join our list for product news and seasonal updates.</p>
                 <form class="newsletter-form d-flex" data-newsletter-form><input type="email" class="form-control" placeholder="Your email address" aria-label="Your email address" required><button class="btn btn-light" type="submit" aria-label="Subscribe"><svg class="icon"><use href="#i-arrow"/></svg></button></form>
             </div>
         </div>
