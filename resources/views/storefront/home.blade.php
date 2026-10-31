@@ -36,14 +36,14 @@
         <div class="section-heading"><div><span class="eyebrow">FIND YOUR SOMETHING</span><h2>Shop by <em>category</em></h2></div><a class="text-link" href="{{ route('shop') }}">View everything <svg class="icon"><use href="#i-arrow"/></svg></a></div>
         @php
             $categoryImages = [
-                'fresh-produce' => 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=700&q=80',
-                'seeds-saplings' => 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=700&q=80',
-                'organic-farm-inputs' => 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=700&q=80',
-                'gardening-tools' => 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=700&q=80',
-                'apparel' => 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=700&q=80',
-                'electronics' => 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700&q=80',
-                'watches' => 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700&q=80',
-                'bags-travel' => 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700&q=80',
+                'fresh-produce' => 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=480&q=68',
+                'seeds-saplings' => 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=480&q=68',
+                'organic-farm-inputs' => 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=480&q=68',
+                'gardening-tools' => 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=480&q=68',
+                'apparel' => 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=480&q=68',
+                'electronics' => 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=480&q=68',
+                'watches' => 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=480&q=68',
+                'bags-travel' => 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=480&q=68',
             ];
         @endphp
         <div class="category-grid" data-category-grid data-server-rendered="true">
