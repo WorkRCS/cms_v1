@@ -15,7 +15,7 @@
         <div class="account-card mb-4">
             <div class="account-avatar"><svg class="icon"><use href="#i-user"/></svg></div>
             <div class="flex-grow-1 min-w-0">
-                <h3 data-account-name>Loading account…</h3>
+                <h2 data-account-name>Loading account…</h3>
                 <p class="text-secondary mb-0" data-account-email></p>
                 <span class="badge text-bg-light mt-2" data-account-role>Customer</span>
             </div>
@@ -128,14 +128,14 @@
         <div class="row g-4 mt-2">
             <div class="col-md-6">
                 <div class="account-feature">
-                    <h5>My orders</h5>
+                    <h3>My orders</h3>
                     <p>Order history and tracking will appear here when the order backend is connected.</p>
                     <span class="text-secondary small">Coming in the next milestone</span>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="account-feature">
-                    <h5>Saved addresses</h5>
+                    <h3>Saved addresses</h3>
                     <p>Your address details are saved privately with your account for future checkout use.</p>
                     <span class="text-secondary small">One profile delivery address</span>
                 </div>
