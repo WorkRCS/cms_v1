@@ -178,7 +178,8 @@
           const bg = photo ? 'https://images.unsplash.com/' + photo + '?w=700&q=80' : '';
           const type = category.product_type === 'agriculture' ? 'Farm & garden' : 'Everyday goods';
           return '<a class="category-card" data-category-slug="' + escapeHtml(category.slug) + '" href="/shop?category=' + encodeURIComponent(category.slug) +
-            '" style="--category-image:url(\'' + bg + '\')"><div><h3 data-category-name data-category-slug="' + escapeHtml(category.slug) + '">' + escapeHtml(category.name) +
+            '">' + (bg ? '<img class="category-card-image" src="' + escapeHtml(bg) + '" width="480" height="320" loading="lazy" decoding="async" alt="" aria-hidden="true">' : '') +
+            '<div><h3 data-category-name data-category-slug="' + escapeHtml(category.slug) + '">' + escapeHtml(category.name) +
             '</h3><p>' + type + '</p></div></a>';
         }).join('') || '<div class="empty-state">Categories will appear here soon.</div>';
       }
