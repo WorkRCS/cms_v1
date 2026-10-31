@@ -41,6 +41,7 @@ Route::prefix('api/v1')->group(function (): void {
 
     Route::middleware('auth')->group(function (): void {
         Route::get('/auth/me', [AuthController::class, 'me']);
+        Route::patch('/auth/profile', [AuthController::class, 'updateProfile']);
         Route::post('/auth/logout', [AuthController::class, 'logout']);
 
         Route::prefix('seller')->middleware('seller')->group(function (): void {
