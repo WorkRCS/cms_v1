@@ -200,7 +200,13 @@ For multiple production application instances, use a managed Redis service for s
     REDIS_PASSWORD=<managed-redis-password>
     REDIS_PORT=6379
 
-Do not use these settings until a reachable Redis service and the PHP Redis extension are available. For real multi-instance scale, also provision shared object storage for product images/videos (the current default public disk is local), a CDN, MongoDB Atlas sizing/backups/monitoring, queue workers, PHP-FPM capacity and load tests for the expected concurrency. Indexes are created by the local seeders; production index changes should be applied through a reviewed deployment/migration process rather than running demo seeders against production.
+Do not use these settings until a reachable Redis service and the PHP Redis extension are available. For real multi-instance scale, also provision shared object storage for product images/videos (the current default public disk is local), a CDN, MongoDB Atlas sizing/backups/monitoring, queue workers, PHP-FPM capacity and load tests for the expected concurrency.
+
+After reviewing and cleaning any duplicate account emails/category slugs/product slugs in the production database, create the required MongoDB indexes with:
+
+    php artisan storefront:ensure-indexes
+
+This command creates the indexes without inserting demo records or deleting data. It creates unique indexes for email/category/product slugs; duplicate values must be resolved before those unique indexes can be added. Run it once during a controlled deployment window and verify the output before routing production traffic.
 
 ## Production checklist
 
