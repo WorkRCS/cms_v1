@@ -199,22 +199,54 @@ class ProductController extends Controller
             ]);
         }
 
+        $previousVideo = is_array($product->video) ? $product->video : [];
+        $previousUploadPath = ($previousVideo['type'] ?? null) === 'upload'
+            ? ($previousVideo['path'] ?? null)
+            : null;
+        $videoWasReplaced = false;
+
         if (filled($data['video_youtube_url'] ?? null)) {
             $data['video'] = $this->youtubeVideos->fromUrl(
                 $data['video_youtube_url'],
                 $data['video_layout'] ?? 'auto',
                 $data['video_title'] ?? null,
             );
+            $videoWasReplaced = true;
         } elseif ($request->boolean('remove_video')) {
             $data['video'] = null;
+            $videoWasReplaced = true;
         } elseif ($request->hasFile('video')) {
             $data['video'] = $this->storeVideo($request);
+            $videoWasReplaced = true;
+        } elseif ($previousVideo !== []) {
+            // Allow title/layout adjustments without uploading the same video again.
+            if (array_key_exists('video_title', $data)) {
+                $title = trim((string) ($data['video_title'] ?? ''));
+                $previousVideo['title'] = $title !== '' ? mb_substr($title, 0, 180) : null;
+                $data['video'] = $previousVideo;
+            }
+
+            if (
+                isset($data['video_layout']) &&
+                in_array($data['video_layout'], ['shorts', 'standard'], true)
+            ) {
+                $previousVideo['layout'] = $data['video_layout'];
+                $data['video'] = $previousVideo;
+            }
         }
 
         unset($data['video_youtube_url'], $data['video_title'], $data['video_layout'], $data['remove_video']);
 
         $product->fill($data);
         $product->save();
+
+        if ($videoWasReplaced && is_string($previousUploadPath) && $previousUploadPath !== '') {
+            $nextVideo = is_array($product->video) ? $product->video : [];
+            if (($nextVideo['path'] ?? null) !== $previousUploadPath) {
+                Storage::disk('public')->delete($previousUploadPath);
+            }
+        }
+
         $this->clearPublicCatalogueCache();
 
         return response()->json(['message' => 'Product updated successfully.', 'data' => $product->fresh()]);
