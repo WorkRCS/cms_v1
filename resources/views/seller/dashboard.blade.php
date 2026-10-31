@@ -26,7 +26,28 @@
                     <div class="col-12"><label class="form-label" for="productShortInput">Short description</label><input class="form-control" id="productShortInput" name="short_description" maxlength="300"></div>
                     <div class="col-12"><label class="form-label" for="productDescriptionInput">Full description</label><textarea class="form-control" id="productDescriptionInput" name="description" rows="4" required maxlength="20000"></textarea></div>
                     <div class="col-md-7"><label class="form-label" for="productImagesInput">Product images (1–8)</label><input class="form-control" id="productImagesInput" name="images[]" type="file" accept="image/jpeg,image/png,image/webp" multiple required><div class="form-text">Images are converted to WebP in 320px, 640px and 1200px sizes.</div><div class="image-preview-row" data-upload-preview></div></div>
-                    <div class="col-md-5"><label class="form-label" for="productVideoInput">Product video (optional)</label><input class="form-control" id="productVideoInput" name="video" type="file" accept="video/mp4,video/webm"><div class="form-text">MP4/WebM, maximum 50 MB.</div></div>
+                    <div class="col-md-7">
+                        <label class="form-label" for="productYouTubeInput">YouTube video URL (optional)</label>
+                        <input class="form-control" id="productYouTubeInput" name="video_youtube_url" type="url" inputmode="url" placeholder="https://www.youtube.com/watch?v=...">
+                        <div class="form-text">Paste a YouTube video, Shorts, youtu.be or embed link. Shorts are detected automatically.</div>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label" for="productVideoTitleInput">Video title (optional)</label>
+                        <input class="form-control" id="productVideoTitleInput" name="video_title" type="text" maxlength="180" placeholder="A short title for this video">
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label" for="productVideoLayoutInput">Video layout</label>
+                        <select class="form-select" id="productVideoLayoutInput" name="video_layout">
+                            <option value="auto" selected>Automatic (detect Shorts)</option>
+                            <option value="shorts">Vertical Shorts (9:16)</option>
+                            <option value="standard">Landscape video (16:9)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-7">
+                        <label class="form-label" for="productVideoInput">Or upload a video file</label>
+                        <input class="form-control" id="productVideoInput" name="video" type="file" accept="video/mp4,video/webm">
+                        <div class="form-text">MP4/WebM, maximum 50 MB. Use either a YouTube link or an upload, not both.</div>
+                    </div>
                     <div class="col-12"><div class="form-check"><input class="form-check-input" type="checkbox" id="productFeaturedInput" name="is_featured"><label class="form-check-label" for="productFeaturedInput">Feature this product on the homepage</label></div></div>
                 </div>
                 <div class="form-message mt-3" data-form-message role="alert"></div>
