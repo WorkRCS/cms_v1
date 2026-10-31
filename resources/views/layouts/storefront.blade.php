@@ -110,7 +110,7 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('shop', ['product_type' => 'general']) }}">Everyday goods</a></li>
             </ul>
             <div class="nav-actions d-flex align-items-center gap-3">
-                <a class="icon-link" href="{{ auth()->check() ? (auth()->user()->role === 'seller' ? route('seller.dashboard') : route('account')) : route('login') }}" aria-label="Account"><svg class="icon"><use href="#i-user"/></svg><span class="d-lg-none">Account</span></a>
+                <a class="icon-link" href="{{ auth()->check() ? (auth()->user()->role === 'seller' ? route('admin.dashboard') : route('account')) : route('login') }}" aria-label="Account"><svg class="icon"><use href="#i-user"/></svg><span class="d-lg-none">Account</span></a>
                 <a class="icon-link cart-link" href="{{ route('cart') }}" aria-label="Shopping cart"><svg class="icon"><use href="#i-bag"/></svg><span class="cart-count" data-cart-count>0</span><span class="d-lg-none">Cart</span></a>
             </div>
         </div>
@@ -123,9 +123,9 @@
     $mobileAccountActive = request()->routeIs('login', 'register');
     if (auth()->check()) {
         $mobileIsSeller = auth()->user()->role === 'seller';
-        $mobileAccountUrl = $mobileIsSeller ? route('seller.dashboard') : route('account');
+        $mobileAccountUrl = $mobileIsSeller ? route('admin.dashboard') : route('account');
         $mobileAccountLabel = $mobileIsSeller ? 'Studio' : 'Account';
-        $mobileAccountActive = $mobileIsSeller ? request()->routeIs('seller.*') : request()->routeIs('account');
+        $mobileAccountActive = $mobileIsSeller ? request()->routeIs('seller.*', 'admin.dashboard') : request()->routeIs('account');
     }
 @endphp
 <nav class="mobile-bottom-nav" aria-label="Primary mobile navigation">
