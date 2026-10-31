@@ -79,11 +79,16 @@ class ProductController extends Controller
         $images = $this->images->store($data['images'], $data['name']);
         $video = $request->hasFile('video') ? $this->storeVideo($request) : null;
 
+        $baseSlug = Str::slug($data['name']) ?: 'product';
+        $slug = Product::where('slug', $baseSlug)->exists()
+            ? $baseSlug.'-'.Str::lower(Str::random(5))
+            : $baseSlug;
+
         $product = Product::create([
             'seller_id' => (string) $request->user()->getKey(),
             'category_id' => (string) $category->getKey(),
             'name' => trim($data['name']),
-            'slug' => Str::slug($data['name']).'-'.Str::lower(Str::random(6)),
+            'slug' => $slug,
             'sku' => $data['sku'] ?? null,
             'brand' => $data['brand'] ?? null,
             'product_type' => $data['product_type'],
@@ -144,7 +149,7 @@ class ProductController extends Controller
 
         if (isset($data['name'])) {
             $data['name'] = trim($data['name']);
-            $data['slug'] = Str::slug($data['name']).'-'.Str::lower(Str::random(6));
+            // Keep published product URLs stable when a seller edits the title.
         }
 
         $priceMinor = (int) ($data['price_minor'] ?? $product->price_minor);
