@@ -99,7 +99,7 @@ class DatabaseSeeder extends Seeder
                     'embed_url' => 'https://www.youtube-nocookie.com/embed/j_ZOWRaWBbM?playsinline=1&rel=0',
                     'thumbnail_url' => 'https://i.ytimg.com/vi/j_ZOWRaWBbM/hqdefault.jpg',
                     'layout' => 'shorts',
-                    'title' => 'Organic vegetable harvesting — demo Short',
+                    'title' => 'Organic vegetable harvesting — GetMyHarvest demo Short',
                 ],
             ],
             [
