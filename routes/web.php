@@ -31,7 +31,7 @@ Route::view('/seller', 'seller.dashboard')->middleware(['auth', 'seller'])->name
 Route::view('/admin', 'seller.dashboard')->middleware(['auth', 'seller'])->name('admin.dashboard');
 
 Route::prefix('api/v1')->group(function (): void {
-    Route::get('/health', [HealthController::class, 'show']);
+    Route::get('/health', [HealthController::class, 'show'])->middleware('throttle:60,1');
     Route::get('/csrf-token', fn () => response()->json(['token' => csrf_token()]))->middleware('throttle:120,1');
 
     Route::get('/categories', [CategoryController::class, 'index'])->middleware('throttle:120,1');
