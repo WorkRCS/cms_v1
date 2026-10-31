@@ -55,6 +55,22 @@
         ],
     ];
     $thumbnailImages = collect($images);
+    $productVideo = is_array($product->video) ? $product->video : null;
+    $isYoutubeVideo = ($productVideo['type'] ?? null) === 'youtube' && !empty($productVideo['video_id']);
+    $isUploadedVideo = ! $isYoutubeVideo && !empty($productVideo['url']);
+    $videoLayout = ($productVideo['layout'] ?? 'standard') === 'shorts' ? 'shorts' : 'standard';
+    $videoThumbnail = $isYoutubeVideo
+        ? ($productVideo['thumbnail_url'] ?? ('https://i.ytimg.com/vi/'.$productVideo['video_id'].'/hqdefault.jpg'))
+        : $mainImageUrl;
+    if ($isYoutubeVideo) {
+        $productSchema['subjectOf'] = [
+            '@type' => 'VideoObject',
+            'name' => $productVideo['title'] ?: ($product->name.' product video'),
+            'description' => $seoDescription,
+            'thumbnailUrl' => $videoThumbnail,
+            'embedUrl' => $productVideo['embed_url'],
+        ];
+    }
 @endphp
 @section('title', $product->name)
 @section('meta_description', $seoDescription)
@@ -97,6 +113,7 @@
                         data-product-main
                     >
                 </div>
+                <div class="product-main-video product-video-frame product-video-frame--{{ $videoLayout }}" data-product-video-stage hidden></div>
                 <div class="product-thumbnails" data-product-thumbnails>
                     @foreach ($thumbnailImages as $index => $image)
                         @php
@@ -109,6 +126,13 @@
                             </button>
                         @endif
                     @endforeach
+                    @if ($isYoutubeVideo || $isUploadedVideo)
+                        <button class="product-thumb product-video-thumb{{ $videoLayout === 'shorts' ? ' product-video-thumb--shorts' : '' }}" type="button" data-video-select aria-label="Play {{ $productVideo['title'] ?? ($product->name.' product video') }}">
+                            <img src="{{ $videoThumbnail }}" alt="" width="82" height="82" loading="lazy" decoding="async">
+                            <span class="product-video-play" aria-hidden="true"><svg class="icon"><use href="#i-play"/></svg></span>
+                            <span class="product-video-label">Video</span>
+                        </button>
+                    @endif
                 </div>
             </div>
         </div>
@@ -166,14 +190,6 @@
                     </div>
                 @else
                     <div class="product-attributes" data-product-attributes></div>
-                @endif
-                @if (is_array($product->video) && !empty($product->video['url']))
-                    <div class="product-video-wrap mt-4" data-product-video>
-                        <h2 class="h5">Product video</h2>
-                        <video controls class="w-100 rounded-4" preload="none" data-product-video-player src="{{ $product->video['url'] }}"></video>
-                    </div>
-                @else
-                    <div class="product-video-wrap" data-product-video hidden><h2 class="h5">Product video</h2><video controls class="w-100 rounded-4" preload="none" data-product-video-player></video></div>
                 @endif
             </div>
         </div>
