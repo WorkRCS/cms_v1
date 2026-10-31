@@ -337,10 +337,6 @@
       document.querySelector('[data-product-attributes]').innerHTML = Object.entries(product.attributes || {}).map(([key, value]) =>
         '<div class="attribute-chip"><small>' + escapeHtml(key.replace(/[_-]/g, ' ')) +
         '</small><strong>' + escapeHtml(value) + '</strong></div>').join('');
-      if (product.video && product.video.url) {
-        document.querySelector('[data-product-video-player]').src = product.video.url;
-        document.querySelector('[data-product-video]').hidden = false;
-      }
       document.querySelector('[data-qty-minus]').addEventListener('click', () => {
         const input = document.getElementById('productQty');
         input.value = Math.max(1, Number(input.value || 1) - 1);
