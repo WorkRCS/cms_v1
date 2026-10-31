@@ -97,55 +97,71 @@
 <section class="section-space video-feature">
     <div class="container">
         <div class="section-heading">
-            <div><span class="eyebrow">BEHIND THE GOODS</span><h2>Watch it from the <em>source.</em></h2></div>
+            <div><span class="eyebrow">BEHIND THE GOODS</span><h2>Watch every product <em>demo.</em></h2></div>
             <a class="text-link" href="{{ route('shop') }}">Explore products <svg class="icon"><use href="#i-arrow"/></svg></a>
         </div>
         @if ($videoProducts->isNotEmpty())
-            <div class="row g-4 align-items-start">
-                @foreach ($videoProducts as $videoProduct)
-                    @php
-                        $homeVideo = is_array($videoProduct->video) ? $videoProduct->video : [];
-                        $homeVideoYoutube = ($homeVideo['type'] ?? null) === 'youtube';
-                        $homeVideoShort = $homeVideoYoutube && ($homeVideo['layout'] ?? 'standard') === 'shorts';
-                    @endphp
-                    <div class="col-md-6 col-xl-4">
-                        <article class="video-story-card">
-                            <div data-i18n-ignore class="video-story-player{{ $homeVideoShort ? ' video-story-player--shorts' : ' video-story-player--standard' }}">
-                                @if ($homeVideoYoutube)
-                                    <iframe
-                                        src="{{ $homeVideo['embed_url'] }}"
-                                        title="{{ $homeVideo['title'] ?: ($videoProduct->name.' product video') }}"
-                                        loading="lazy"
-                                        referrerpolicy="strict-origin-when-cross-origin"
-                                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                        allowfullscreen
-                                    ></iframe>
-                                @else
-                                    <video
-                                        src="{{ $homeVideo['url'] }}"
-                                        title="{{ $homeVideo['title'] ?: ($videoProduct->name.' product video') }}"
-                                        controls
-                                        playsinline
-                                        preload="none"
-                                    ></video>
-                                @endif
-                            </div>
-                            <div class="video-story-copy">
-                                <span class="eyebrow">{{ $homeVideoShort ? 'SHORT VIDEO' : ($homeVideoYoutube ? 'PRODUCT STORY' : 'UPLOADED VIDEO') }}</span>
-                                <h3 data-i18n-ignore><a href="{{ route('product.show', ['slug' => $videoProduct->slug]) }}">{{ $videoProduct->name }}</a></h3>
-                                <p data-i18n-ignore>{{ $videoProduct->short_description }}</p>
-                                <a class="text-link" href="{{ route('product.show', ['slug' => $videoProduct->slug]) }}">Explore product <svg class="icon"><use href="#i-arrow"/></svg></a>
-                            </div>
-                        </article>
+            <p class="home-video-intro">Browse every product video in the store. Select a video to play it, or open the product to see its full details.</p>
+            <div class="home-video-rails" data-home-video-rails>
+                @foreach (['left', 'right'] as $railDirection)
+                    <div class="home-video-rail" data-home-video-rail="{{ $railDirection }}" aria-label="{{ $railDirection === 'left' ? 'Product videos moving left' : 'Product videos moving right' }}">
+                        <div class="home-video-rail-track{{ $railDirection === 'left' ? ' is-moving-left' : ' is-moving-right' }}" data-home-video-track data-direction="{{ $railDirection }}">
+                            @foreach (($railDirection === 'left' ? $videoProducts : $videoProducts->reverse()) as $videoProduct)
+                                @php
+                                    $homeVideo = is_array($videoProduct->video) ? $videoProduct->video : [];
+                                    $homeVideoYoutube = ($homeVideo['type'] ?? null) === 'youtube';
+                                    $homeVideoShort = ($homeVideo['layout'] ?? 'standard') === 'shorts';
+                                    $homeVideoLayout = $homeVideoShort ? 'shorts' : 'standard';
+                                    $homeVideoThumbnail = $homeVideo['thumbnail_url']
+                                        ?? (data_get($videoProduct, 'images.0.variants.medium')
+                                            ?: data_get($videoProduct, 'images.0.url')
+                                            ?: asset('favicon.svg'));
+                                    $homeVideoTitle = $homeVideo['title'] ?: ($videoProduct->name.' product video');
+                                @endphp
+                                <article class="home-video-card">
+                                    <div
+                                        class="home-video-card-media home-video-card-media--{{ $homeVideoLayout }}"
+                                        data-i18n-ignore
+                                        data-home-video-player
+                                        data-video-type="{{ $homeVideoYoutube ? 'youtube' : 'upload' }}"
+                                        data-video-embed-url="{{ $homeVideo['embed_url'] ?? '' }}"
+                                        data-video-url="{{ $homeVideo['url'] }}"
+                                        data-video-title="{{ $homeVideoTitle }}"
+                                        data-video-layout="{{ $homeVideoLayout }}"
+                                    >
+                                        <img
+                                            src="{{ $homeVideoThumbnail }}"
+                                            alt="{{ $videoProduct->name }} video thumbnail"
+                                            width="{{ $homeVideoShort ? 480 : 640 }}"
+                                            height="{{ $homeVideoShort ? 854 : 360 }}"
+                                            loading="lazy"
+                                            decoding="async"
+                                        >
+                                        <button class="home-video-play" type="button" data-home-video-play aria-label="Play video for {{ $videoProduct->name }}">
+                                            <svg class="icon"><use href="#i-play"/></svg>
+                                        </button>
+                                    </div>
+                                    <div class="home-video-card-copy">
+                                        <span class="eyebrow">{{ $homeVideoShort ? 'SHORT VIDEO' : ($homeVideoYoutube ? 'PRODUCT STORY' : 'UPLOADED VIDEO') }}</span>
+                                        <h3 data-i18n-ignore><a href="{{ route('product.show', ['slug' => $videoProduct->slug]) }}">{{ $videoProduct->name }}</a></h3>
+                                        <p data-i18n-ignore>{{ $videoProduct->short_description }}</p>
+                                        <div class="home-video-card-actions">
+                                            <button class="text-link btn btn-link p-0 border-0" type="button" data-home-video-play>Watch video</button>
+                                            <a class="text-link" href="{{ route('product.show', ['slug' => $videoProduct->slug]) }}">Explore product <svg class="icon"><use href="#i-arrow"/></svg></a>
+                                        </div>
+                                    </div>
+                                </article>
+                            @endforeach
+                        </div>
                     </div>
                 @endforeach
             </div>
+            <p class="home-video-footnote">Each card names the product it belongs to. The video player loads only when you choose to watch.</p>
         @else
-            <div class="empty-state">Product videos will appear here when the seller adds a YouTube link.</div>
+            <div class="empty-state">Product videos will appear here when the seller adds a YouTube link or video file.</div>
         @endif
     </div>
 </section>
-
 <section id="faq" class="section-space faq-section">
     <div class="container"><div class="row g-5">
         <div class="col-lg-4"><span class="eyebrow">A FEW ANSWERS</span><h2>Good to <em>know.</em></h2><p class="body-copy">A few helpful things before you shop. Still curious? Get in touch with the store.</p><a href="mailto:hello@example.test" class="text-link">Ask us a question <svg class="icon"><use href="#i-arrow"/></svg></a></div>
