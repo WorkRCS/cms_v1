@@ -14,7 +14,7 @@
                     srcset="{{ $cardImage }} 640w, {{ $cardImageLarge }} 1200w"
                 @endif
                 sizes="(max-width: 767px) 50vw, (max-width: 1199px) 33vw, 25vw"
-                alt="{{ data_get($cardPrimary, 'alt') ?: $product->name }}"
+                alt="{{ data_get($cardPrimary, 'alt') ?: $product->name }}" data-i18n-ignore
                 width="640"
                 height="736"
                 loading="lazy"
@@ -26,7 +26,7 @@
             @endif
         </a>
         <div class="product-card-body">
-            <div class="product-card-type">{{ $product->brand ?: $cardType }}</div>
+            <div class="product-card-type" @if($product->brand) data-i18n-ignore @endif>{{ $product->brand ?: $cardType }}</div>
             <h3><a href="{{ route('product.show', ['slug' => $product->slug]) }}">{{ $product->name }}</a></h3>
             <div class="product-card-price">
                 ₹{{ number_format(((int) $product->price_minor) / 100, 2) }}
