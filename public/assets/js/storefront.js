@@ -973,6 +973,20 @@
     const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
     let resizeFrame = null;
 
+    const finishTrack = (track) => {
+      const rail = track.closest('[data-home-video-rail]');
+      track.classList.remove('is-ready');
+      track.classList.add('is-finished');
+      track.style.animation = 'none';
+      track.style.transform = 'none';
+      if (!rail) return;
+
+      rail.classList.add('is-finished');
+      // Leave the last items in view on the left-moving rail, and the first
+      // items in view on the right-moving rail. Visitors can then swipe-scroll.
+      rail.scrollLeft = track.dataset.direction === 'left' ? rail.scrollWidth : 0;
+    };
+
     const measureTracks = () => {
       tracks.forEach((track) => {
         if (track.classList.contains('is-finished')) return;
@@ -988,13 +1002,12 @@
 
         track.classList.remove('is-ready');
         if (motionPreference.matches || travel < 24) {
-          track.style.animation = 'none';
-          track.style.transform = 'none';
-          track.classList.add('is-finished');
+          finishTrack(track);
           return;
         }
 
         track.style.animation = 'none';
+        track.style.transform = '';
         void track.offsetWidth;
         track.style.animation = '';
         track.classList.add('is-ready');
@@ -1003,9 +1016,8 @@
 
     tracks.forEach((track) => {
       track.addEventListener('animationend', (event) => {
-        if (event.target !== track) return;
-        track.classList.remove('is-ready');
-        track.classList.add('is-finished');
+        if (event.target !== track || event.animationName === '') return;
+        finishTrack(track);
       });
     });
 
@@ -1021,6 +1033,7 @@
     motionPreference.addEventListener?.('change', () => {
       tracks.forEach((track) => {
         track.classList.remove('is-finished');
+        track.closest('[data-home-video-rail]')?.classList.remove('is-finished');
         track.style.animation = '';
         track.style.transform = '';
       });
