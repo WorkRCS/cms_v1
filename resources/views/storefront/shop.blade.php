@@ -1,6 +1,21 @@
 @extends('layouts.storefront')
 @section('title', 'Shop farm produce & everyday essentials')
 @section('meta_description', 'Explore farm produce, seeds, garden supplies and useful everyday goods from Field & Found.')
+@php
+    $shopCanonicalParams = [];
+    if (!empty($filters['category'])) {
+        $shopCanonicalParams['category'] = $filters['category'];
+    } elseif (!empty($filters['product_type'])) {
+        $shopCanonicalParams['product_type'] = $filters['product_type'];
+    }
+    $shopCanonical = route('shop', $shopCanonicalParams);
+    $shopHasSearchFilters = !empty($filters['q'])
+        || !empty($filters['featured'])
+        || (($filters['sort'] ?? 'latest') !== 'latest')
+        || $products->currentPage() > 1;
+@endphp
+@section('canonical_url', $shopCanonical)
+@section('robots', $shopHasSearchFilters ? 'noindex,follow' : 'index,follow,max-image-preview:large')
 @section('content')
 <section class="page-hero"><div class="container"><span class="eyebrow">THE COLLECTION</span><h1>Find your <em>something.</em></h1><p>Good things for the garden, the home and everything in between.</p></div></section>
 <section class="section-space pt-4"><div class="container">
