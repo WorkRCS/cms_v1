@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class DemoProductVideoSeeder extends Seeder
 {
@@ -14,6 +15,16 @@ class DemoProductVideoSeeder extends Seeder
             $this->command?->warn('Demo product videos are restricted to APP_ENV=local.');
             return;
         }
+
+        $database = DB::connection('mongodb')->getMongoDB();
+        $database->selectCollection('products')->createIndex(
+            ['status' => 1, 'video.url' => 1, 'updated_at' => -1],
+            ['name' => 'products_published_videos'],
+        );
+        $database->selectCollection('users')->createIndex(
+            ['role' => 1, 'is_active' => 1, 'created_at' => -1],
+            ['name' => 'users_by_role_status_created'],
+        );
 
         $videos = [
             'farm-fresh-vegetable-box' => [
@@ -52,6 +63,7 @@ class DemoProductVideoSeeder extends Seeder
         }
 
         Cache::forget('storefront.home.videos.v1');
+        Cache::forget('storefront.home.videos.v2');
         Cache::forget('storefront.home.featured.v1');
         Cache::forget('storefront.home.latest.v1');
         Cache::forget('seo.sitemap.v1');
